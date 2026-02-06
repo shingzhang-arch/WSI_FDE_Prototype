@@ -127,6 +127,67 @@
             color: #181818;
         }
 
+        /* ===== PROTOTYPE FOOTER TOGGLE ===== */
+        .panel-proto-footer {
+            flex-shrink: 0;
+        }
+        .panel-proto-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0.25rem;
+            cursor: pointer;
+        }
+        .panel-proto-toggle-label {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #181818;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #c9c9c9;
+            transition: 0.2s;
+            border-radius: 22px;
+        }
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #fff;
+            transition: 0.2s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #0176d3;
+        }
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(18px);
+        }
+        .panel-device-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+            padding-top: 0.5rem;
+        }
+
         /* ===== RIGHT PREVIEW AREA ===== */
         .preview-area {
             flex: 1;
@@ -871,13 +932,19 @@
             background: #f8f9fa;
             border-radius: 40px;
             overflow: hidden;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
             height: 780px;
             padding-top: 52px;
             position: relative;
         }
-        .phone-screen::-webkit-scrollbar { display: none; }
-        .phone-screen { -ms-overflow-style: none; scrollbar-width: none; }
+        .phone-screen-body {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
+        .phone-screen-body::-webkit-scrollbar { display: none; }
+        .phone-screen-body { -ms-overflow-style: none; scrollbar-width: none; }
         .phone-home-indicator-wrap {
             display: flex;
             justify-content: center;
@@ -896,6 +963,27 @@
             min-height: 100%;
             background: #f8f9fa;
         }
+        .mobile-input-bar {
+            flex-shrink: 0;
+            padding: 0.5rem 0.75rem;
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            border-radius: 0 0 40px 40px;
+        }
+        .mobile-input-field {
+            width: 100%;
+            padding: 0.5rem 0.875rem;
+            border: 1px solid #d0d0d0;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            color: #706e6b;
+            background: #fff;
+            outline: none;
+            font-family: inherit;
+        }
+        .mobile-input-field:focus {
+            border-color: #0176d3;
+        }
 
         /* ===== DESKTOP BROWSER FRAME ===== */
         .desktop-frame {
@@ -903,6 +991,7 @@
             flex-direction: column;
             width: 1100px;
             max-width: calc(100vw - 320px);
+            height: calc(100vh - 1.5rem);
             background: #fff;
             border-radius: 10px;
             overflow: hidden;
@@ -951,7 +1040,9 @@
         }
         .browser-viewport {
             display: flex;
-            height: 680px;
+            flex: 1;
+            min-height: 0;
+            position: relative;
         }
 
         /* ===== WS MOCKUP (Desktop left side) ===== */
@@ -1106,63 +1197,128 @@
             width: 360px;
             display: flex;
             flex-direction: column;
-            border-left: 1px solid #d0d0d0;
-            background: #ffffff;
+            border-left: 2px solid #c0c0c0;
+            background: #f9fafb;
             flex-shrink: 0;
-            box-shadow: -4px 0 16px rgba(0,0,0,0.08);
+            box-shadow: -6px 0 24px rgba(0,0,0,0.12);
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
         }
-        .sidebar-chat-header {
+        .chat-header-bar {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 0.75rem;
-            background: #fff;
-            border-bottom: 1px solid #e5e5e5;
+            padding: 0.625rem 0.75rem;
+            background: #1a1a1a;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .chat-header-sparkle {
+            font-size: 1rem;
+            color: #fff;
             flex-shrink: 0;
         }
-        .sidebar-brand-icon {
-            width: 26px;
-            height: 26px;
+        .chat-header-brand-icon {
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             object-fit: cover;
             flex-shrink: 0;
+            display: none;
         }
-        .sidebar-brand-name {
+        .chat-header-brand-name {
             flex: 1;
-            font-size: 0.875rem;
+            font-size: 0.9375rem;
             font-weight: 700;
-            color: #181818;
+            color: #ffffff;
             white-space: nowrap;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-        .sidebar-chat-actions {
+        .chat-header-actions {
             display: flex;
             align-items: center;
-            gap: 0.125rem;
+            gap: 0.25rem;
         }
-        .sidebar-action-btn {
+        .chat-header-btn {
             background: none;
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 4px;
             cursor: pointer;
-            color: #706e6b;
-            font-size: 1.125rem;
+            color: #ffffff;
+            font-size: 1.25rem;
             line-height: 1;
             transition: background 0.15s;
         }
-        .sidebar-action-btn:hover {
-            background: #f3f3f3;
+        .chat-header-btn:hover {
+            background: rgba(255,255,255,0.12);
         }
+        /* "End Chat" dropdown */
+        .chat-header-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0.75rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            z-index: 100;
+            overflow: hidden;
+            min-width: 140px;
+        }
+        .chat-header-menu.visible {
+            display: block;
+        }
+        .chat-header-menu-item {
+            padding: 0.625rem 1rem;
+            color: #ffffff;
+            font-size: 0.8125rem;
+            cursor: pointer;
+            transition: background 0.12s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .chat-header-menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        /* Minimized state (just the Olive icon) */
+        .chat-minimized-fab {
+            display: none;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #2e844a;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            transition: transform 0.15s;
+        }
+        .chat-minimized-fab:hover {
+            transform: scale(1.08);
+        }
+        .chat-minimized-fab img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        /* Legacy alias kept for sidebar compat */
+        .sidebar-brand-icon { display: none; }
         .desktop-sidebar .chat-container {
             max-width: 100%;
             flex: 1;
+            min-height: 0;
             overflow-y: auto;
             border-radius: 0;
-            background: #fff;
+            background: #ffffff;
         }
         .sidebar-input-bar {
             flex-shrink: 0;
@@ -1185,30 +1341,7 @@
             border-color: #0176d3;
         }
 
-        /* Green FAB (chat trigger on WS site) */
-        .ws-chat-fab {
-            position: sticky;
-            bottom: 20px;
-            float: right;
-            margin-right: 20px;
-            margin-top: -68px;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: #2e844a;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            cursor: default;
-            z-index: 5;
-        }
-        .ws-chat-fab svg {
-            width: 22px;
-            height: 22px;
-            fill: #fff;
-        }
+        
 
         /* WS sister brands bar */
         .ws-brands-bar {
@@ -1246,9 +1379,10 @@
         /* ===== PREVIEW AREA DEVICE OVERRIDES ===== */
         .preview-area.device-desktop {
             flex-direction: row;
-            padding: 1.25rem;
-            align-items: stretch;
+            padding: 0.75rem;
+            align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
         .preview-area.device-mobile {
             flex-direction: row;
@@ -1446,38 +1580,6 @@
     <div class="settings-panel">
         <div class="panel-title">Variation Controls</div>
 
-        <!-- Live Prototype Mode Toggle -->
-        <div class="panel-section">
-            <label class="panel-toggle">
-                <input type="checkbox" id="prototypeModeToggle">
-                <span class="panel-toggle-label">Live Prototype Mode</span>
-            </label>
-            <div class="panel-option-desc">View component in chat interface context</div>
-        </div>
-
-        <!-- Device Preview Toggle (visible only in prototype mode) -->
-        <div class="panel-section" id="deviceToggleSection" style="display: none;">
-            <div class="panel-section-title">Device Preview</div>
-
-            <label class="panel-option selected" data-device="mobile">
-                <input type="radio" name="device" value="mobile" checked>
-                <div class="panel-option-content">
-                    <div class="panel-option-label">Mobile</div>
-                    <div class="panel-option-desc">iPhone frame with chat interface</div>
-                </div>
-            </label>
-
-            <label class="panel-option" data-device="desktop">
-                <input type="radio" name="device" value="desktop">
-                <div class="panel-option-content">
-                    <div class="panel-option-label">Desktop</div>
-                    <div class="panel-option-desc">Chat sidebar overlay on Williams-Sonoma.com</div>
-                </div>
-            </label>
-        </div>
-
-        <div class="panel-divider"></div>
-
         <!-- Placement Variations -->
         <div class="panel-section">
             <div class="panel-section-title">See More Placement</div>
@@ -1553,6 +1655,37 @@
                 </div>
             </label>
         </div>
+
+        <!-- Spacer to push prototype toggle to bottom -->
+        <div style="flex:1;"></div>
+
+        <!-- Live Prototype Mode Toggle (bottom of panel) -->
+        <div class="panel-proto-footer">
+            <div class="panel-divider"></div>
+            <label class="panel-proto-toggle" for="prototypeModeToggle">
+                <span class="panel-proto-toggle-label">Live Prototype Mode</span>
+                <span class="toggle-switch">
+                    <input type="checkbox" id="prototypeModeToggle">
+                    <span class="toggle-slider"></span>
+                </span>
+            </label>
+
+            <!-- Device Preview Toggle (visible only in prototype mode) -->
+            <div class="panel-device-options" id="deviceToggleSection" style="display: none;">
+                <label class="panel-option selected" data-device="mobile">
+                    <input type="radio" name="device" value="mobile" checked>
+                    <div class="panel-option-content">
+                        <div class="panel-option-label">Mobile</div>
+                    </div>
+                </label>
+                <label class="panel-option" data-device="desktop">
+                    <input type="radio" name="device" value="desktop">
+                    <div class="panel-option-content">
+                        <div class="panel-option-label">Desktop</div>
+                    </div>
+                </label>
+            </div>
+        </div>
     </div>
 
     <!-- ===== RIGHT PREVIEW AREA ===== -->
@@ -1562,7 +1695,25 @@
             <div class="phone-bezel">
                 <div class="phone-dynamic-island"></div>
                 <div class="phone-screen" id="mobileScreen">
-                    <!-- chatContainer is moved here in mobile mode -->
+                    <div class="chat-header-bar" id="mobileHeaderBar">
+                        <span class="chat-header-sparkle">✦</span>
+                        <span class="chat-header-brand-name">AI Sous Chef</span>
+                        <div class="chat-header-actions">
+                            <button class="chat-header-btn chat-menu-btn" title="More options">⋮</button>
+                        </div>
+                        <div class="chat-header-menu">
+                            <div class="chat-header-menu-item" onclick="handleEndChat()">End Chat</div>
+                        </div>
+                    </div>
+                    <div class="phone-screen-body" id="mobileScreenBody">
+                        <!-- chatContainer is moved here in mobile mode -->
+                    </div>
+                    <div class="mobile-input-bar">
+                        <input type="text" class="mobile-input-field" placeholder="Type your message..." disabled>
+                    </div>
+                    <div class="chat-minimized-fab" id="mobileMinimizedFab" onclick="restoreChat('mobile')">
+                        <img src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="Open chat">
+                    </div>
                 </div>
                 <div class="phone-home-indicator-wrap">
                     <div class="phone-home-indicator"></div>
@@ -1645,26 +1796,37 @@
                         <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
                         <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
                     </div>
-                    <!-- Green FAB chat trigger -->
-                    <button class="ws-chat-fab" aria-label="Open chat">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
-                    </button>
+                    <div class="ws-section">
+                        <div class="ws-section-title">BEST SELLERS</div>
+                    </div>
+                    <div class="ws-product-row">
+                        <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
+                        <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
+                        <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
+                        <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
+                    </div>
                 </div>
 
                 <!-- Chat Sidebar -->
                 <div class="desktop-sidebar" id="desktopSidebar">
-                    <div class="sidebar-chat-header">
-                        <img class="sidebar-brand-icon" src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="AI Sous Chef">
-                        <span class="sidebar-brand-name">AI Sous Chef</span>
-                        <div class="sidebar-chat-actions">
-                            <button class="sidebar-action-btn" title="More options">⋮</button>
-                            <button class="sidebar-action-btn" title="Minimize">⌄</button>
+                    <div class="chat-header-bar" id="desktopHeaderBar">
+                        <span class="chat-header-sparkle">✦</span>
+                        <span class="chat-header-brand-name">AI Sous Chef</span>
+                        <div class="chat-header-actions">
+                            <button class="chat-header-btn chat-menu-btn" title="More options">⋮</button>
+                            <button class="chat-header-btn chat-minimize-btn" title="Minimize">⌄</button>
+                        </div>
+                        <div class="chat-header-menu">
+                            <div class="chat-header-menu-item" onclick="handleEndChat()">End Chat</div>
                         </div>
                     </div>
                     <!-- chatContainer is moved here in desktop mode -->
                     <div class="sidebar-input-bar" id="sidebarInputBar">
                         <input type="text" class="sidebar-input-field" placeholder="Type your message..." disabled>
                     </div>
+                </div>
+                <div class="chat-minimized-fab" id="desktopMinimizedFab" onclick="restoreChat('desktop')" style="position:absolute;bottom:20px;right:20px;">
+                    <img src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="Open chat">
                 </div>
             </div>
         </div>
@@ -2273,7 +2435,7 @@
                 const desktopFrame = document.getElementById('desktopFrame');
 
                 if (mobileFrame && mobileFrame.style.display !== 'none') {
-                    target = document.getElementById('mobileScreen');
+                    target = document.getElementById('mobileScreenBody');
                 } else if (desktopFrame && desktopFrame.style.display !== 'none') {
                     target = document.getElementById('chatContainer');
                 } else {
@@ -2676,14 +2838,27 @@
 
             if (mode === 'mobile') {
                 desktopFrame.style.display = 'none';
-                document.getElementById('mobileScreen').appendChild(chatContainer);
+                // Restore desktop sidebar in case it was minimized
+                document.getElementById('desktopSidebar').style.display = 'flex';
+                document.getElementById('desktopMinimizedFab').style.display = 'none';
+                // Restore mobile elements
+                document.getElementById('mobileHeaderBar').style.display = 'flex';
+                document.getElementById('mobileScreenBody').style.display = 'flex';
+                document.getElementById('mobileScreen').querySelector('.mobile-input-bar').style.display = 'block';
+                document.getElementById('mobileMinimizedFab').style.display = 'none';
+                document.getElementById('mobileScreenBody').appendChild(chatContainer);
                 chatContainer.style.display = 'flex';
                 mobileFrame.style.display = 'flex';
                 previewArea.classList.remove('device-desktop');
                 previewArea.classList.add('device-mobile');
             } else {
                 mobileFrame.style.display = 'none';
+                // Restore mobile in case it was minimized
+                document.getElementById('mobileMinimizedFab').style.display = 'none';
+                // Restore desktop sidebar
                 const sidebar = document.getElementById('desktopSidebar');
+                sidebar.style.display = 'flex';
+                document.getElementById('desktopMinimizedFab').style.display = 'none';
                 const inputBar = document.getElementById('sidebarInputBar');
                 sidebar.insertBefore(chatContainer, inputBar);
                 chatContainer.style.display = 'flex';
@@ -2695,6 +2870,66 @@
             syncChatContainer();
             setTimeout(() => animateChatMessages(), 300);
         }
+
+        // ===== CHAT HEADER: Menu & Minimize =====
+        // Toggle the "End Chat" dropdown on ⋮ click
+        document.querySelectorAll('.chat-menu-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const menu = btn.closest('.chat-header-bar').querySelector('.chat-header-menu');
+                if (menu) menu.classList.toggle('visible');
+            });
+        });
+        // Close menu when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.chat-header-menu.visible').forEach(m => m.classList.remove('visible'));
+        });
+
+        // Minimize ⌄: hide sidebar/chat, show Olive FAB
+        document.querySelectorAll('.chat-minimize-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (activeDevice === 'desktop') {
+                    const sidebar = document.getElementById('desktopSidebar');
+                    const fab = document.getElementById('desktopMinimizedFab');
+                    sidebar.style.display = 'none';
+                    if (fab) fab.style.display = 'flex';
+                } else if (activeDevice === 'mobile') {
+                    const screenBody = document.getElementById('mobileScreenBody');
+                    const header = document.getElementById('mobileHeaderBar');
+                    const inputBar = document.getElementById('mobileScreen').querySelector('.mobile-input-bar');
+                    const fab = document.getElementById('mobileMinimizedFab');
+                    if (screenBody) screenBody.style.display = 'none';
+                    if (header) header.style.display = 'none';
+                    if (inputBar) inputBar.style.display = 'none';
+                    if (fab) fab.style.display = 'flex';
+                }
+            });
+        });
+
+        // Restore from minimized FAB
+        window.restoreChat = function(device) {
+            if (device === 'desktop') {
+                const sidebar = document.getElementById('desktopSidebar');
+                const fab = document.getElementById('desktopMinimizedFab');
+                sidebar.style.display = 'flex';
+                if (fab) fab.style.display = 'none';
+            } else {
+                const screenBody = document.getElementById('mobileScreenBody');
+                const header = document.getElementById('mobileHeaderBar');
+                const inputBar = document.getElementById('mobileScreen').querySelector('.mobile-input-bar');
+                const fab = document.getElementById('mobileMinimizedFab');
+                if (screenBody) screenBody.style.display = 'flex';
+                if (header) header.style.display = 'flex';
+                if (inputBar) inputBar.style.display = 'block';
+                if (fab) fab.style.display = 'none';
+            }
+        };
+
+        // End Chat handler (placeholder)
+        window.handleEndChat = function() {
+            document.querySelectorAll('.chat-header-menu.visible').forEach(m => m.classList.remove('visible'));
+            alert('Chat ended. (This is a prototype — no actual session to end.)');
+        };
 
         function renderCarouselInContainer(container) {
             if (!container) return;
