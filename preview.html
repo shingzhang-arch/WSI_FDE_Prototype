@@ -131,8 +131,8 @@
         .preview-area {
             flex: 1;
             display: flex;
-            align-items: flex-start;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             padding: 2rem;
             overflow-y: auto;
             background-color: #f3f3f3;
@@ -463,17 +463,129 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 0.5rem;
         }
-        .see-less-link {
-            display: block;
-            text-align: center;
+        /* ===== CONVERSATION NUDGE CHIPS ===== */
+        .nudge-chips-container {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
             margin-top: 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #0176d3;
-            text-decoration: none;
-            cursor: pointer;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e5e5e5;
         }
-        .see-less-link:hover { text-decoration: underline; }
+        .nudge-chips-container.visible {
+            display: flex;
+        }
+        .nudge-chips-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .nudge-chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+        }
+        .nudge-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.375rem 0.625rem;
+            border-radius: 100px;
+            border: 1px solid #c9c7c5;
+            background: #ffffff;
+            color: #181818;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .nudge-chip:hover {
+            background-color: #f3f3f3;
+            border-color: #706e6b;
+        }
+        .nudge-chip.active {
+            background-color: #0176d3;
+            border-color: #0176d3;
+            color: #ffffff;
+        }
+        .nudge-chip-icon {
+            font-size: 0.75rem;
+            line-height: 1;
+        }
+        .nudge-chip.accent {
+            background-color: #eef4ff;
+            border-color: #0176d3;
+            color: #0176d3;
+        }
+        .nudge-chip.accent:hover {
+            background-color: #0176d3;
+            color: #ffffff;
+        }
+        .nudge-chip:disabled {
+            opacity: 0.45;
+            cursor: default;
+            pointer-events: none;
+        }
+        .nudge-chip.selected {
+            background-color: #181818;
+            border-color: #181818;
+            color: #ffffff;
+            pointer-events: none;
+        }
+
+        /* ===== CONVERSATION THREAD (appended turns) ===== */
+        .conversation-thread {
+            display: flex;
+            flex-direction: column;
+        }
+        .conversation-turn {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e5e5e5;
+            animation: turnSlideIn 0.35s ease-out both;
+        }
+        @keyframes turnSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .turn-commentary {
+            font-size: 0.8125rem;
+            color: #181818;
+            line-height: 1.5;
+            margin-bottom: 0.625rem;
+        }
+        .turn-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        .turn-nudge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+            margin-top: 0.625rem;
+            padding-top: 0.5rem;
+        }
+        .turn-nudge-label {
+            width: 100%;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.125rem;
+        }
+        .turn-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        .turn-carousel {
+            margin-bottom: 0.25rem;
+        }
 
         /* Disclosure 4: Scrollable List */
         .scrollable-list {
@@ -704,14 +816,19 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background-color: #0176d3;
-            color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.875rem;
-            font-weight: 600;
             flex-shrink: 0;
+            overflow: hidden;
+            background-color: transparent;
+        }
+
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .message-content {
@@ -724,6 +841,603 @@
             box-shadow: none;
             border: none;
             padding: 0;
+        }
+
+        /* ===== PHONE FRAME (Mobile Prototype) ===== */
+        .phone-frame {
+            display: none;
+            justify-content: center;
+        }
+        .phone-bezel {
+            width: 393px;
+            background: #1d1d1f;
+            border-radius: 50px;
+            padding: 10px;
+            position: relative;
+            box-shadow: 0 0 0 1px #3a3a3c, 0 25px 70px rgba(0,0,0,0.35);
+        }
+        .phone-dynamic-island {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        .phone-screen {
+            background: #f8f9fa;
+            border-radius: 40px;
+            overflow: hidden;
+            overflow-y: auto;
+            height: 780px;
+            padding-top: 52px;
+            position: relative;
+        }
+        .phone-screen::-webkit-scrollbar { display: none; }
+        .phone-screen { -ms-overflow-style: none; scrollbar-width: none; }
+        .phone-home-indicator-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 6px 0 4px;
+            background: #1d1d1f;
+        }
+        .phone-home-indicator {
+            width: 134px;
+            height: 5px;
+            background: #555;
+            border-radius: 3px;
+        }
+        .phone-screen .chat-container {
+            max-width: 100%;
+            border-radius: 0;
+            min-height: 100%;
+            background: #f8f9fa;
+        }
+
+        /* ===== DESKTOP BROWSER FRAME ===== */
+        .desktop-frame {
+            display: none;
+            flex-direction: column;
+            width: 1100px;
+            max-width: calc(100vw - 320px);
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+        }
+        .browser-chrome {
+            height: 40px;
+            background: linear-gradient(180deg, #e8e8e8, #d8d8d8);
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            gap: 10px;
+            border-bottom: 1px solid #c0c0c0;
+            flex-shrink: 0;
+        }
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+        }
+        .browser-dots .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .browser-dots .dot.red { background: #ff5f57; }
+        .browser-dots .dot.yellow { background: #ffbd2e; }
+        .browser-dots .dot.green { background: #28c840; }
+        .browser-url-bar {
+            flex: 1;
+            max-width: 420px;
+            height: 26px;
+            background: #ffffff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 0.75rem;
+            color: #555;
+            gap: 5px;
+            margin-left: 4px;
+            border: 1px solid #c0c0c0;
+        }
+        .browser-url-bar .lock-icon {
+            font-size: 0.625rem;
+            color: #2e844a;
+        }
+        .browser-viewport {
+            display: flex;
+            height: 680px;
+        }
+
+        /* ===== WS MOCKUP (Desktop left side) ===== */
+        .ws-mockup {
+            flex: 1;
+            overflow-y: auto;
+            background: #fff;
+            font-family: Georgia, 'Times New Roman', serif;
+            position: relative;
+        }
+        .ws-mockup::-webkit-scrollbar { width: 6px; }
+        .ws-mockup::-webkit-scrollbar-thumb { background: #c0c0c0; border-radius: 3px; }
+        .ws-promo-bar {
+            background: #2d2d2d;
+            color: #fff;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.625rem;
+            letter-spacing: 1px;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .ws-main-header {
+            padding: 1rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #e0ddd8;
+        }
+        .ws-logo-text {
+            font-size: 1.125rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: #2d2d2d;
+        }
+        .ws-nav-bar {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e0ddd8;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #2d2d2d;
+        }
+        .ws-nav-bar span {
+            cursor: default;
+        }
+        .ws-nav-bar .ws-nav-active {
+            color: #2e844a;
+            border-bottom: 2px solid #2e844a;
+            padding-bottom: 2px;
+        }
+        .ws-hero {
+            height: 280px;
+            background: linear-gradient(135deg, #e8e5de 0%, #d4cfc6 50%, #c7c0b5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .ws-hero-overlay { padding: 2rem; }
+        .ws-hero-title {
+            font-size: 1.75rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            color: #2d2d2d;
+            margin-bottom: 0.5rem;
+        }
+        .ws-hero-subtitle {
+            font-size: 0.8125rem;
+            color: #555;
+            margin-bottom: 1.25rem;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .ws-hero-cta {
+            background: #2d2d2d;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            cursor: default;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .ws-section {
+            padding: 1.5rem;
+        }
+        .ws-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #2d2d2d;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .ws-category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+        .ws-category-card {
+            aspect-ratio: 4/3;
+            background: linear-gradient(145deg, #f5f3ef, #e8e5de);
+            border: 1px solid #e0ddd8;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0.75rem;
+        }
+        .ws-category-card span {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #2d2d2d;
+            text-transform: uppercase;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .ws-product-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            padding: 0 1.5rem 1.5rem;
+        }
+        .ws-product-mock {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .ws-product-mock-img {
+            aspect-ratio: 1;
+            background: linear-gradient(145deg, #f5f3ef, #ebe8e2);
+            border: 1px solid #e0ddd8;
+        }
+        .ws-product-mock-name {
+            height: 10px;
+            background: #e0ddd8;
+            border-radius: 2px;
+            width: 85%;
+        }
+        .ws-product-mock-price {
+            height: 8px;
+            background: #d0cdc8;
+            border-radius: 2px;
+            width: 40%;
+        }
+
+        /* ===== DESKTOP SIDEBAR (Chat Widget) ===== */
+        .desktop-sidebar {
+            width: 360px;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #d0d0d0;
+            background: #ffffff;
+            flex-shrink: 0;
+            box-shadow: -4px 0 16px rgba(0,0,0,0.08);
+        }
+        .sidebar-chat-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            flex-shrink: 0;
+        }
+        .sidebar-brand-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .sidebar-brand-name {
+            flex: 1;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #181818;
+            white-space: nowrap;
+        }
+        .sidebar-chat-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+        }
+        .sidebar-action-btn {
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #706e6b;
+            font-size: 1.125rem;
+            line-height: 1;
+            transition: background 0.15s;
+        }
+        .sidebar-action-btn:hover {
+            background: #f3f3f3;
+        }
+        .desktop-sidebar .chat-container {
+            max-width: 100%;
+            flex: 1;
+            overflow-y: auto;
+            border-radius: 0;
+            background: #fff;
+        }
+        .sidebar-input-bar {
+            flex-shrink: 0;
+            padding: 0.625rem 0.75rem;
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+        }
+        .sidebar-input-field {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid #d0d0d0;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            color: #706e6b;
+            background: #fff;
+            outline: none;
+            font-family: inherit;
+        }
+        .sidebar-input-field:focus {
+            border-color: #0176d3;
+        }
+
+        /* Green FAB (chat trigger on WS site) */
+        .ws-chat-fab {
+            position: sticky;
+            bottom: 20px;
+            float: right;
+            margin-right: 20px;
+            margin-top: -68px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #2e844a;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: default;
+            z-index: 5;
+        }
+        .ws-chat-fab svg {
+            width: 22px;
+            height: 22px;
+            fill: #fff;
+        }
+
+        /* WS sister brands bar */
+        .ws-brands-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            padding: 0.375rem 1rem;
+            border-bottom: 1px solid #e0ddd8;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.5625rem;
+            color: #706e6b;
+        }
+        .ws-brands-bar span.ws-brand-active {
+            color: #2d2d2d;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        /* WS join bar */
+        .ws-join-bar {
+            background: #f5f3ef;
+            text-align: center;
+            padding: 0.375rem;
+            font-size: 0.5625rem;
+            color: #2d2d2d;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            border-bottom: 1px solid #e0ddd8;
+        }
+        .ws-join-bar a {
+            color: #0176d3;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ===== PREVIEW AREA DEVICE OVERRIDES ===== */
+        .preview-area.device-desktop {
+            flex-direction: row;
+            padding: 1.25rem;
+            align-items: stretch;
+            justify-content: center;
+        }
+        .preview-area.device-mobile {
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        /* ===== RIGHT RAIL (UX Commentary) ===== */
+        .ux-rail {
+            width: 340px;
+            min-width: 340px;
+            background: #ffffff;
+            border-left: 1px solid #e5e5e5;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.25s ease, min-width 0.25s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        .ux-rail.is-hidden {
+            display: none;
+        }
+        .ux-rail.collapsed {
+            width: 40px;
+            min-width: 40px;
+            border-left: 1px solid #e5e5e5;
+        }
+        .ux-rail.collapsed .ux-rail-header,
+        .ux-rail.collapsed .ux-rail-body {
+            display: none;
+        }
+        .ux-rail-toggle {
+            width: 100%;
+            height: 40px;
+            background: #ffffff;
+            border: none;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #706e6b;
+            font-size: 0.875rem;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+        .ux-rail-toggle:hover {
+            background: #f3f3f3;
+            color: #181818;
+        }
+        .ux-rail.collapsed .ux-rail-toggle {
+            border-bottom: none;
+            height: 48px;
+        }
+        .ux-rail-header {
+            padding: 1rem 1.25rem 0.75rem;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        .ux-rail-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #181818;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ux-rail-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 1.25rem;
+        }
+        .ux-explanations {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .ux-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 1.125rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e5e5e5;
+        }
+        .ux-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            margin-bottom: 0.625rem;
+            flex-wrap: wrap;
+        }
+        .ux-card-icon {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        .ux-card-title {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #181818;
+        }
+        .ux-card-label {
+            font-size: 0.5625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.125rem 0.4375rem;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+        .ux-card-label.placement { background: #eef4ff; color: #0176d3; }
+        .ux-card-label.disclosure { background: #f0fdf4; color: #059669; }
+        .ux-card-desc {
+            font-size: 0.75rem;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 0.875rem;
+        }
+        .ux-pro-con {
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+            margin-bottom: 0.875rem;
+        }
+        .ux-pro, .ux-con {
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.6875rem;
+            line-height: 1.6;
+        }
+        .ux-pro {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+        .ux-con {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+        .ux-pro-title, .ux-con-title {
+            font-weight: 700;
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.25rem;
+        }
+        .ux-pro-title { color: #059669; }
+        .ux-con-title { color: #dc2626; }
+        .ux-pro ul, .ux-con ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .ux-pro li, .ux-con li {
+            padding: 0.125rem 0;
+            padding-left: 1rem;
+            position: relative;
+            font-size: 0.6875rem;
+        }
+        .ux-pro li { color: #065f46; }
+        .ux-con li { color: #991b1b; }
+        .ux-pro li::before {
+            content: "\2713";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 700;
+        }
+        .ux-con li::before {
+            content: "\2717";
+            position: absolute;
+            left: 0;
+            color: #ef4444;
+            font-weight: 700;
+        }
+        .ux-best-practice {
+            background: #f0f9ff;
+            border-left: 3px solid #3b82f6;
+            padding: 0.625rem 0.875rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.6875rem;
+            color: #1e40af;
+            line-height: 1.5;
+        }
+        .ux-best-practice strong {
+            display: block;
+            margin-bottom: 0.125rem;
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
     </style>
 </head>
@@ -739,6 +1453,27 @@
                 <span class="panel-toggle-label">Live Prototype Mode</span>
             </label>
             <div class="panel-option-desc">View component in chat interface context</div>
+        </div>
+
+        <!-- Device Preview Toggle (visible only in prototype mode) -->
+        <div class="panel-section" id="deviceToggleSection" style="display: none;">
+            <div class="panel-section-title">Device Preview</div>
+
+            <label class="panel-option selected" data-device="mobile">
+                <input type="radio" name="device" value="mobile" checked>
+                <div class="panel-option-content">
+                    <div class="panel-option-label">Mobile</div>
+                    <div class="panel-option-desc">iPhone frame with chat interface</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-device="desktop">
+                <input type="radio" name="device" value="desktop">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">Desktop</div>
+                    <div class="panel-option-desc">Chat sidebar overlay on Williams-Sonoma.com</div>
+                </div>
+            </label>
         </div>
 
         <div class="panel-divider"></div>
@@ -781,40 +1516,40 @@
             <label class="panel-option selected" data-disclosure="1">
                 <input type="radio" name="disclosure" value="1" checked>
                 <div class="panel-option-content">
-                    <div class="panel-option-label">1: Expand Grid Below</div>
-                    <div class="panel-option-desc">Additional products appear in a 2-column grid below the carousel</div>
+                    <div class="panel-option-label">1: Stacked Carousels</div>
+                    <div class="panel-option-desc">Reveals additional carousels grouped by sub-category</div>
                 </div>
             </label>
 
             <label class="panel-option" data-disclosure="2">
                 <input type="radio" name="disclosure" value="2">
                 <div class="panel-option-content">
-                    <div class="panel-option-label">2: Carousel Extends</div>
-                    <div class="panel-option-desc">More products load into the carousel, adding extra dots</div>
+                    <div class="panel-option-label">2: Expand Grid Below</div>
+                    <div class="panel-option-desc">Additional products appear in a 2-column grid below the carousel</div>
                 </div>
             </label>
 
             <label class="panel-option" data-disclosure="3">
                 <input type="radio" name="disclosure" value="3">
                 <div class="panel-option-content">
-                    <div class="panel-option-label">3: Open Product Page</div>
-                    <div class="panel-option-desc">Opens Williams Sonoma category page in a new tab</div>
+                    <div class="panel-option-label">3: Carousel Extends</div>
+                    <div class="panel-option-desc">More products load into the carousel, adding extra dots</div>
                 </div>
             </label>
 
             <label class="panel-option" data-disclosure="4">
                 <input type="radio" name="disclosure" value="4">
                 <div class="panel-option-content">
-                    <div class="panel-option-label">4: Replace with List</div>
-                    <div class="panel-option-desc">Carousel switches to a compact scrollable list view</div>
+                    <div class="panel-option-label">4: Open Product Page</div>
+                    <div class="panel-option-desc">Opens Williams Sonoma category page in a new tab</div>
                 </div>
             </label>
 
             <label class="panel-option" data-disclosure="5">
                 <input type="radio" name="disclosure" value="5">
                 <div class="panel-option-content">
-                    <div class="panel-option-label">5: Stacked Carousels</div>
-                    <div class="panel-option-desc">Reveals additional carousels grouped by sub-category</div>
+                    <div class="panel-option-label">5: Replace with List</div>
+                    <div class="panel-option-desc">Carousel switches to a compact scrollable list view</div>
                 </div>
             </label>
         </div>
@@ -822,7 +1557,119 @@
 
     <!-- ===== RIGHT PREVIEW AREA ===== -->
     <div class="preview-area" id="previewArea">
-        <!-- Chat Mode -->
+        <!-- Mobile Phone Frame (Prototype Mode) -->
+        <div class="phone-frame" id="mobileFrame" style="display: none;">
+            <div class="phone-bezel">
+                <div class="phone-dynamic-island"></div>
+                <div class="phone-screen" id="mobileScreen">
+                    <!-- chatContainer is moved here in mobile mode -->
+                </div>
+                <div class="phone-home-indicator-wrap">
+                    <div class="phone-home-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Browser Frame (Prototype Mode) -->
+        <div class="desktop-frame" id="desktopFrame" style="display: none;">
+            <div class="browser-chrome">
+                <div class="browser-dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <div class="browser-url-bar">
+                    <span class="lock-icon">🔒</span>
+                    <span>www.williams-sonoma.com</span>
+                </div>
+            </div>
+            <div class="browser-viewport">
+                <!-- WS Site Mockup -->
+                <div class="ws-mockup">
+                    <div class="ws-brands-bar">
+                        <span class="ws-brand-active">Williams Sonoma</span>
+                        <span>Williams Sonoma Home</span>
+                        <span>Pottery Barn</span>
+                        <span>PB Kids</span>
+                        <span>PB Teen</span>
+                        <span>West Elm</span>
+                        <span>Rejuvenation</span>
+                        <span>Mark &amp; Graham</span>
+                        <span>GreenRow</span>
+                    </div>
+                    <div class="ws-join-bar">Williams Sonoma Reserve – Enjoy free shipping on eligible purchases* <a href="#">JOIN NOW →</a></div>
+                    <div class="ws-main-header">
+                        <div class="ws-logo-text">WILLIAMS SONOMA</div>
+                    </div>
+                    <div class="ws-nav-bar">
+                        <span>AI Sous Chef</span>
+                        <span>Lunar New Year</span>
+                        <span>Valentine's Day</span>
+                        <span>Easter</span>
+                        <span>Recipes &amp; Menus</span>
+                        <span>Entertaining</span>
+                    </div>
+                    <div class="ws-nav-bar" style="border-top: none; padding-top: 0;">
+                        <span>New</span>
+                        <span>Cookware</span>
+                        <span>Cook's Tools</span>
+                        <span>Cutlery</span>
+                        <span class="ws-nav-active">Electrics</span>
+                        <span>Bakeware</span>
+                        <span>Food</span>
+                        <span>Tabletop &amp; Bar</span>
+                        <span>Home Essentials</span>
+                    </div>
+                    <div class="ws-hero">
+                        <div class="ws-hero-overlay">
+                            <div class="ws-hero-title">THE ART OF COFFEE</div>
+                            <div class="ws-hero-subtitle">Discover our curated collection of premium coffee makers</div>
+                            <button class="ws-hero-cta">SHOP COFFEE</button>
+                        </div>
+                    </div>
+                    <div class="ws-section">
+                        <div class="ws-section-title">SHOP BY CATEGORY</div>
+                        <div class="ws-category-grid">
+                            <div class="ws-category-card"><span>Drip Coffee</span></div>
+                            <div class="ws-category-card"><span>Espresso</span></div>
+                            <div class="ws-category-card"><span>Grinders</span></div>
+                            <div class="ws-category-card"><span>Pour Over</span></div>
+                        </div>
+                    </div>
+                    <div class="ws-section">
+                        <div class="ws-section-title">TRENDING NOW</div>
+                    </div>
+                    <div class="ws-product-row">
+                        <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
+                        <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
+                        <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
+                        <div class="ws-product-mock"><div class="ws-product-mock-img"></div><div class="ws-product-mock-name"></div><div class="ws-product-mock-price"></div></div>
+                    </div>
+                    <!-- Green FAB chat trigger -->
+                    <button class="ws-chat-fab" aria-label="Open chat">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
+                    </button>
+                </div>
+
+                <!-- Chat Sidebar -->
+                <div class="desktop-sidebar" id="desktopSidebar">
+                    <div class="sidebar-chat-header">
+                        <img class="sidebar-brand-icon" src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="AI Sous Chef">
+                        <span class="sidebar-brand-name">AI Sous Chef</span>
+                        <div class="sidebar-chat-actions">
+                            <button class="sidebar-action-btn" title="More options">⋮</button>
+                            <button class="sidebar-action-btn" title="Minimize">⌄</button>
+                        </div>
+                    </div>
+                    <!-- chatContainer is moved here in desktop mode -->
+                    <div class="sidebar-input-bar" id="sidebarInputBar">
+                        <input type="text" class="sidebar-input-field" placeholder="Type your message..." disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Container (moved between frames via JS) -->
         <div class="chat-container" id="chatContainer" style="display: none;">
             <div class="chat-message user">
                 <div class="message-bubble">
@@ -831,7 +1678,7 @@
                 <div class="message-time">Just now</div>
             </div>
             <div class="chat-message agent">
-                <div class="chat-avatar">A</div>
+                <div class="chat-avatar"><img src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="Agent Olive"></div>
                 <div class="message-content">
                     <div class="preview-container" id="chatPreviewContainer">
                         <!-- Carousel will be cloned here -->
@@ -878,6 +1725,27 @@
 
             <!-- Disclosure 5: Stacked Carousels -->
             <div class="stacked-carousels" id="stackedCarousels"></div>
+
+            <!-- Conversation Nudge Chips (shown after See More) -->
+            <div class="nudge-chips-container" id="nudgeChips">
+                <div class="nudge-chips-label">Refine your picks</div>
+                <div class="nudge-chips-row" id="nudgeChipsRow"></div>
+            </div>
+
+            <!-- Conversation Thread (appended turns from nudge chips) -->
+            <div class="conversation-thread" id="conversationThread"></div>
+        </div>
+
+    </div>
+
+    <!-- ===== RIGHT RAIL (UX Commentary) ===== -->
+    <div class="ux-rail" id="uxRail">
+        <button class="ux-rail-toggle" id="uxRailToggle" title="Collapse UX commentary">&#x276F;</button>
+        <div class="ux-rail-header">
+            <div class="ux-rail-title">UX Commentary</div>
+        </div>
+        <div class="ux-rail-body">
+            <div class="ux-explanations" id="uxExplanations"></div>
         </div>
     </div>
 
@@ -1002,13 +1870,14 @@
 
         function getVisibleItems() {
             const items = [];
-            const totalItems = activePlacement === 'c' ? allProducts.length + 1 : allProducts.length;
+            // Only show See More card for placement C when NOT yet expanded
+            const showSeeMoreCard = activePlacement === 'c' && !isExpanded;
+            const totalItems = showSeeMoreCard ? allProducts.length + 1 : allProducts.length;
             
             for (let i = 0; i < itemsPerView; i++) {
                 const idx = (currentIndex + i) % totalItems;
                 
-                // If placement C is active and we're at the last position (See More card)
-                if (activePlacement === 'c' && idx === allProducts.length) {
+                if (showSeeMoreCard && idx === allProducts.length) {
                     items.push({ type: 'seeMore' });
                 } else {
                     items.push({ type: 'product', product: allProducts[idx] });
@@ -1066,8 +1935,9 @@
         }
 
         function renderCarousel() {
-            // Render in standalone container
-            const track = document.getElementById('carouselTrack');
+            // Render in standalone container (source of truth)
+            const standalone = document.getElementById('standaloneContainer');
+            const track = standalone ? standalone.querySelector('#carouselTrack') : document.getElementById('carouselTrack');
             if (track) {
                 const items = getVisibleItems();
                 track.innerHTML = items.map(item => 
@@ -1075,30 +1945,362 @@
                 ).join('');
             }
             
+            updateNavigation();
+            renderPagination();
+            
             // Also render in chat container if it exists and is visible
             const chatContainer = document.getElementById('chatContainer');
             if (chatContainer && chatContainer.style.display !== 'none') {
                 renderCarouselInContainer(document.getElementById('chatPreviewContainer'));
             }
-            
-            updateNavigation();
-            renderPagination();
         }
 
         function updateNavigation() {
-            document.getElementById('prevBtn').disabled = currentIndex === 0;
-            document.getElementById('nextBtn').disabled = currentIndex >= TOTAL_DOTS - 1;
+            const standalone = document.getElementById('standaloneContainer');
+            const prevBtn = standalone ? standalone.querySelector('#prevBtn') : document.getElementById('prevBtn');
+            const nextBtn = standalone ? standalone.querySelector('#nextBtn') : document.getElementById('nextBtn');
+            if (prevBtn) prevBtn.disabled = currentIndex === 0;
+            if (nextBtn) nextBtn.disabled = currentIndex >= TOTAL_DOTS - 1;
         }
 
         function renderPagination() {
-            document.getElementById('paginationDots').innerHTML = Array.from({ length: TOTAL_DOTS }, (_, i) =>
-                `<button class="pagination-dot ${i === currentIndex ? 'active' : ''}" onclick="goToSlide(${i})" aria-label="Go to slide ${i + 1}"></button>`
-            ).join('');
+            const standalone = document.getElementById('standaloneContainer');
+            const dots = standalone ? standalone.querySelector('#paginationDots') : document.getElementById('paginationDots');
+            if (dots) {
+                dots.innerHTML = Array.from({ length: TOTAL_DOTS }, (_, i) =>
+                    `<button class="pagination-dot ${i === currentIndex ? 'active' : ''}" onclick="goToSlide(${i})" aria-label="Go to slide ${i + 1}"></button>`
+                ).join('');
+            }
         }
 
         function handlePrevious() { if (currentIndex > 0) { currentIndex--; renderCarousel(); } }
         function handleNext() { if (currentIndex < TOTAL_DOTS - 1) { currentIndex++; renderCarousel(); } }
         function goToSlide(i) { if (i >= 0 && i < TOTAL_DOTS) { currentIndex = i; renderCarousel(); } }
+
+        // ===== HELPERS: always target standalone container (source of truth) =====
+        function getStandalone() {
+            return document.getElementById('standaloneContainer');
+        }
+        function $id(id) {
+            // Always resolve IDs from the standalone container to avoid duplicate-ID issues
+            return getStandalone().querySelector('#' + id);
+        }
+
+        // ===== CONVERSATION NUDGE CHIPS & THREAD =====
+        // Master chip definitions
+        const allChipDefs = [
+            { id: 'price_200',    label: 'Under $200',        icon: '💰', type: 'price',    value: 200 },
+            { id: 'price_400',    label: '$200\u2013$400',     icon: '💰', type: 'price',    value: 400 },
+            { id: 'price_999',    label: '$400+',             icon: '💰', type: 'price',    value: 999 },
+            { id: 'badge_top',    label: 'Top Rated',         icon: '⭐', type: 'badge',    value: 'topRated' },
+            { id: 'badge_best',   label: 'Best Sellers',      icon: '🔥', type: 'badge',    value: 'bestSeller' },
+            { id: 'badge_olive',  label: 'Olive Picks',       icon: '🫒', type: 'badge',    value: 'olivePick' },
+            { id: 'cat_espresso', label: 'Espresso Machines',  icon: '☕', type: 'category', value: 0, accent: true },
+            { id: 'cat_grinder',  label: 'Coffee Grinders',    icon: '⚙️', type: 'category', value: 1, accent: true },
+            { id: 'link_browse',  label: 'Browse All on WS',   icon: '→',  type: 'link',    accent: true },
+            { id: 'help_decide',  label: 'Help Me Decide',     icon: '💬', type: 'help',    accent: true },
+        ];
+
+        // Contextual commentary per chip type/value
+        const commentary = {
+            price_200:    'Here are some great coffee makers under $200:',
+            price_400:    'In the $200\u2013$400 range, these are popular picks:',
+            price_999:    'For premium coffee makers over $400:',
+            badge_top:    'Here are our top-rated coffee makers:',
+            badge_best:   'These are the current best sellers:',
+            badge_olive:  'Our experts recommend these Olive Picks:',
+            cat_espresso: 'Take a look at our espresso machines:',
+            cat_grinder:  'Here are some coffee grinders to pair with your maker:',
+            help_decide:  'Based on ratings and popularity, here are my top 3 recommendations:',
+        };
+
+        // Which chip IDs to offer NEXT after a given chip type
+        function getNextChipIds(usedChipId) {
+            const chip = allChipDefs.find(c => c.id === usedChipId);
+            if (!chip) return allChipDefs.filter(c => c.type !== 'link').map(c => c.id);
+            const usedType = chip.type;
+
+            if (usedType === 'price') {
+                return ['badge_top', 'badge_best', 'badge_olive', 'cat_espresso', 'cat_grinder', 'help_decide'];
+            } else if (usedType === 'badge') {
+                return ['price_200', 'price_400', 'price_999', 'cat_espresso', 'cat_grinder', 'help_decide'];
+            } else if (usedType === 'category') {
+                return ['price_200', 'price_400', 'price_999', 'badge_top', 'badge_best', 'badge_olive', 'help_decide'];
+            } else if (usedType === 'help') {
+                return ['price_200', 'price_400', 'price_999', 'link_browse'];
+            }
+            return allChipDefs.filter(c => c.type !== 'link').map(c => c.id);
+        }
+
+        // Resolve products for a chip
+        function getProductsForChip(chipDef) {
+            const allItems = [...mockProducts, ...extraProducts];
+            if (chipDef.type === 'price') {
+                let filtered;
+                if (chipDef.value === 200) filtered = allItems.filter(p => p.price < 200);
+                else if (chipDef.value === 400) filtered = allItems.filter(p => p.price >= 200 && p.price <= 400);
+                else filtered = allItems.filter(p => p.price > 400);
+                return filtered.length ? filtered : allItems;
+            } else if (chipDef.type === 'badge') {
+                const filtered = allItems.filter(p => p.badge === chipDef.value);
+                return filtered.length ? filtered : allItems;
+            } else if (chipDef.type === 'category') {
+                const cat = subCategories[chipDef.value];
+                return cat ? cat.products : [];
+            } else if (chipDef.type === 'help') {
+                const priority = { olivePick: 1, bestSeller: 2, topRated: 3 };
+                return [...allItems].sort((a, b) => (priority[a.badge] || 99) - (priority[b.badge] || 99)).slice(0, 3);
+            }
+            return [];
+        }
+
+        // Turn counter and state for unique IDs / carousels within turns
+        let turnCounter = 0;
+        const turnCarouselIndices = {};
+        const turnData = {};
+
+        // Render a set of chip buttons as HTML string
+        function renderChipButtons(chipIds, turnId) {
+            return chipIds.map(cid => {
+                const def = allChipDefs.find(c => c.id === cid);
+                if (!def) return '';
+                return `<button class="nudge-chip${def.accent ? ' accent' : ''}" data-chip-id="${def.id}" onclick="handleNudgeChip('${def.id}', ${turnId})" title="${def.label}"><span class="nudge-chip-icon">${def.icon}</span>${def.label}</button>`;
+            }).join('');
+        }
+
+        // Render the initial nudge chips row (after See More)
+        function renderNudgeChips() {
+            const row = $id('nudgeChipsRow');
+            if (!row) return;
+            const initialIds = allChipDefs.filter(c => c.type !== 'link').map(c => c.id);
+            row.innerHTML = renderChipButtons(initialIds, -1);
+        }
+
+        function showNudgeChips() {
+            const container = $id('nudgeChips');
+            if (container) {
+                turnCounter = 0;
+                renderNudgeChips();
+                container.classList.add('visible');
+            }
+        }
+
+        function hideNudgeChips() {
+            const container = $id('nudgeChips');
+            if (container) container.classList.remove('visible');
+        }
+
+        // ===== CORE: Append a conversation turn =====
+        function appendConversationTurn(chipId, sourceRowTurnId) {
+            const chipDef = allChipDefs.find(c => c.id === chipId);
+            if (!chipDef) return;
+
+            // 1. Disable all chips in the source row and highlight the clicked one
+            disableChipsInRow(sourceRowTurnId, chipId);
+
+            // 2. Resolve content
+            const text = commentary[chipId] || 'Here are some picks:';
+            const products = getProductsForChip(chipDef);
+            const nextChipIds = getNextChipIds(chipId);
+
+            // 3. Build turn HTML -- product layout matches selected disclosure
+            const currentTurnId = turnCounter++;
+            turnData[currentTurnId] = { products: products };
+            const productHtml = renderTurnProducts(products, currentTurnId);
+
+            const turnHtml = `
+                <div class="conversation-turn" data-turn-id="${currentTurnId}">
+                    <div class="turn-commentary">${text}</div>
+                    ${productHtml}
+                    ${nextChipIds.length ? `
+                    <div class="turn-nudge-row" data-turn-id="${currentTurnId}">
+                        <div class="turn-nudge-label">Keep exploring</div>
+                        ${renderChipButtons(nextChipIds, currentTurnId)}
+                    </div>` : ''}
+                </div>`;
+
+            // 4. Append to thread
+            const thread = $id('conversationThread');
+            if (thread) {
+                thread.insertAdjacentHTML('beforeend', turnHtml);
+            }
+
+            // 5. Sync chat and auto-scroll
+            syncChatContainer();
+            autoScrollToLatestTurn();
+        }
+
+        // Render products in the style matching the active disclosure pattern
+        function renderTurnProducts(products, turnId) {
+            if (activeDisclosure === '1' || activeDisclosure === '3') {
+                return renderTurnCarousel(products, turnId);
+            } else if (activeDisclosure === '5') {
+                return renderTurnList(products);
+            } else {
+                // Disclosure 2, 4: 2-column grid (default)
+                return `<div class="turn-grid">${products.map(renderProductCard).join('')}</div>`;
+            }
+        }
+
+        // Mini-carousel for turn (disclosures 1 & 3)
+        function renderTurnCarousel(products, turnId) {
+            const carouselId = `turnCarousel_${turnId}`;
+            turnCarouselIndices[carouselId] = 0;
+            const currentIdx = 0;
+            const totalDots = products.length;
+
+            const visibleProducts = [];
+            for (let i = 0; i < 2 && (currentIdx + i) < products.length; i++) {
+                visibleProducts.push(products[currentIdx + i]);
+            }
+
+            const dots = Array.from({ length: totalDots }, (_, i) =>
+                `<button class="sub-dot ${i === currentIdx ? 'active' : ''}" onclick="goToTurnCarouselSlide(${turnId}, ${i})" aria-label="Go to slide ${i + 1}"></button>`
+            ).join('');
+
+            const canGoNext = totalDots > 1;
+
+            return `
+                <div class="turn-carousel" data-turn-carousel="${turnId}">
+                    <div class="sub-carousel-wrapper">
+                        <button class="sub-carousel-nav-btn" onclick="turnCarouselPrev(${turnId})" disabled>&lsaquo;</button>
+                        <div class="sub-carousel-track">
+                            ${visibleProducts.map(renderProductCard).join('')}
+                        </div>
+                        <button class="sub-carousel-nav-btn" onclick="turnCarouselNext(${turnId})" ${canGoNext ? '' : 'disabled'}>&rsaquo;</button>
+                    </div>
+                    <div class="sub-carousel-nav">${dots}</div>
+                </div>`;
+        }
+
+        // Compact list for turn (disclosure 4)
+        function renderTurnList(products) {
+            return `<div class="turn-list">${products.map(p => `
+                <a href="${p.productUrl}" target="_blank" rel="noopener noreferrer" class="list-item">
+                    <img src="${p.imageUrl}" class="list-item-img" alt="${p.name}"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/52x52/fafaf9/706e6b?text=...';">
+                    <div class="list-item-info">
+                        <div class="list-item-name">${p.name}</div>
+                        <div class="list-item-price">${formatPrice(p.price)}</div>
+                    </div>
+                    <span class="list-item-arrow">&rsaquo;</span>
+                </a>`).join('')}</div>`;
+        }
+
+        // Turn-carousel navigation
+        function turnCarouselPrev(turnId) {
+            const carouselId = `turnCarousel_${turnId}`;
+            if ((turnCarouselIndices[carouselId] || 0) > 0) {
+                turnCarouselIndices[carouselId]--;
+                updateTurnCarousel(turnId);
+            }
+        }
+        function turnCarouselNext(turnId) {
+            const carouselId = `turnCarousel_${turnId}`;
+            const data = turnData[turnId];
+            if (!data) return;
+            const currentIdx = turnCarouselIndices[carouselId] || 0;
+            if (currentIdx < data.products.length - 1) {
+                turnCarouselIndices[carouselId] = currentIdx + 1;
+                updateTurnCarousel(turnId);
+            }
+        }
+        function goToTurnCarouselSlide(turnId, slideIndex) {
+            turnCarouselIndices[`turnCarousel_${turnId}`] = slideIndex;
+            updateTurnCarousel(turnId);
+        }
+        function updateTurnCarousel(turnId) {
+            const carouselId = `turnCarousel_${turnId}`;
+            const data = turnData[turnId];
+            if (!data) return;
+            const currentIdx = turnCarouselIndices[carouselId] || 0;
+            const products = data.products;
+            const totalDots = products.length;
+
+            const turnEl = getStandalone().querySelector(`.turn-carousel[data-turn-carousel="${turnId}"]`);
+            if (!turnEl) return;
+
+            // Update visible products
+            const visibleProducts = [];
+            for (let i = 0; i < 2 && (currentIdx + i) < products.length; i++) {
+                visibleProducts.push(products[currentIdx + i]);
+            }
+            const track = turnEl.querySelector('.sub-carousel-track');
+            if (track) track.innerHTML = visibleProducts.map(renderProductCard).join('');
+
+            // Update nav buttons
+            const buttons = turnEl.querySelectorAll('.sub-carousel-nav-btn');
+            if (buttons[0]) buttons[0].disabled = currentIdx === 0;
+            if (buttons[1]) buttons[1].disabled = currentIdx >= totalDots - 1;
+
+            // Update dots
+            turnEl.querySelectorAll('.sub-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIdx);
+            });
+
+            syncChatContainer();
+        }
+
+        // Expose globally
+        window.turnCarouselPrev = turnCarouselPrev;
+        window.turnCarouselNext = turnCarouselNext;
+        window.goToTurnCarouselSlide = goToTurnCarouselSlide;
+
+        function disableChipsInRow(turnId, selectedChipId) {
+            // turnId === -1 means the initial nudge chips row (#nudgeChipsRow)
+            let row;
+            if (turnId === -1) {
+                row = $id('nudgeChipsRow');
+            } else {
+                row = getStandalone().querySelector(`.turn-nudge-row[data-turn-id="${turnId}"]`);
+            }
+            if (!row) return;
+            row.querySelectorAll('.nudge-chip').forEach(btn => {
+                const cid = btn.getAttribute('data-chip-id');
+                if (cid === selectedChipId) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.disabled = true;
+                }
+            });
+        }
+
+        function autoScrollToLatestTurn() {
+            // Scroll the correct scrollable container so the new turn is visible
+            setTimeout(() => {
+                let target;
+                const mobileFrame = document.getElementById('mobileFrame');
+                const desktopFrame = document.getElementById('desktopFrame');
+
+                if (mobileFrame && mobileFrame.style.display !== 'none') {
+                    target = document.getElementById('mobileScreen');
+                } else if (desktopFrame && desktopFrame.style.display !== 'none') {
+                    target = document.getElementById('chatContainer');
+                } else {
+                    target = document.getElementById('previewArea');
+                }
+                if (target) {
+                    target.scrollTo({ top: target.scrollHeight, behavior: 'smooth' });
+                }
+            }, 50);
+        }
+
+        // Unified handler for all nudge chip clicks (initial row and turn rows)
+        function handleNudgeChip(chipId, turnId) {
+            const chipDef = allChipDefs.find(c => c.id === chipId);
+            if (!chipDef) return;
+
+            // Special case: external link doesn't append a turn
+            if (chipDef.type === 'link') {
+                window.open('https://www.williams-sonoma.com/shop/electrics/coffee-makers/', '_blank');
+                return;
+            }
+
+            appendConversationTurn(chipId, turnId);
+        }
+
+        // Make nudge handler global
+        window.handleNudgeChip = handleNudgeChip;
 
         // ===== SEE MORE HANDLER =====
         function handleSeeMore(e) {
@@ -1106,43 +2308,56 @@
                 e.preventDefault();
                 e.stopPropagation();
             }
+            if (isExpanded) return; // Already expanded, no-op
 
             if (activeDisclosure === '1') {
-                toggleExpandedGrid();
+                showStackedCarousels();
             } else if (activeDisclosure === '2') {
-                extendCarousel();
+                expandGrid();
             } else if (activeDisclosure === '3') {
-                window.open('https://www.williams-sonoma.com/shop/electrics/coffee-makers/', '_blank');
+                extendCarousel();
             } else if (activeDisclosure === '4') {
-                toggleListView();
+                window.open('https://www.williams-sonoma.com/shop/electrics/coffee-makers/', '_blank');
+                return; // Don't hide See More for external link
             } else if (activeDisclosure === '5') {
-                toggleStackedCarousels();
+                showListView();
+            }
+
+            // Hide See More and show nudge chips
+            isExpanded = true;
+            hideSeeMore();
+            showNudgeChips();
+            syncChatContainer();
+        }
+
+        function hideSeeMore() {
+            // Hide all See More elements
+            getStandalone().querySelectorAll('.see-more-a, .see-more-b').forEach(el => {
+                el.classList.add('is-hidden');
+            });
+            // For placement C, re-render carousel without the See More card
+            if (activePlacement === 'c') {
+                TOTAL_DOTS = allProducts.length;
+                currentIndex = Math.min(currentIndex, TOTAL_DOTS - 1);
+                renderCarousel();
             }
         }
 
-        // Disclosure 1: Expand grid
-        function toggleExpandedGrid() {
-            const grid = document.getElementById('expandedGrid');
-            isExpanded = !isExpanded;
-            if (isExpanded) {
-                grid.innerHTML = `
-                    <div class="expanded-grid-title">More Coffee Makers</div>
-                    <div class="expanded-grid-track">
-                        ${extraProducts.map(renderProductCard).join('')}
-                    </div>
-                    <a class="see-less-link" onclick="handleSeeLess()">See Less</a>
-                `;
-                grid.classList.add('visible');
-                updateSeeMoreText('See Less');
-                syncChatContainer();
-            } else {
-                handleSeeLess();
-            }
+        // Disclosure 1: Expand grid (one-way, no toggle)
+        function expandGrid() {
+            const grid = $id('expandedGrid');
+            grid.innerHTML = `
+                <div class="expanded-grid-title">More Coffee Makers</div>
+                <div class="expanded-grid-track">
+                    ${extraProducts.map(renderProductCard).join('')}
+                </div>
+            `;
+            grid.classList.add('visible');
         }
 
         function syncChatContainer() {
             const chatContainer = document.getElementById('chatContainer');
-            const standaloneContainer = document.getElementById('standaloneContainer');
+            const standaloneContainer = getStandalone();
             if (chatContainer && chatContainer.style.display !== 'none' && standaloneContainer) {
                 const chatPreviewContainer = document.getElementById('chatPreviewContainer');
                 if (chatPreviewContainer) {
@@ -1158,67 +2373,70 @@
                             el.setAttribute('href', '#');
                         }
                     });
+                    // Re-attach nudge chip handlers (initial row + all turn rows)
+                    chatPreviewContainer.querySelectorAll('.nudge-chip').forEach(chip => {
+                        const origOnclick = chip.getAttribute('onclick');
+                        if (origOnclick) chip.setAttribute('onclick', origOnclick);
+                    });
+                    // Re-attach carousel nav buttons
+                    const chatPrev = chatPreviewContainer.querySelector('#prevBtn');
+                    const chatNext = chatPreviewContainer.querySelector('#nextBtn');
+                    if (chatPrev) chatPrev.setAttribute('onclick', 'handlePrevious()');
+                    if (chatNext) chatNext.setAttribute('onclick', 'handleNext()');
+                    // Re-attach pagination dots
+                    chatPreviewContainer.querySelectorAll('.pagination-dot').forEach((dot, i) => {
+                        dot.setAttribute('onclick', `goToSlide(${i})`);
+                    });
+                    // Re-attach sub-carousel buttons
+                    chatPreviewContainer.querySelectorAll('.sub-carousel-nav-btn').forEach(btn => {
+                        const origOnclick = btn.getAttribute('onclick');
+                        if (origOnclick) btn.setAttribute('onclick', origOnclick);
+                    });
                 }
             }
         }
 
-        function handleSeeLess() {
+        // Internal reset (used when switching disclosure/placement, NOT exposed to user)
+        function resetDisclosure() {
             isExpanded = false;
-            document.getElementById('expandedGrid').classList.remove('visible');
-            document.getElementById('expandedGrid').innerHTML = '';
-            document.getElementById('scrollableList').classList.remove('visible');
-            document.getElementById('scrollableList').innerHTML = '';
-            document.getElementById('stackedCarousels').classList.remove('visible');
-            document.getElementById('stackedCarousels').innerHTML = '';
-            document.getElementById('carouselSection').classList.remove('hidden');
-            updateSeeMoreText('See More');
-            syncChatContainer();
+            turnCounter = 0;
+            Object.keys(turnCarouselIndices).forEach(k => delete turnCarouselIndices[k]);
+            Object.keys(turnData).forEach(k => delete turnData[k]);
+            $id('expandedGrid').classList.remove('visible');
+            $id('expandedGrid').innerHTML = '';
+            $id('scrollableList').classList.remove('visible');
+            $id('scrollableList').innerHTML = '';
+            $id('stackedCarousels').classList.remove('visible');
+            $id('stackedCarousels').innerHTML = '';
+            $id('carouselSection').classList.remove('hidden');
+            $id('conversationThread').innerHTML = '';
+            hideNudgeChips();
         }
 
-        // Disclosure 2: Extend carousel
+        // Disclosure 2: Extend carousel (one-way)
         function extendCarousel() {
-            if (!isExpanded) {
-                isExpanded = true;
-                allProducts = [...mockProducts, ...extraProducts];
-                TOTAL_DOTS = allProducts.length + (activePlacement === 'c' ? 1 : 0);
-                renderCarousel();
-                updateSeeMoreText('See Less');
-                syncChatContainer();
-            } else {
-                isExpanded = false;
-                allProducts = [...mockProducts];
-                TOTAL_DOTS = activePlacement === 'c' ? 6 : 5;
-                currentIndex = Math.min(currentIndex, TOTAL_DOTS - 1);
-                renderCarousel();
-                updateSeeMoreText('See More');
-                syncChatContainer();
-            }
+            allProducts = [...mockProducts, ...extraProducts];
+            TOTAL_DOTS = allProducts.length + (activePlacement === 'c' ? 1 : 0);
+            renderCarousel();
         }
 
-        // Disclosure 4: List view
-        function toggleListView() {
-            const list = document.getElementById('scrollableList');
-            isExpanded = !isExpanded;
-            if (isExpanded) {
-                const allItems = [...mockProducts, ...extraProducts];
-                list.innerHTML = allItems.map(p => `
-                    <a href="${p.productUrl}" target="_blank" rel="noopener noreferrer" class="list-item">
-                        <img src="${p.imageUrl}" class="list-item-img" alt="${p.name}"
-                             onerror="this.onerror=null; this.src='https://via.placeholder.com/52x52/fafaf9/706e6b?text=...';">
-                        <div class="list-item-info">
-                            <div class="list-item-name">${p.name}</div>
-                            <div class="list-item-price">${formatPrice(p.price)}</div>
-                        </div>
-                        <span class="list-item-arrow">&rsaquo;</span>
-                    </a>
-                `).join('') + `<a class="see-less-link" onclick="handleSeeLess()">See Less</a>`;
-                list.classList.add('visible');
-                document.getElementById('carouselSection').classList.add('hidden');
-                updateSeeMoreText('See Less');
-                syncChatContainer();
-            } else {
-                handleSeeLess();
-            }
+        // Disclosure 4: List view (one-way)
+        function showListView() {
+            const list = $id('scrollableList');
+            const allItems = [...mockProducts, ...extraProducts];
+            list.innerHTML = allItems.map(p => `
+                <a href="${p.productUrl}" target="_blank" rel="noopener noreferrer" class="list-item">
+                    <img src="${p.imageUrl}" class="list-item-img" alt="${p.name}"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/52x52/fafaf9/706e6b?text=...';">
+                    <div class="list-item-info">
+                        <div class="list-item-name">${p.name}</div>
+                        <div class="list-item-price">${formatPrice(p.price)}</div>
+                    </div>
+                    <span class="list-item-arrow">&rsaquo;</span>
+                </a>
+            `).join('');
+            list.classList.add('visible');
+            $id('carouselSection').classList.add('hidden');
         }
 
         // Disclosure 5: Stacked carousels
@@ -1290,38 +2508,29 @@
         }
         
         function updateSubCarousel(categoryIndex) {
-            const container = document.getElementById('stackedCarousels');
+            const container = $id('stackedCarousels');
             const cat = subCategories[categoryIndex];
             const carouselHtml = renderSubCarousel(categoryIndex, cat);
             // Find and replace the specific carousel
-            const carousels = container.querySelectorAll('> div');
+            const carousels = container.querySelectorAll(':scope > div');
             if (carousels[categoryIndex]) {
                 carousels[categoryIndex].outerHTML = carouselHtml;
             }
+            syncChatContainer();
         }
         
-        function toggleStackedCarousels() {
-            const container = document.getElementById('stackedCarousels');
-            if (!container) {
-                return;
-            }
-            
-            isExpanded = !isExpanded;
-            
-            if (isExpanded) {
-                // Reset all sub-carousel indices
-                subCategories.forEach((_, idx) => {
-                    subCarouselIndices[`subCarousel_${idx}`] = 0;
-                });
-                
-                container.innerHTML = subCategories.map((cat, idx) => renderSubCarousel(idx, cat)).join('') + 
-                    `<a class="see-less-link" onclick="handleSeeLess()">See Less</a>`;
-                container.classList.add('visible');
-                updateSeeMoreText('See Less');
-                syncChatContainer();
-            } else {
-                handleSeeLess();
-            }
+        // Disclosure 5: Stacked carousels (one-way)
+        function showStackedCarousels() {
+            const container = $id('stackedCarousels');
+            if (!container) return;
+
+            // Reset all sub-carousel indices
+            subCategories.forEach((_, idx) => {
+                subCarouselIndices[`subCarousel_${idx}`] = 0;
+            });
+
+            container.innerHTML = subCategories.map((cat, idx) => renderSubCarousel(idx, cat)).join('');
+            container.classList.add('visible');
         }
         
         // Make functions globally accessible
@@ -1329,68 +2538,61 @@
         window.subCarouselNext = subCarouselNext;
         window.goToSubCarouselSlide = goToSubCarouselSlide;
         window.handleSeeMore = handleSeeMore;
-        window.handleSeeLess = handleSeeLess;
-
-        function updateSeeMoreText(text) {
-            document.querySelectorAll('.see-more-link').forEach(el => el.textContent = text);
-            document.querySelectorAll('.see-more-button-full').forEach(el => el.textContent = text === 'See Less' ? 'See Less' : 'See More Items');
-            // Update See More card text if placement C is active
-            if (activePlacement === 'c') {
-                document.querySelectorAll('.see-more-card-text').forEach(el => el.textContent = text);
-            }
-        }
 
         // ===== PLACEMENT / DISCLOSURE TOGGLING =====
         function applyPlacement(value) {
+            // Reset any open disclosure
+            resetDisclosure();
+            allProducts = [...mockProducts];
+
             activePlacement = value;
             // Hide all placement elements (A, B are separate UI elements)
-            document.querySelectorAll('.see-more-a, .see-more-b').forEach(el => {
+            getStandalone().querySelectorAll('.see-more-a, .see-more-b').forEach(el => {
                 el.classList.add('is-hidden');
             });
-            // For C, the card is rendered in the carousel, so we don't need to hide/show it here
-            // But we do need to update TOTAL_DOTS
+
             if (value === 'c') {
                 TOTAL_DOTS = 6; // 5 products + 1 See More card
             } else {
-                TOTAL_DOTS = 5; // Just 5 products
+                TOTAL_DOTS = 5;
             }
             
             // Show selected placement element (A or B)
             if (value !== 'c') {
-                document.querySelectorAll(`.see-more-${value}`).forEach(el => {
+                getStandalone().querySelectorAll(`.see-more-${value}`).forEach(el => {
                     el.classList.remove('is-hidden');
                 });
             }
             
             // Reset carousel index if needed
-            if (currentIndex >= TOTAL_DOTS) {
-                currentIndex = TOTAL_DOTS - 1;
-            }
+            currentIndex = 0;
             
             // Update selected state in panel
             document.querySelectorAll('[data-placement]').forEach(opt => {
                 opt.classList.toggle('selected', opt.dataset.placement === value);
             });
             
-            // Re-render carousel with new placement
             renderCarousel();
-            
-            // Also update chat container if visible
-            const chatContainer = document.getElementById('chatContainer');
-            if (chatContainer && chatContainer.style.display !== 'none') {
-                renderCarouselInContainer(document.getElementById('chatPreviewContainer'));
-            }
+            syncChatContainer();
+            renderUxExplanations();
         }
 
         function applyDisclosure(value) {
             // Reset any open disclosure first
-            handleSeeLess();
-            isExpanded = false;
+            resetDisclosure();
             // Reset carousel to original products
             allProducts = [...mockProducts];
             // Set TOTAL_DOTS based on active placement
             TOTAL_DOTS = activePlacement === 'c' ? 6 : 5;
             currentIndex = 0;
+
+            // Re-show See More elements for the active placement
+            if (activePlacement !== 'c') {
+                getStandalone().querySelectorAll(`.see-more-${activePlacement}`).forEach(el => {
+                    el.classList.remove('is-hidden');
+                });
+            }
+
             renderCarousel();
 
             activeDisclosure = value;
@@ -1399,11 +2601,8 @@
                 opt.classList.toggle('selected', opt.dataset.disclosure === value);
             });
             
-            // Also update chat container if visible
-            const chatContainer = document.getElementById('chatContainer');
-            if (chatContainer && chatContainer.style.display !== 'none') {
-                renderCarouselInContainer(document.getElementById('chatPreviewContainer'));
-            }
+            syncChatContainer();
+            renderUxExplanations();
         }
 
         // Wire up radio buttons
@@ -1414,39 +2613,87 @@
             radio.addEventListener('change', () => applyDisclosure(radio.value));
         });
 
-        // ===== PROTOTYPE MODE TOGGLE =====
+        // ===== PROTOTYPE MODE & DEVICE TOGGLE =====
+        let activeDevice = 'mobile';
+
         function togglePrototypeMode(enabled) {
             const chatContainer = document.getElementById('chatContainer');
             const standaloneContainer = document.getElementById('standaloneContainer');
             const previewArea = document.getElementById('previewArea');
-            const chatPreviewContainer = document.getElementById('chatPreviewContainer');
-            
+            const deviceSection = document.getElementById('deviceToggleSection');
+
             if (enabled) {
-                // Clone the entire carousel structure into chat container
+                // Sync chat content from standalone into chatPreview
+                const chatPreviewContainer = document.getElementById('chatPreviewContainer');
                 chatPreviewContainer.innerHTML = standaloneContainer.innerHTML;
-                
-                chatContainer.style.display = 'flex';
+
                 standaloneContainer.style.display = 'none';
                 previewArea.classList.add('prototype-mode');
-                
-                // Re-render carousel in chat context to ensure everything is synced
-                setTimeout(() => {
-                    renderCarouselInContainer(chatPreviewContainer);
-                    // Animate message appearance after a brief delay
-                    setTimeout(() => {
-                        animateChatMessages();
-                    }, 200);
-                }, 50);
+                deviceSection.style.display = 'block';
+                renderUxExplanations();
+
+                // Apply the currently selected device mode
+                applyDeviceMode(activeDevice);
             } else {
+                // Move chatContainer back to previewArea (before standaloneContainer)
+                previewArea.insertBefore(chatContainer, standaloneContainer);
                 chatContainer.style.display = 'none';
-                standaloneContainer.style.display = 'block';
+
+                document.getElementById('mobileFrame').style.display = 'none';
+                document.getElementById('desktopFrame').style.display = 'none';
                 previewArea.classList.remove('prototype-mode');
-                
+                previewArea.classList.remove('device-mobile');
+                previewArea.classList.remove('device-desktop');
+
+                standaloneContainer.style.display = 'block';
+                deviceSection.style.display = 'none';
+
                 // Reset message animations
                 document.querySelectorAll('.chat-message').forEach(msg => {
                     msg.classList.remove('visible');
                 });
+
+                renderUxExplanations();
             }
+        }
+
+        function applyDeviceMode(mode) {
+            activeDevice = mode;
+            const chatContainer = document.getElementById('chatContainer');
+            const mobileFrame = document.getElementById('mobileFrame');
+            const desktopFrame = document.getElementById('desktopFrame');
+            const previewArea = document.getElementById('previewArea');
+
+            // Reset message animations before moving
+            document.querySelectorAll('.chat-message').forEach(msg => {
+                msg.classList.remove('visible');
+            });
+
+            // Update settings panel selection
+            document.querySelectorAll('[data-device]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.device === mode);
+            });
+
+            if (mode === 'mobile') {
+                desktopFrame.style.display = 'none';
+                document.getElementById('mobileScreen').appendChild(chatContainer);
+                chatContainer.style.display = 'flex';
+                mobileFrame.style.display = 'flex';
+                previewArea.classList.remove('device-desktop');
+                previewArea.classList.add('device-mobile');
+            } else {
+                mobileFrame.style.display = 'none';
+                const sidebar = document.getElementById('desktopSidebar');
+                const inputBar = document.getElementById('sidebarInputBar');
+                sidebar.insertBefore(chatContainer, inputBar);
+                chatContainer.style.display = 'flex';
+                desktopFrame.style.display = 'flex';
+                previewArea.classList.remove('device-mobile');
+                previewArea.classList.add('device-desktop');
+            }
+
+            syncChatContainer();
+            setTimeout(() => animateChatMessages(), 300);
         }
 
         function renderCarouselInContainer(container) {
@@ -1475,14 +2722,17 @@
             }
             
             // Update See More elements visibility based on active placement
-            if (activePlacement === 'a') {
-                container.querySelectorAll('.see-more-a').forEach(el => el.classList.remove('is-hidden'));
-                container.querySelectorAll('.see-more-b, .see-more-c').forEach(el => el.classList.add('is-hidden'));
-            } else if (activePlacement === 'b') {
-                container.querySelectorAll('.see-more-b').forEach(el => el.classList.remove('is-hidden'));
-                container.querySelectorAll('.see-more-a, .see-more-c').forEach(el => el.classList.add('is-hidden'));
-            } else if (activePlacement === 'c') {
-                container.querySelectorAll('.see-more-c').forEach(el => el.classList.remove('is-hidden'));
+            if (!isExpanded) {
+                if (activePlacement === 'a') {
+                    container.querySelectorAll('.see-more-a').forEach(el => el.classList.remove('is-hidden'));
+                    container.querySelectorAll('.see-more-b').forEach(el => el.classList.add('is-hidden'));
+                } else if (activePlacement === 'b') {
+                    container.querySelectorAll('.see-more-b').forEach(el => el.classList.remove('is-hidden'));
+                    container.querySelectorAll('.see-more-a').forEach(el => el.classList.add('is-hidden'));
+                } else {
+                    container.querySelectorAll('.see-more-a, .see-more-b').forEach(el => el.classList.add('is-hidden'));
+                }
+            } else {
                 container.querySelectorAll('.see-more-a, .see-more-b').forEach(el => el.classList.add('is-hidden'));
             }
         }
@@ -1492,7 +2742,7 @@
             messages.forEach((msg, idx) => {
                 setTimeout(() => {
                     msg.classList.add('visible');
-                }, idx * 500);
+                }, idx * 400);
             });
         }
 
@@ -1504,16 +2754,135 @@
             });
         }
 
+        // Wire up device toggle
+        document.querySelectorAll('input[name="device"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (document.getElementById('prototypeModeToggle').checked) {
+                    applyDeviceMode(radio.value);
+                }
+            });
+        });
+
+        // ===== UX EXPLANATIONS =====
+        const uxPlacementData = {
+            a: {
+                icon: '🔗', title: 'Header-Right Link',
+                desc: 'A subtle text link positioned in the header row beside the section title. Commonly used in editorial and content-heavy layouts.',
+                pros: ['Minimal footprint — doesn\'t disrupt layout', 'Familiar web pattern (inline links)', 'Space-efficient, works with any header style', 'Feels non-intrusive for returning visitors'],
+                cons: ['Low visibility — easy to overlook', 'Low affordance (text link vs. button)', 'Small tap target on mobile devices', 'May underperform for first-time users who need discovery'],
+                bestPractice: 'Best for power users or when "See More" is a secondary action. To improve discoverability, use a distinct color and underline on hover. Pair with a bolder disclosure on first visit.'
+            },
+            b: {
+                icon: '🔘', title: 'Full-Width Button',
+                desc: 'A prominent outlined button below the carousel navigation. This is a standard e-commerce CTA pattern with high visibility.',
+                pros: ['High visibility — impossible to miss', 'Strong affordance (button = clickable)', 'Large tap target on mobile', 'Clear, actionable CTA that drives engagement'],
+                cons: ['Takes extra vertical space', 'Can feel aggressive/pushy if overused', 'May compete visually with product cards', 'Adds visual weight below the carousel'],
+                bestPractice: 'Best overall choice for driving discovery. Place below the carousel where users naturally look after browsing. Use outlined (not filled) style to feel inviting without overpowering product cards.'
+            },
+            c: {
+                icon: '🃏', title: 'See More Card in Carousel',
+                desc: 'The "See More" action appears as the last card in the carousel, discoverable during the natural browsing flow.',
+                pros: ['Contextual — discovered while browsing', 'No extra UI elements or layout shifts', 'Maintains the carousel paradigm', 'Feels integrated and non-intrusive'],
+                cons: ['User may never scroll far enough to see it', 'Competes with product cards for attention', 'Breaks expectation that all cards are products', 'Pagination dots may not convey a CTA exists'],
+                bestPractice: 'Works well when users are actively engaged with the carousel. Consider adding a visual indicator (e.g., a different card color or arrow icon) to differentiate it from product cards.'
+            }
+        };
+
+        const uxDisclosureData = {
+            '1': {
+                icon: '📚', title: 'Stacked Carousels by Category',
+                desc: 'Reveals additional mini-carousels grouped by sub-category (e.g., Espresso Machines, Coffee Grinders). Each has its own navigation.',
+                pros: ['Organized by meaningful categories', 'Enables focused browsing within each group', 'Maintains carousel interaction per group', 'Feels like structured recommendations'],
+                cons: ['Takes significant vertical space', 'Can feel overwhelming (multiple carousels at once)', 'Harder to compare across categories', 'Each carousel requires its own navigation state'],
+                bestPractice: 'Best when products span distinct categories and the AI wants to suggest related product types. Limit to 2-3 sub-carousels. Each should have a clear heading explaining the recommendation logic.'
+            },
+            '2': {
+                icon: '📊', title: 'Expand Grid Below',
+                desc: 'Additional products appear in a 2-column grid below the carousel. The original carousel stays visible, providing context.',
+                pros: ['Preserves original carousel context', 'Users see both initial picks and expanded results', 'Familiar expand/collapse pattern', 'Good for progressive disclosure — conversation builds downward'],
+                cons: ['Pushes content below the fold', 'Increases page length and scrolling', 'User may lose their scroll position', 'Can feel overwhelming if too many items are shown'],
+                bestPractice: 'Best for progressive disclosure in conversational AI. Keeps context visible while revealing more. Limit expanded items to 4-6 to prevent overload. Pair with nudge chips for guided refinement.'
+            },
+            '3': {
+                icon: '➕', title: 'Carousel Extends',
+                desc: 'More products load directly into the carousel, adding extra pagination dots. The interaction pattern remains consistent.',
+                pros: ['Seamless — no layout changes', 'Consistent interaction (same carousel gestures)', 'Minimal cognitive load', 'No content shift or page reflow'],
+                cons: ['Hard to notice items were added', 'Old vs. new items are indistinguishable', 'Pagination dots can get crowded (7+ dots)', 'Feels less like "discovery" and more invisible'],
+                bestPractice: 'Works best when additions are modest (2-4 items). Signal the change clearly — e.g., briefly highlight the new dots or show a toast. Not ideal for large product sets.'
+            },
+            '4': {
+                icon: '↗️', title: 'Open Product Page',
+                desc: 'Clicking "See More" opens the Williams-Sonoma category page in a new tab. No in-chat expansion occurs.',
+                pros: ['Full e-commerce browsing experience', 'Leverages existing WS product pages', 'No additional chat complexity', 'Good for "browse at your own pace" users'],
+                cons: ['Leaves the conversation entirely', 'Loses AI context and history', 'User must navigate back to chat', 'Breaks the conversational flow the AI built'],
+                bestPractice: 'Use as a fallback "escape hatch" alongside another disclosure pattern, not as the primary action. Best when paired with a "Browse All" link at the end of a conversation, after initial guided exploration.'
+            },
+            '5': {
+                icon: '📋', title: 'Replace with List View',
+                desc: 'The carousel switches to a compact scrollable list view. Products are shown in a scannable row format with thumbnail, name, and price.',
+                pros: ['Compact — shows more products in less space', 'Highly scannable (one product per row)', 'Efficient for quick comparison', 'Good information density for mobile'],
+                cons: ['Loses visual richness of product images', 'Less engaging than card/carousel view', 'Removes the carousel (can\'t go back easily)', 'Not ideal for visual products (fashion, decor)'],
+                bestPractice: 'Best for utility-focused browsing where users want to quickly scan options (e.g., accessories, tools). For visually-driven categories (furniture, fashion), the grid or carousel is preferable.'
+            }
+        };
+
+        // ===== RIGHT RAIL TOGGLE =====
+        let uxRailOpen = true;
+        const uxRail = document.getElementById('uxRail');
+        const uxRailToggle = document.getElementById('uxRailToggle');
+        uxRailToggle.addEventListener('click', () => {
+            uxRailOpen = !uxRailOpen;
+            uxRail.classList.toggle('collapsed', !uxRailOpen);
+            uxRailToggle.innerHTML = uxRailOpen ? '&#x276F;' : '&#x276E;';
+            uxRailToggle.title = uxRailOpen ? 'Collapse UX commentary' : 'Expand UX commentary';
+        });
+
+        function renderUxExplanations() {
+            const panel = document.getElementById('uxExplanations');
+            if (!panel) return;
+            const rail = document.getElementById('uxRail');
+            const isProto = document.getElementById('prototypeModeToggle').checked;
+            if (isProto) { rail.classList.add('is-hidden'); return; }
+            rail.classList.remove('is-hidden');
+
+            const p = uxPlacementData[activePlacement];
+            const d = uxDisclosureData[activeDisclosure];
+
+            panel.innerHTML = renderUxCard(p, 'placement', 'Placement ' + activePlacement.toUpperCase()) + renderUxCard(d, 'disclosure', 'Disclosure ' + activeDisclosure);
+        }
+
+        function renderUxCard(data, type, label) {
+            return `
+            <div class="ux-card">
+                <div class="ux-card-header">
+                    <span class="ux-card-icon">${data.icon}</span>
+                    <span class="ux-card-title">${data.title}</span>
+                    <span class="ux-card-label ${type}">${label}</span>
+                </div>
+                <div class="ux-card-desc">${data.desc}</div>
+                <div class="ux-pro-con">
+                    <div class="ux-pro">
+                        <div class="ux-pro-title">Pros</div>
+                        <ul>${data.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+                    </div>
+                    <div class="ux-con">
+                        <div class="ux-con-title">Cons</div>
+                        <ul>${data.cons.map(c => `<li>${c}</li>`).join('')}</ul>
+                    </div>
+                </div>
+                <div class="ux-best-practice">
+                    <strong>UX Best Practice</strong>
+                    ${data.bestPractice}
+                </div>
+            </div>`;
+        }
+
         // ===== INIT =====
         // Initialize with default placement and disclosure
         applyPlacement('a');
-        applyDisclosure('1'); // Default to disclosure 1
+        applyDisclosure('1');
         renderCarousel();
-        
-        // Ensure See More link is visible for placement A
-        document.querySelectorAll('.see-more-a').forEach(el => {
-            el.classList.remove('is-hidden');
-        });
+        renderUxExplanations();
     </script>
 </body>
 </html>
