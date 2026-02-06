@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Personalized Picks Carousel</masterLabel>
+    <description>Carousel component displaying personalized product recommendations. Features horizontal scrolling with 5 pagination dots, product cards with SHOP NOW action, and OLIVE PICK badges.</description>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage,lightning__AppPage,lightning__HomePage">
+            <property name="title" type="String" default="Your Personalized Picks" label="Title" description="Main title displayed at the top of the carousel"/>
+            <property name="subtitle" type="String" label="Subtitle" description="Optional subtitle text displayed below the title"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

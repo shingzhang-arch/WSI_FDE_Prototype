@@ -1,0 +1,122 @@
+<template>
+    <div class="slds-m-around_medium personalized-picks-container">
+        <!-- Screen reader announcements -->
+        <div class="slds-assistive-text" data-announcer aria-live="polite" aria-atomic="true"></div>
+
+        <!-- Header Section -->
+        <div class="slds-m-bottom_medium">
+            <h2 class="slds-text-heading_large slds-text-color_default slds-m-bottom_x-small">
+                {title}
+            </h2>
+            <p class="slds-text-body_regular slds-text-color_weak">
+                {displaySubtitle}
+            </p>
+        </div>
+
+        <!-- Carousel Container -->
+        <div class="carousel-wrapper" role="region" aria-label="Product recommendations carousel">
+            <!-- Navigation Arrow: Previous -->
+            <lightning-button-icon
+                class="carousel-nav carousel-nav-prev"
+                icon-name="utility:chevronleft"
+                alternative-text="Previous products"
+                title="Previous products"
+                onclick={handlePrevious}
+                disabled={isPreviousDisabled}
+                variant="border-filled">
+            </lightning-button-icon>
+
+            <!-- Product Cards Container -->
+            <div class="carousel-track" role="list">
+                <template for:each={visibleProducts} for:item="product">
+                    <div key={product.id} class="product-card" role="listitem">
+                        <!-- Card Container -->
+                        <div class="slds-card slds-card_boundary product-card-inner">
+                            <!-- OLIVE PICK Badge (no icon) -->
+                            <template if:true={product.isOlivePick}>
+                                <div class="olive-pick-badge">
+                                    <span class="badge-text">OLIVE PICK</span>
+                                </div>
+                            </template>
+
+                            <!-- Product Image -->
+                            <div class="product-image-container">
+                                <template if:true={product.imageUrl}>
+                                    <img
+                                        src={product.imageUrl}
+                                        alt={product.name}
+                                        class="product-image"
+                                        loading="lazy"
+                                        onerror={handleImageError}>
+                                </template>
+                                <template if:false={product.imageUrl}>
+                                    <lightning-icon
+                                        icon-name="utility:image"
+                                        size="large"
+                                        class="product-image-placeholder"
+                                        alternative-text="Product image placeholder">
+                                    </lightning-icon>
+                                </template>
+                            </div>
+
+                            <!-- Product Details -->
+                            <div class="slds-card__body slds-card__body_inner product-details">
+                                <!-- Product Name -->
+                                <h3 class="slds-text-heading_small slds-text-color_default slds-m-bottom_x-small product-name">
+                                    {product.name}
+                                </h3>
+
+                                <!-- Price -->
+                                <div class="price-container slds-m-bottom_small">
+                                    <span class="slds-text-heading_small slds-text-color_default price-text">
+                                        {product.formattedPrice}
+                                    </span>
+                                </div>
+
+                                <!-- Action Button -->
+                                <div class="action-buttons">
+                                    <lightning-button
+                                        label="SHOP NOW"
+                                        variant="brand"
+                                        data-product-id={product.id}
+                                        onclick={handleShopNow}
+                                        class="btn-shop-now">
+                                    </lightning-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Navigation Arrow: Next -->
+            <lightning-button-icon
+                class="carousel-nav carousel-nav-next"
+                icon-name="utility:chevronright"
+                alternative-text="Next products"
+                title="Next products"
+                onclick={handleNext}
+                disabled={isNextDisabled}
+                variant="border-filled">
+            </lightning-button-icon>
+        </div>
+
+        <!-- Pagination Dots -->
+        <template if:true={paginationDots}>
+            <div class="pagination-container" role="tablist" aria-label="Carousel pagination">
+                <template for:each={paginationDots} for:item="dot">
+                    <button
+                        key={dot.index}
+                        type="button"
+                        class="pagination-dot"
+                        data-index={dot.index}
+                        onclick={goToSlide}
+                        aria-label="Go to slide {dot.index}"
+                        aria-selected={dot.isActive}
+                        role="tab">
+                    </button>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

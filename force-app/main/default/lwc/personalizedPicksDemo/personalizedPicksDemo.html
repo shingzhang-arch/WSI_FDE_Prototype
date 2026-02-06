@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title="Personalized Picks Demo" icon-name="utility:product">
+        <div class="slds-m-around_medium">
+            <p class="slds-text-body_regular slds-m-bottom_medium slds-text-color_weak">
+                This is a demo page showing the Personalized Picks Carousel component with mock product data.
+                All interactions are logged to the browser console.
+            </p>
+
+            <!-- Personalized Picks Component -->
+            <c-personalized-picks
+                title={carouselTitle}
+                subtitle={carouselSubtitle}
+                products={mockProducts}
+                onshopnow={handleShopNow}>
+            </c-personalized-picks>
+
+            <!-- Event Log Section (for development) -->
+            <div class="slds-m-top_large slds-box slds-theme_shade">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">Event Log</h3>
+                <p class="slds-text-body_small slds-text-color_weak">
+                    Open your browser's Developer Console (F12) to see event logs when you interact with the component.
+                </p>
+                <ul class="slds-list_dotted slds-m-top_small">
+                    <li>Click "SHOP NOW" to see shopnow events</li>
+                    <li>Use arrow buttons or pagination dots to navigate the carousel</li>
+                </ul>
+            </div>
+        </div>
+    </lightning-card>
+</template>

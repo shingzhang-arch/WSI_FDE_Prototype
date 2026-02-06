@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Picks Carousel - Preview</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.25.0/assets/styles/salesforce-lightning-design-system.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f3f3f3;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ===== LEFT PANEL ===== */
+        .settings-panel {
+            width: 280px;
+            min-width: 280px;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 1.25rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .panel-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #181818;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #181818;
+        }
+
+        .panel-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .panel-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s;
+            border: 1px solid transparent;
+        }
+
+        .panel-option:hover {
+            background-color: #f3f3f3;
+        }
+
+        .panel-option.selected {
+            background-color: #eef4ff;
+            border-color: #0176d3;
+        }
+
+        .panel-option input[type="radio"] {
+            margin-top: 2px;
+            accent-color: #0176d3;
+            flex-shrink: 0;
+        }
+
+        .panel-option-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+        }
+
+        .panel-option-label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #181818;
+        }
+
+        .panel-option-desc {
+            font-size: 0.6875rem;
+            color: #706e6b;
+            line-height: 1.4;
+        }
+
+        .panel-divider {
+            height: 1px;
+            background-color: #e5e5e5;
+        }
+
+        .panel-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        .panel-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0176d3;
+            cursor: pointer;
+        }
+
+        .panel-toggle-label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #181818;
+        }
+
+        /* ===== RIGHT PREVIEW AREA ===== */
+        .preview-area {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 2rem;
+            overflow-y: auto;
+            background-color: #f3f3f3;
+        }
+
+        .preview-container {
+            max-width: 375px;
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            margin-bottom: 0.75rem;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.25rem;
+        }
+
+        .header h2 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #181818;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 0.875rem;
+            color: #706e6b;
+        }
+
+        /* See More: Variation A - Header Right Link */
+        .see-more-link {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #0176d3;
+            text-decoration: none;
+            white-space: nowrap;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        .see-more-link:hover {
+            text-decoration: underline;
+        }
+        .see-more-link.is-hidden {
+            pointer-events: none;
+        }
+
+        /* See More: Variation B - Full-Width Button */
+        .see-more-button-full {
+            display: block;
+            width: 100%;
+            padding: 0.625rem;
+            margin-top: 0.75rem;
+            background: transparent;
+            border: 1px solid #181818;
+            color: #181818;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+        .see-more-button-full:hover {
+            background-color: #181818;
+            color: #ffffff;
+        }
+
+        /* See More: Variation C - Card in Carousel */
+        .see-more-card {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+        .see-more-card-inner {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid #e5e5e5;
+            border-radius: 0;
+            background-color: #fafaf9;
+            transition: box-shadow 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            text-align: center;
+        }
+        .see-more-card-inner:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f3f3f3;
+        }
+        .see-more-card-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #0176d3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .see-more-card-icon {
+            font-size: 1.5rem;
+            color: #0176d3;
+            margin-bottom: 0.5rem;
+        }
+
+
+        /* Utility class to hide elements */
+        .is-hidden {
+            display: none !important;
+        }
+
+        /* ===== CAROUSEL ===== */
+        .carousel-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .carousel-track {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            overflow: hidden;
+        }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .product-card-inner {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid #e5e5e5;
+            border-radius: 0;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .product-card-inner:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 0.375rem;
+            left: 0.375rem;
+            display: flex;
+            align-items: center;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            z-index: 1;
+        }
+
+        .badge-olive-pick {
+            background-color: #2e844a;
+        }
+
+        .badge-best-seller {
+            background-color: #0176d3;
+        }
+
+        .badge-top-rated {
+            background-color: #fe9339;
+        }
+
+        .badge-text {
+            font-size: 0.5625rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fafaf9;
+            overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #181818;
+            line-height: 1.3;
+            margin-bottom: 0.25rem;
+            font-size: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .price-text {
+            font-weight: 400;
+            color: #181818;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-buttons {
+            margin-top: auto;
+        }
+
+        .btn {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: none;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-shop-now {
+            background-color: #181818;
+            color: white;
+            text-transform: uppercase;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-radius: 0;
+        }
+        .btn-shop-now:hover {
+            background-color: #333333;
+        }
+
+        .carousel-nav {
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 1.5rem;
+            color: #181818;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+        .carousel-nav:hover:not(:disabled) { opacity: 0.7; }
+        .carousel-nav:disabled { color: #c9c9c9; cursor: not-allowed; }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pagination-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: none;
+            background-color: #c9c9c9;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        .pagination-dot:hover:not(.active) { background-color: #a0a0a0; }
+        .pagination-dot.active { background-color: #181818; }
+
+        /* ===== DISCLOSURE AREAS ===== */
+
+        /* Disclosure 1: Expand Grid Below */
+        .expanded-grid {
+            display: none;
+            margin-top: 1rem;
+            border-top: 1px solid #e5e5e5;
+            padding-top: 0.75rem;
+        }
+        .expanded-grid.visible {
+            display: block;
+        }
+        .expanded-grid-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.5rem;
+        }
+        .expanded-grid-track {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        .see-less-link {
+            display: block;
+            text-align: center;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #0176d3;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .see-less-link:hover { text-decoration: underline; }
+
+        /* Disclosure 4: Scrollable List */
+        .scrollable-list {
+            display: none;
+            margin-top: 0rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .scrollable-list.visible {
+            display: block;
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.1s;
+        }
+        .list-item:hover {
+            background-color: #fafaf9;
+        }
+        .list-item-img {
+            width: 52px;
+            height: 52px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background-color: #fafaf9;
+        }
+        .list-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .list-item-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #181818;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .list-item-price {
+            font-size: 0.6875rem;
+            color: #706e6b;
+            margin-top: 0.125rem;
+        }
+        .list-item-arrow {
+            color: #c9c9c9;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        /* Disclosure 5: Stacked Carousels */
+        .stacked-carousels {
+            display: none;
+            margin-top: 1rem;
+            border-top: 1px solid #e5e5e5;
+            padding-top: 0.75rem;
+        }
+        .stacked-carousels.visible {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .sub-carousel-header {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #181818;
+            margin-bottom: 0.5rem;
+        }
+        .sub-carousel-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .sub-carousel-track {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            flex: 1;
+        }
+        .sub-carousel-nav-btn {
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: #181818;
+            padding: 0.25rem;
+            transition: opacity 0.2s;
+        }
+        .sub-carousel-nav-btn:hover:not(:disabled) {
+            opacity: 0.7;
+        }
+        .sub-carousel-nav-btn:disabled {
+            color: #c9c9c9;
+            cursor: not-allowed;
+        }
+        .sub-carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.375rem;
+            margin-top: 0.5rem;
+        }
+        .sub-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            border: none;
+            background-color: #c9c9c9;
+            padding: 0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .sub-dot:hover:not(.active) {
+            background-color: #a0a0a0;
+        }
+        .sub-dot.active { 
+            background-color: #181818; 
+        }
+
+        /* Carousel section that hides/shows */
+        .carousel-section {
+            /* visible by default */
+        }
+        .carousel-section.hidden {
+            display: none;
+        }
+
+        /* ===== CHAT INTERFACE ===== */
+        .prototype-mode {
+            background-color: #f8f9fa;
+        }
+
+        .chat-container {
+            max-width: 375px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            min-height: 100%;
+        }
+
+        .chat-message {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            animation: messageSlideIn 0.3s ease-out;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .chat-message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            align-items: flex-end;
+        }
+
+        .chat-message.agent {
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 85%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .chat-message.user .message-bubble {
+            background-color: #0176d3;
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.agent .message-bubble {
+            background-color: #ffffff;
+            color: #181818;
+            border: 1px solid #e5e5e5;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .message-text {
+            font-size: 0.875rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .message-time {
+            font-size: 0.6875rem;
+            color: #706e6b;
+            padding: 0 0.5rem;
+        }
+
+        .chat-message.agent {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .chat-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #0176d3;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-message.agent .message-content .preview-container {
+            margin: 0;
+            box-shadow: none;
+            border: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== LEFT SETTINGS PANEL ===== -->
+    <div class="settings-panel">
+        <div class="panel-title">Variation Controls</div>
+
+        <!-- Live Prototype Mode Toggle -->
+        <div class="panel-section">
+            <label class="panel-toggle">
+                <input type="checkbox" id="prototypeModeToggle">
+                <span class="panel-toggle-label">Live Prototype Mode</span>
+            </label>
+            <div class="panel-option-desc">View component in chat interface context</div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Placement Variations -->
+        <div class="panel-section">
+            <div class="panel-section-title">See More Placement</div>
+
+            <label class="panel-option selected" data-placement="a">
+                <input type="radio" name="placement" value="a" checked>
+                <div class="panel-option-content">
+                    <div class="panel-option-label">A: Header-Right Link</div>
+                    <div class="panel-option-desc">Blue text link next to "Coffee Makers" heading</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-placement="b">
+                <input type="radio" name="placement" value="b">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">B: Full-Width Button</div>
+                    <div class="panel-option-desc">Outlined button below the carousel navigation</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-placement="c">
+                <input type="radio" name="placement" value="c">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">C: See More Card</div>
+                    <div class="panel-option-desc">"See More" appears as the last card in the carousel</div>
+                </div>
+            </label>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Disclosure Variations -->
+        <div class="panel-section">
+            <div class="panel-section-title">Disclosure Pattern</div>
+
+            <label class="panel-option selected" data-disclosure="1">
+                <input type="radio" name="disclosure" value="1" checked>
+                <div class="panel-option-content">
+                    <div class="panel-option-label">1: Expand Grid Below</div>
+                    <div class="panel-option-desc">Additional products appear in a 2-column grid below the carousel</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-disclosure="2">
+                <input type="radio" name="disclosure" value="2">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">2: Carousel Extends</div>
+                    <div class="panel-option-desc">More products load into the carousel, adding extra dots</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-disclosure="3">
+                <input type="radio" name="disclosure" value="3">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">3: Open Product Page</div>
+                    <div class="panel-option-desc">Opens Williams Sonoma category page in a new tab</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-disclosure="4">
+                <input type="radio" name="disclosure" value="4">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">4: Replace with List</div>
+                    <div class="panel-option-desc">Carousel switches to a compact scrollable list view</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-disclosure="5">
+                <input type="radio" name="disclosure" value="5">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">5: Stacked Carousels</div>
+                    <div class="panel-option-desc">Reveals additional carousels grouped by sub-category</div>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <!-- ===== RIGHT PREVIEW AREA ===== -->
+    <div class="preview-area" id="previewArea">
+        <!-- Chat Mode -->
+        <div class="chat-container" id="chatContainer" style="display: none;">
+            <div class="chat-message user">
+                <div class="message-bubble">
+                    <div class="message-text">Can you recommend a good coffee maker?</div>
+                </div>
+                <div class="message-time">Just now</div>
+            </div>
+            <div class="chat-message agent">
+                <div class="chat-avatar">A</div>
+                <div class="message-content">
+                    <div class="preview-container" id="chatPreviewContainer">
+                        <!-- Carousel will be cloned here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Standalone Mode (current) -->
+        <div class="preview-container" id="standaloneContainer">
+            <!-- Header Section -->
+            <div class="header">
+                <div class="header-row">
+                    <h2>Coffee Makers</h2>
+                    <!-- Placement A: Header-Right Link -->
+                    <a href="#" class="see-more-link see-more-a is-hidden" onclick="handleSeeMore(event)">See More</a>
+                </div>
+                <p>Curated just for you &bull; 5 items</p>
+            </div>
+
+            <!-- Carousel Section (can be hidden by Disclosure 4) -->
+            <div class="carousel-section" id="carouselSection">
+                <!-- Carousel Container -->
+                <div class="carousel-wrapper">
+                    <div class="carousel-track" id="carouselTrack"></div>
+                </div>
+
+                <!-- Carousel Navigation -->
+                <div class="carousel-navigation">
+                    <button class="carousel-nav" id="prevBtn" onclick="handlePrevious()" disabled>&lsaquo;</button>
+                    <div class="pagination-container" id="paginationDots"></div>
+                    <button class="carousel-nav" id="nextBtn" onclick="handleNext()">&rsaquo;</button>
+                </div>
+            </div>
+
+            <!-- Placement B: Full-Width Button (below navigation) -->
+            <a href="#" class="see-more-button-full see-more-b is-hidden" onclick="handleSeeMore(event)">See More Items</a>
+
+            <!-- Disclosure 1: Expanded Grid -->
+            <div class="expanded-grid" id="expandedGrid"></div>
+
+            <!-- Disclosure 4: Scrollable List -->
+            <div class="scrollable-list" id="scrollableList"></div>
+
+            <!-- Disclosure 5: Stacked Carousels -->
+            <div class="stacked-carousels" id="stackedCarousels"></div>
+        </div>
+    </div>
+
+    <script>
+        // ===== PRODUCT DATA =====
+        const mockProducts = [
+            {
+                id: '1',
+                name: 'Breville The Luxe Brewer with Thermal Carafe',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg',
+                price: 349.95,
+                badge: 'olivePick',
+                productUrl: 'https://www.williams-sonoma.com/products/breville-the-luxe-brewer-with-thermal-carafe/'
+            },
+            {
+                id: '2',
+                name: 'Fellow Aiden Coffee Brewer',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg',
+                price: 299.95,
+                badge: 'bestSeller',
+                productUrl: 'https://www.williams-sonoma.com/products/fellow-aiden-coffee-brewer/'
+            },
+            {
+                id: '3',
+                name: 'Cafe Specialty Drip Coffee Maker with Glass Carafe',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg',
+                price: 199.95,
+                badge: 'topRated',
+                productUrl: 'https://www.williams-sonoma.com/products/cafe-specialty-drip-coffee-maker-with-glass/'
+            },
+            {
+                id: '4',
+                name: 'Moccamaster by Technivorm KBGV Select Coffee Maker, 10-cup',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202414/0036/moccamaster-by-technivorm-kbgv-select-10-cup-coffee-maker-o.jpg',
+                price: 369.95,
+                badge: 'olivePick',
+                productUrl: 'https://www.williams-sonoma.com/products/technivorm-moccamaster-kgb-select/'
+            },
+            {
+                id: '5',
+                name: 'OXO Brew 12-Cup Coffee Maker',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg',
+                price: 199.95,
+                badge: 'bestSeller',
+                productUrl: 'https://www.williams-sonoma.com/products/oxo-brew-12-cup-coffee-maker-with-podless-single-serve-function/'
+            }
+        ];
+
+        // Extra products for disclosure patterns
+        const extraProducts = [
+            {
+                id: '6',
+                name: 'Cuisinart Touchscreen 14-Cup Coffee Maker',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202514/0010/cuisinart-touchscreen-14-cup-coffee-maker-o.jpg',
+                price: 129.95,
+                badge: 'topRated',
+                productUrl: 'https://www.williams-sonoma.com/products/cuisinart-touchscreen-12-cup-coffee-maker/'
+            },
+            {
+                id: '7',
+                name: 'De\'Longhi TrueBrew Automatic Coffee Maker',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202509/0002/delonghi-truebrew-automatic-coffee-maker-with-bean-extract-1-o.jpg',
+                price: 329.95,
+                badge: 'bestSeller',
+                productUrl: 'https://www.williams-sonoma.com/products/delonghi-truebrew-auto-coffee-with-bean-extract-carafe/'
+            },
+            {
+                id: '8',
+                name: 'Cuisinart Coffee-On-Demand 12-Cup Programmable',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202406/0092/img7o.jpg',
+                price: 99.95,
+                badge: null,
+                productUrl: 'https://www.williams-sonoma.com/products/cuisinart-coffee-on-demand-coffee-maker/'
+            },
+            {
+                id: '9',
+                name: 'Open Kitchen Programmable Coffee Maker, 12-cup',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg',
+                price: 59.95,
+                badge: 'topRated',
+                productUrl: 'https://www.williams-sonoma.com/products/open-kitchen-by-ws-programmable-coffee-maker/'
+            }
+        ];
+
+        // Sub-category data for Disclosure 5
+        const subCategories = [
+            {
+                title: 'Espresso Machines',
+                products: [
+                    { id: 'e1', name: 'Breville Barista Express', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg', price: 749.95, badge: 'bestSeller', productUrl: '#' },
+                    { id: 'e2', name: 'De\'Longhi La Specialista', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202509/0002/delonghi-truebrew-automatic-coffee-maker-with-bean-extract-1-o.jpg', price: 599.95, badge: 'topRated', productUrl: '#' },
+                    { id: 'e3', name: 'Nespresso Vertuo Next', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202414/0036/moccamaster-by-technivorm-kbgv-select-10-cup-coffee-maker-o.jpg', price: 199.95, badge: 'olivePick', productUrl: '#' },
+                    { id: 'e4', name: 'JURA E8 Automatic Coffee Center', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg', price: 1499.95, badge: null, productUrl: '#' },
+                    { id: 'e5', name: 'SMEG Espresso Machine', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg', price: 449.95, badge: 'bestSeller', productUrl: '#' }
+                ]
+            },
+            {
+                title: 'Coffee Grinders',
+                products: [
+                    { id: 'g1', name: 'Baratza Encore ESP Grinder', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg', price: 199.95, badge: 'topRated', productUrl: '#' },
+                    { id: 'g2', name: 'Fellow Ode Brew Grinder Gen 2', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg', price: 345.00, badge: 'olivePick', productUrl: '#' },
+                    { id: 'g3', name: 'Comandante C40 Hand Grinder', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg', price: 275.00, badge: 'bestSeller', productUrl: '#' },
+                    { id: 'g4', name: 'Breville Smart Grinder Pro', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg', price: 199.95, badge: 'topRated', productUrl: '#' },
+                    { id: 'g5', name: '1Zpresso J-Max Manual Grinder', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg', price: 199.00, badge: 'olivePick', productUrl: '#' }
+                ]
+            }
+        ];
+
+        // ===== STATE =====
+        let currentIndex = 0;
+        let itemsPerView = 2;
+        let TOTAL_DOTS = 5;
+        let activePlacement = 'a';
+        let activeDisclosure = '1';
+        let isExpanded = false;
+        let allProducts = [...mockProducts]; // used for disclosure 2
+
+        // ===== CAROUSEL RENDERING =====
+        function formatPrice(price) {
+            return `$${price.toFixed(2)}`;
+        }
+
+        function getVisibleItems() {
+            const items = [];
+            const totalItems = activePlacement === 'c' ? allProducts.length + 1 : allProducts.length;
+            
+            for (let i = 0; i < itemsPerView; i++) {
+                const idx = (currentIndex + i) % totalItems;
+                
+                // If placement C is active and we're at the last position (See More card)
+                if (activePlacement === 'c' && idx === allProducts.length) {
+                    items.push({ type: 'seeMore' });
+                } else {
+                    items.push({ type: 'product', product: allProducts[idx] });
+                }
+            }
+            return items;
+        }
+
+        function renderBadge(badge) {
+            if (!badge) return '';
+            
+            const badgeConfig = {
+                olivePick: { text: 'OLIVE PICK', class: 'badge-olive-pick' },
+                bestSeller: { text: 'BEST SELLER', class: 'badge-best-seller' },
+                topRated: { text: 'TOP RATED', class: 'badge-top-rated' }
+            };
+            
+            const config = badgeConfig[badge];
+            if (!config) return '';
+            
+            return `<div class="product-badge ${config.class}"><span class="badge-text">${config.text}</span></div>`;
+        }
+
+        function renderProductCard(product) {
+            // Support both old isOlivePick and new badge property for backward compatibility
+            const badge = product.badge || (product.isOlivePick ? 'olivePick' : null);
+            
+            return `
+                <div class="product-card">
+                    <div class="product-card-inner">
+                        ${renderBadge(badge)}
+                        <div class="product-image-container">
+                            <img src="${product.imageUrl}" alt="${product.name}" class="product-image"
+                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/400x400/fafaf9/706e6b?text=Coffee+Maker';">
+                        </div>
+                        <div class="product-details">
+                            <h3 class="product-name">${product.name}</h3>
+                            <div class="price-text">${formatPrice(product.price)}</div>
+                            <div class="action-buttons">
+                                <a href="${product.productUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-shop-now">SHOP NOW</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function renderSeeMoreCard() {
+            return `
+                <div class="see-more-card see-more-c">
+                    <div class="see-more-card-inner" onclick="handleSeeMore(event)">
+                        <div class="see-more-card-icon">&rsaquo;</div>
+                        <div class="see-more-card-text">See More</div>
+                    </div>
+                </div>`;
+        }
+
+        function renderCarousel() {
+            // Render in standalone container
+            const track = document.getElementById('carouselTrack');
+            if (track) {
+                const items = getVisibleItems();
+                track.innerHTML = items.map(item => 
+                    item.type === 'seeMore' ? renderSeeMoreCard() : renderProductCard(item.product)
+                ).join('');
+            }
+            
+            // Also render in chat container if it exists and is visible
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer && chatContainer.style.display !== 'none') {
+                renderCarouselInContainer(document.getElementById('chatPreviewContainer'));
+            }
+            
+            updateNavigation();
+            renderPagination();
+        }
+
+        function updateNavigation() {
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex >= TOTAL_DOTS - 1;
+        }
+
+        function renderPagination() {
+            document.getElementById('paginationDots').innerHTML = Array.from({ length: TOTAL_DOTS }, (_, i) =>
+                `<button class="pagination-dot ${i === currentIndex ? 'active' : ''}" onclick="goToSlide(${i})" aria-label="Go to slide ${i + 1}"></button>`
+            ).join('');
+        }
+
+        function handlePrevious() { if (currentIndex > 0) { currentIndex--; renderCarousel(); } }
+        function handleNext() { if (currentIndex < TOTAL_DOTS - 1) { currentIndex++; renderCarousel(); } }
+        function goToSlide(i) { if (i >= 0 && i < TOTAL_DOTS) { currentIndex = i; renderCarousel(); } }
+
+        // ===== SEE MORE HANDLER =====
+        function handleSeeMore(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            if (activeDisclosure === '1') {
+                toggleExpandedGrid();
+            } else if (activeDisclosure === '2') {
+                extendCarousel();
+            } else if (activeDisclosure === '3') {
+                window.open('https://www.williams-sonoma.com/shop/electrics/coffee-makers/', '_blank');
+            } else if (activeDisclosure === '4') {
+                toggleListView();
+            } else if (activeDisclosure === '5') {
+                toggleStackedCarousels();
+            }
+        }
+
+        // Disclosure 1: Expand grid
+        function toggleExpandedGrid() {
+            const grid = document.getElementById('expandedGrid');
+            isExpanded = !isExpanded;
+            if (isExpanded) {
+                grid.innerHTML = `
+                    <div class="expanded-grid-title">More Coffee Makers</div>
+                    <div class="expanded-grid-track">
+                        ${extraProducts.map(renderProductCard).join('')}
+                    </div>
+                    <a class="see-less-link" onclick="handleSeeLess()">See Less</a>
+                `;
+                grid.classList.add('visible');
+                updateSeeMoreText('See Less');
+                syncChatContainer();
+            } else {
+                handleSeeLess();
+            }
+        }
+
+        function syncChatContainer() {
+            const chatContainer = document.getElementById('chatContainer');
+            const standaloneContainer = document.getElementById('standaloneContainer');
+            if (chatContainer && chatContainer.style.display !== 'none' && standaloneContainer) {
+                const chatPreviewContainer = document.getElementById('chatPreviewContainer');
+                if (chatPreviewContainer) {
+                    chatPreviewContainer.innerHTML = standaloneContainer.innerHTML;
+                    renderCarouselInContainer(chatPreviewContainer);
+                    
+                    // Re-attach event handlers to cloned See More links
+                    chatPreviewContainer.querySelectorAll('.see-more-link, .see-more-button-full, .see-more-card-inner').forEach(el => {
+                        if (el.classList.contains('see-more-card-inner')) {
+                            el.onclick = handleSeeMore;
+                        } else {
+                            el.setAttribute('onclick', 'handleSeeMore(event)');
+                            el.setAttribute('href', '#');
+                        }
+                    });
+                }
+            }
+        }
+
+        function handleSeeLess() {
+            isExpanded = false;
+            document.getElementById('expandedGrid').classList.remove('visible');
+            document.getElementById('expandedGrid').innerHTML = '';
+            document.getElementById('scrollableList').classList.remove('visible');
+            document.getElementById('scrollableList').innerHTML = '';
+            document.getElementById('stackedCarousels').classList.remove('visible');
+            document.getElementById('stackedCarousels').innerHTML = '';
+            document.getElementById('carouselSection').classList.remove('hidden');
+            updateSeeMoreText('See More');
+            syncChatContainer();
+        }
+
+        // Disclosure 2: Extend carousel
+        function extendCarousel() {
+            if (!isExpanded) {
+                isExpanded = true;
+                allProducts = [...mockProducts, ...extraProducts];
+                TOTAL_DOTS = allProducts.length + (activePlacement === 'c' ? 1 : 0);
+                renderCarousel();
+                updateSeeMoreText('See Less');
+                syncChatContainer();
+            } else {
+                isExpanded = false;
+                allProducts = [...mockProducts];
+                TOTAL_DOTS = activePlacement === 'c' ? 6 : 5;
+                currentIndex = Math.min(currentIndex, TOTAL_DOTS - 1);
+                renderCarousel();
+                updateSeeMoreText('See More');
+                syncChatContainer();
+            }
+        }
+
+        // Disclosure 4: List view
+        function toggleListView() {
+            const list = document.getElementById('scrollableList');
+            isExpanded = !isExpanded;
+            if (isExpanded) {
+                const allItems = [...mockProducts, ...extraProducts];
+                list.innerHTML = allItems.map(p => `
+                    <a href="${p.productUrl}" target="_blank" rel="noopener noreferrer" class="list-item">
+                        <img src="${p.imageUrl}" class="list-item-img" alt="${p.name}"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/52x52/fafaf9/706e6b?text=...';">
+                        <div class="list-item-info">
+                            <div class="list-item-name">${p.name}</div>
+                            <div class="list-item-price">${formatPrice(p.price)}</div>
+                        </div>
+                        <span class="list-item-arrow">&rsaquo;</span>
+                    </a>
+                `).join('') + `<a class="see-less-link" onclick="handleSeeLess()">See Less</a>`;
+                list.classList.add('visible');
+                document.getElementById('carouselSection').classList.add('hidden');
+                updateSeeMoreText('See Less');
+                syncChatContainer();
+            } else {
+                handleSeeLess();
+            }
+        }
+
+        // Disclosure 5: Stacked carousels
+        // State for each sub-carousel
+        const subCarouselIndices = {};
+        
+        function renderSubCarousel(categoryIndex, cat) {
+            const carouselId = `subCarousel_${categoryIndex}`;
+            const currentIdx = subCarouselIndices[carouselId] || 0;
+            const products = cat.products;
+            const totalDots = products.length; // 5 products = 5 dots (overlapping like main carousel)
+            
+            // Get visible products (2 at a time, overlapping)
+            const visibleProducts = [];
+            for (let i = 0; i < 2; i++) {
+                const idx = (currentIdx + i) % products.length;
+                visibleProducts.push(products[idx]);
+            }
+            
+            const dots = Array.from({ length: totalDots }, (_, i) => 
+                `<button class="sub-dot ${i === currentIdx ? 'active' : ''}" 
+                         onclick="goToSubCarouselSlide(${categoryIndex}, ${i})"
+                         aria-label="Go to slide ${i + 1}"></button>`
+            ).join('');
+            
+            const canGoPrev = currentIdx > 0;
+            const canGoNext = currentIdx < totalDots - 1;
+            
+            return `
+                <div>
+                    <div class="sub-carousel-header">${cat.title}</div>
+                    <div class="sub-carousel-wrapper">
+                        <button class="sub-carousel-nav-btn" onclick="subCarouselPrev(${categoryIndex})" ${canGoPrev ? '' : 'disabled'}>&lsaquo;</button>
+                        <div class="sub-carousel-track">
+                            ${visibleProducts.map(renderProductCard).join('')}
+                        </div>
+                        <button class="sub-carousel-nav-btn" onclick="subCarouselNext(${categoryIndex})" ${canGoNext ? '' : 'disabled'}>&rsaquo;</button>
+                    </div>
+                    <div class="sub-carousel-nav">
+                        ${dots}
+                    </div>
+                </div>`;
+        }
+        
+        function subCarouselPrev(categoryIndex) {
+            const carouselId = `subCarousel_${categoryIndex}`;
+            const currentIdx = subCarouselIndices[carouselId] || 0;
+            if (currentIdx > 0) {
+                subCarouselIndices[carouselId] = currentIdx - 1;
+                updateSubCarousel(categoryIndex);
+            }
+        }
+        
+        function subCarouselNext(categoryIndex) {
+            const carouselId = `subCarousel_${categoryIndex}`;
+            const cat = subCategories[categoryIndex];
+            const currentIdx = subCarouselIndices[carouselId] || 0;
+            const totalDots = cat.products.length;
+            if (currentIdx < totalDots - 1) {
+                subCarouselIndices[carouselId] = currentIdx + 1;
+                updateSubCarousel(categoryIndex);
+            }
+        }
+        
+        function goToSubCarouselSlide(categoryIndex, slideIndex) {
+            const carouselId = `subCarousel_${categoryIndex}`;
+            subCarouselIndices[carouselId] = slideIndex;
+            updateSubCarousel(categoryIndex);
+        }
+        
+        function updateSubCarousel(categoryIndex) {
+            const container = document.getElementById('stackedCarousels');
+            const cat = subCategories[categoryIndex];
+            const carouselHtml = renderSubCarousel(categoryIndex, cat);
+            // Find and replace the specific carousel
+            const carousels = container.querySelectorAll('> div');
+            if (carousels[categoryIndex]) {
+                carousels[categoryIndex].outerHTML = carouselHtml;
+            }
+        }
+        
+        function toggleStackedCarousels() {
+            const container = document.getElementById('stackedCarousels');
+            if (!container) {
+                return;
+            }
+            
+            isExpanded = !isExpanded;
+            
+            if (isExpanded) {
+                // Reset all sub-carousel indices
+                subCategories.forEach((_, idx) => {
+                    subCarouselIndices[`subCarousel_${idx}`] = 0;
+                });
+                
+                container.innerHTML = subCategories.map((cat, idx) => renderSubCarousel(idx, cat)).join('') + 
+                    `<a class="see-less-link" onclick="handleSeeLess()">See Less</a>`;
+                container.classList.add('visible');
+                updateSeeMoreText('See Less');
+                syncChatContainer();
+            } else {
+                handleSeeLess();
+            }
+        }
+        
+        // Make functions globally accessible
+        window.subCarouselPrev = subCarouselPrev;
+        window.subCarouselNext = subCarouselNext;
+        window.goToSubCarouselSlide = goToSubCarouselSlide;
+        window.handleSeeMore = handleSeeMore;
+        window.handleSeeLess = handleSeeLess;
+
+        function updateSeeMoreText(text) {
+            document.querySelectorAll('.see-more-link').forEach(el => el.textContent = text);
+            document.querySelectorAll('.see-more-button-full').forEach(el => el.textContent = text === 'See Less' ? 'See Less' : 'See More Items');
+            // Update See More card text if placement C is active
+            if (activePlacement === 'c') {
+                document.querySelectorAll('.see-more-card-text').forEach(el => el.textContent = text);
+            }
+        }
+
+        // ===== PLACEMENT / DISCLOSURE TOGGLING =====
+        function applyPlacement(value) {
+            activePlacement = value;
+            // Hide all placement elements (A, B are separate UI elements)
+            document.querySelectorAll('.see-more-a, .see-more-b').forEach(el => {
+                el.classList.add('is-hidden');
+            });
+            // For C, the card is rendered in the carousel, so we don't need to hide/show it here
+            // But we do need to update TOTAL_DOTS
+            if (value === 'c') {
+                TOTAL_DOTS = 6; // 5 products + 1 See More card
+            } else {
+                TOTAL_DOTS = 5; // Just 5 products
+            }
+            
+            // Show selected placement element (A or B)
+            if (value !== 'c') {
+                document.querySelectorAll(`.see-more-${value}`).forEach(el => {
+                    el.classList.remove('is-hidden');
+                });
+            }
+            
+            // Reset carousel index if needed
+            if (currentIndex >= TOTAL_DOTS) {
+                currentIndex = TOTAL_DOTS - 1;
+            }
+            
+            // Update selected state in panel
+            document.querySelectorAll('[data-placement]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.placement === value);
+            });
+            
+            // Re-render carousel with new placement
+            renderCarousel();
+            
+            // Also update chat container if visible
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer && chatContainer.style.display !== 'none') {
+                renderCarouselInContainer(document.getElementById('chatPreviewContainer'));
+            }
+        }
+
+        function applyDisclosure(value) {
+            // Reset any open disclosure first
+            handleSeeLess();
+            isExpanded = false;
+            // Reset carousel to original products
+            allProducts = [...mockProducts];
+            // Set TOTAL_DOTS based on active placement
+            TOTAL_DOTS = activePlacement === 'c' ? 6 : 5;
+            currentIndex = 0;
+            renderCarousel();
+
+            activeDisclosure = value;
+            // Update selected state in panel
+            document.querySelectorAll('[data-disclosure]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.disclosure === value);
+            });
+            
+            // Also update chat container if visible
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer && chatContainer.style.display !== 'none') {
+                renderCarouselInContainer(document.getElementById('chatPreviewContainer'));
+            }
+        }
+
+        // Wire up radio buttons
+        document.querySelectorAll('input[name="placement"]').forEach(radio => {
+            radio.addEventListener('change', () => applyPlacement(radio.value));
+        });
+        document.querySelectorAll('input[name="disclosure"]').forEach(radio => {
+            radio.addEventListener('change', () => applyDisclosure(radio.value));
+        });
+
+        // ===== PROTOTYPE MODE TOGGLE =====
+        function togglePrototypeMode(enabled) {
+            const chatContainer = document.getElementById('chatContainer');
+            const standaloneContainer = document.getElementById('standaloneContainer');
+            const previewArea = document.getElementById('previewArea');
+            const chatPreviewContainer = document.getElementById('chatPreviewContainer');
+            
+            if (enabled) {
+                // Clone the entire carousel structure into chat container
+                chatPreviewContainer.innerHTML = standaloneContainer.innerHTML;
+                
+                chatContainer.style.display = 'flex';
+                standaloneContainer.style.display = 'none';
+                previewArea.classList.add('prototype-mode');
+                
+                // Re-render carousel in chat context to ensure everything is synced
+                setTimeout(() => {
+                    renderCarouselInContainer(chatPreviewContainer);
+                    // Animate message appearance after a brief delay
+                    setTimeout(() => {
+                        animateChatMessages();
+                    }, 200);
+                }, 50);
+            } else {
+                chatContainer.style.display = 'none';
+                standaloneContainer.style.display = 'block';
+                previewArea.classList.remove('prototype-mode');
+                
+                // Reset message animations
+                document.querySelectorAll('.chat-message').forEach(msg => {
+                    msg.classList.remove('visible');
+                });
+            }
+        }
+
+        function renderCarouselInContainer(container) {
+            if (!container) return;
+            
+            const track = container.querySelector('#carouselTrack');
+            if (track) {
+                const items = getVisibleItems();
+                track.innerHTML = items.map(item => 
+                    item.type === 'seeMore' ? renderSeeMoreCard() : renderProductCard(item.product)
+                ).join('');
+            }
+            
+            // Update navigation buttons
+            const prevBtn = container.querySelector('#prevBtn');
+            const nextBtn = container.querySelector('#nextBtn');
+            if (prevBtn) prevBtn.disabled = currentIndex === 0;
+            if (nextBtn) nextBtn.disabled = currentIndex >= TOTAL_DOTS - 1;
+            
+            // Update pagination dots
+            const paginationDots = container.querySelector('#paginationDots');
+            if (paginationDots) {
+                paginationDots.innerHTML = Array.from({ length: TOTAL_DOTS }, (_, i) =>
+                    `<button class="pagination-dot ${i === currentIndex ? 'active' : ''}" onclick="goToSlide(${i})" aria-label="Go to slide ${i + 1}"></button>`
+                ).join('');
+            }
+            
+            // Update See More elements visibility based on active placement
+            if (activePlacement === 'a') {
+                container.querySelectorAll('.see-more-a').forEach(el => el.classList.remove('is-hidden'));
+                container.querySelectorAll('.see-more-b, .see-more-c').forEach(el => el.classList.add('is-hidden'));
+            } else if (activePlacement === 'b') {
+                container.querySelectorAll('.see-more-b').forEach(el => el.classList.remove('is-hidden'));
+                container.querySelectorAll('.see-more-a, .see-more-c').forEach(el => el.classList.add('is-hidden'));
+            } else if (activePlacement === 'c') {
+                container.querySelectorAll('.see-more-c').forEach(el => el.classList.remove('is-hidden'));
+                container.querySelectorAll('.see-more-a, .see-more-b').forEach(el => el.classList.add('is-hidden'));
+            }
+        }
+
+        function animateChatMessages() {
+            const messages = document.querySelectorAll('.chat-message');
+            messages.forEach((msg, idx) => {
+                setTimeout(() => {
+                    msg.classList.add('visible');
+                }, idx * 500);
+            });
+        }
+
+        // Wire up prototype mode toggle
+        const prototypeToggle = document.getElementById('prototypeModeToggle');
+        if (prototypeToggle) {
+            prototypeToggle.addEventListener('change', (e) => {
+                togglePrototypeMode(e.target.checked);
+            });
+        }
+
+        // ===== INIT =====
+        // Initialize with default placement and disclosure
+        applyPlacement('a');
+        applyDisclosure('1'); // Default to disclosure 1
+        renderCarousel();
+        
+        // Ensure See More link is visible for placement A
+        document.querySelectorAll('.see-more-a').forEach(el => {
+            el.classList.remove('is-hidden');
+        });
+    </script>
+</body>
+</html>
