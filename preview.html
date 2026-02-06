@@ -206,6 +206,10 @@
             padding: 1rem;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        #standaloneContainer {
+            position: relative;
         }
 
         /* ===== HEADER ===== */
@@ -433,6 +437,9 @@
 
         .action-buttons {
             margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
         }
 
         .btn {
@@ -444,6 +451,22 @@
             cursor: pointer;
             transition: all 0.2s;
             width: 100%;
+        }
+
+        .btn-quick-view {
+            background-color: transparent;
+            color: #0176d3;
+            border: 1px solid #0176d3;
+            text-transform: uppercase;
+            text-align: center;
+            display: block;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-radius: 0;
+        }
+        .btn-quick-view:hover {
+            background-color: #0176d3;
+            color: white;
         }
 
         .btn-shop-now {
@@ -1573,6 +1596,299 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
+
+        /* ===== QUICK VIEW STYLES ===== */
+        /* Quick View Overlay (backdrop) */
+        .quick-view-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        .quick-view-overlay.visible {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Quick View Side Panel (Option 1) */
+        .quick-view-side-panel {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 280px;
+            background: #ffffff;
+            box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        .quick-view-side-panel.visible {
+            transform: translateX(0);
+        }
+        
+        /* Quick View container positioning */
+        .quick-view-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        
+        /* In standalone mode, Quick View covers most of the chat */
+        .preview-container .quick-view-container,
+        #standaloneContainer .quick-view-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .preview-container .quick-view-side-panel,
+        #standaloneContainer .quick-view-side-panel {
+            width: 70%;
+            max-width: 400px;
+        }
+        
+        /* In mobile prototype mode, Quick View is within phone-screen */
+        .phone-screen .quick-view-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+        .phone-screen .quick-view-side-panel {
+            width: 85%;
+            max-width: 300px;
+        }
+        
+        /* In desktop prototype mode, Quick View is within desktop-sidebar */
+        .desktop-sidebar .quick-view-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+        .desktop-sidebar .quick-view-side-panel {
+            width: 90%;
+            max-width: 320px;
+        }
+        .quick-view-panel-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .quick-view-panel-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #181818;
+        }
+        .quick-view-close {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: #706e6b;
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+        .quick-view-close:hover {
+            color: #181818;
+        }
+        .quick-view-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .quick-view-image-large {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            background: #fafaf9;
+        }
+        .quick-view-product-name {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #181818;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        .quick-view-price {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #181818;
+            margin-bottom: 0.75rem;
+        }
+        .quick-view-highlights {
+            margin-bottom: 1rem;
+        }
+        .quick-view-highlights-title {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #181818;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+        .quick-view-highlights-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .quick-view-highlights-list li {
+            font-size: 0.75rem;
+            color: #706e6b;
+            padding: 0.25rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+        .quick-view-highlights-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #0176d3;
+        }
+        .quick-view-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
+            color: #706e6b;
+        }
+        .quick-view-stars {
+            color: #fe9339;
+        }
+        .quick-view-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .btn-add-to-cart {
+            background-color: #0176d3;
+            color: white;
+            padding: 0.625rem;
+            border: none;
+            border-radius: 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+        .btn-add-to-cart:hover {
+            background-color: #014486;
+        }
+        .btn-view-details {
+            background-color: transparent;
+            color: #0176d3;
+            padding: 0.625rem;
+            border: 1px solid #0176d3;
+            border-radius: 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .btn-view-details:hover {
+            background-color: #0176d3;
+            color: white;
+        }
+
+        /* Quick View In-Chat Card (Option 2) */
+        .product-card-expanded {
+            grid-column: 1 / -1;
+            margin-top: 0.5rem;
+        }
+        .quick-view-card-content {
+            display: none;
+            padding: 1rem;
+            background: #ffffff;
+            border-top: 2px solid #e5e5e5;
+        }
+        .product-card-inner.expanded .quick-view-card-content {
+            display: block;
+        }
+        .quick-view-card-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            background: #fafaf9;
+        }
+        .quick-view-card-details {
+            font-size: 0.8125rem;
+            color: #706e6b;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Quick View Modal (Option 3) */
+        .quick-view-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .quick-view-modal.visible {
+            display: flex;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .quick-view-modal-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .quick-view-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem;
+        }
+        .quick-view-modal-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            margin-bottom: 1.5rem;
+            background: #fafaf9;
+        }
     </style>
 </head>
 <body>
@@ -1652,6 +1968,37 @@
                 <div class="panel-option-content">
                     <div class="panel-option-label">5: Replace with List</div>
                     <div class="panel-option-desc">Carousel switches to a compact scrollable list view</div>
+                </div>
+            </label>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- CTA Pattern Variations -->
+        <div class="panel-section">
+            <div class="panel-section-title">CTA Pattern</div>
+
+            <label class="panel-option selected" data-cta="d">
+                <input type="radio" name="cta" value="d" checked>
+                <div class="panel-option-content">
+                    <div class="panel-option-label">D: Quick View + Shop Now</div>
+                    <div class="panel-option-desc">Both buttons stacked vertically on product cards</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-cta="e">
+                <input type="radio" name="cta" value="e">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">E: Quick View Only</div>
+                    <div class="panel-option-desc">Quick View button only, Shop Now appears in Quick View</div>
+                </div>
+            </label>
+
+            <label class="panel-option" data-cta="f">
+                <input type="radio" name="cta" value="f">
+                <div class="panel-option-content">
+                    <div class="panel-option-label">F: Shop Now Only</div>
+                    <div class="panel-option-desc">Current behavior - no Quick View button</div>
                 </div>
             </label>
         </div>
@@ -1911,6 +2258,18 @@
         </div>
     </div>
 
+    <!-- ===== QUICK VIEW COMPONENTS ===== -->
+    <!-- Quick View Side Panel is created dynamically and appended to the appropriate container -->
+    
+    <!-- Quick View Modal (Option 3) -->
+    <div class="quick-view-modal" id="quickViewModal">
+        <div class="quick-view-modal-header">
+            <div class="quick-view-panel-title" id="quickViewModalTitle">Quick View</div>
+            <button class="quick-view-close" onclick="closeQuickView()">&times;</button>
+        </div>
+        <div class="quick-view-modal-body" id="quickViewModalBody"></div>
+    </div>
+
     <script>
         // ===== PRODUCT DATA =====
         const mockProducts = [
@@ -1920,7 +2279,16 @@
                 imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg',
                 price: 349.95,
                 badge: 'olivePick',
-                productUrl: 'https://www.williams-sonoma.com/products/breville-the-luxe-brewer-with-thermal-carafe/'
+                productUrl: 'https://www.williams-sonoma.com/products/breville-the-luxe-brewer-with-thermal-carafe/',
+                description: 'Premium coffee maker with thermal carafe that keeps coffee hot for hours. Features precision temperature control and pre-infusion brewing for optimal flavor extraction.',
+                rating: 4.8,
+                reviewCount: 324,
+                highlights: [
+                    'Thermal carafe keeps coffee hot up to 4 hours',
+                    'Precision temperature control (195-205°F)',
+                    'Pre-infusion cycle for even extraction',
+                    '12-cup capacity'
+                ]
             },
             {
                 id: '2',
@@ -1928,7 +2296,16 @@
                 imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg',
                 price: 299.95,
                 badge: 'bestSeller',
-                productUrl: 'https://www.williams-sonoma.com/products/fellow-aiden-coffee-brewer/'
+                productUrl: 'https://www.williams-sonoma.com/products/fellow-aiden-coffee-brewer/',
+                description: 'Sleek, modern coffee maker with precise water temperature and flow rate control. Designed for coffee enthusiasts who want restaurant-quality coffee at home.',
+                rating: 4.6,
+                reviewCount: 187,
+                highlights: [
+                    'Precise water temperature control',
+                    'Adjustable flow rate',
+                    'Sleek, compact design',
+                    '8-cup capacity'
+                ]
             },
             {
                 id: '3',
@@ -1936,7 +2313,16 @@
                 imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg',
                 price: 199.95,
                 badge: 'topRated',
-                productUrl: 'https://www.williams-sonoma.com/products/cafe-specialty-drip-coffee-maker-with-glass/'
+                productUrl: 'https://www.williams-sonoma.com/products/cafe-specialty-drip-coffee-maker-with-glass/',
+                description: 'Classic drip coffee maker with programmable timer and auto-shutoff. Features a glass carafe with warming plate and 12-cup capacity.',
+                rating: 4.5,
+                reviewCount: 256,
+                highlights: [
+                    'Programmable 24-hour timer',
+                    'Auto-shutoff feature',
+                    'Glass carafe with warming plate',
+                    '12-cup capacity'
+                ]
             },
             {
                 id: '4',
@@ -1944,7 +2330,16 @@
                 imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202414/0036/moccamaster-by-technivorm-kbgv-select-10-cup-coffee-maker-o.jpg',
                 price: 369.95,
                 badge: 'olivePick',
-                productUrl: 'https://www.williams-sonoma.com/products/technivorm-moccamaster-kgb-select/'
+                productUrl: 'https://www.williams-sonoma.com/products/technivorm-moccamaster-kgb-select/',
+                description: 'Dutch-engineered coffee maker with copper heating element for optimal brewing temperature. SCAA certified for perfect coffee extraction.',
+                rating: 4.9,
+                reviewCount: 412,
+                highlights: [
+                    'SCAA certified brewing',
+                    'Copper heating element',
+                    'Brews at optimal 196-205°F',
+                    '10-cup capacity'
+                ]
             },
             {
                 id: '5',
@@ -1952,7 +2347,16 @@
                 imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg',
                 price: 199.95,
                 badge: 'bestSeller',
-                productUrl: 'https://www.williams-sonoma.com/products/oxo-brew-12-cup-coffee-maker-with-podless-single-serve-function/'
+                productUrl: 'https://www.williams-sonoma.com/products/oxo-brew-12-cup-coffee-maker-with-podless-single-serve-function/',
+                description: 'Versatile coffee maker with both carafe and single-serve options. Features precision brewing technology and reusable filter basket.',
+                rating: 4.4,
+                reviewCount: 298,
+                highlights: [
+                    'Dual brewing modes (carafe + single-serve)',
+                    'Precision brewing technology',
+                    'Reusable filter basket',
+                    '12-cup capacity'
+                ]
             }
         ];
 
@@ -2022,8 +2426,11 @@
         let TOTAL_DOTS = 5;
         let activePlacement = 'a';
         let activeDisclosure = '1';
+        let activeCtaPattern = 'd';
         let isExpanded = false;
         let allProducts = [...mockProducts]; // used for disclosure 2
+        let activeQuickView = null; // Currently open Quick View product
+        let quickViewType = null; // 'sidePanel', 'card', or 'modal'
 
         // ===== CAROUSEL RENDERING =====
         function formatPrice(price) {
@@ -2067,8 +2474,15 @@
             // Support both old isOlivePick and new badge property for backward compatibility
             const badge = product.badge || (product.isOlivePick ? 'olivePick' : null);
             
+            // Determine which buttons to show based on CTA pattern
+            const showQuickView = activeCtaPattern === 'd' || activeCtaPattern === 'e';
+            const showShopNow = activeCtaPattern === 'd' || activeCtaPattern === 'f';
+            
+            const quickViewBtn = showQuickView ? `<button class="btn btn-quick-view" onclick="handleQuickView('${product.id}')">QUICK VIEW</button>` : '';
+            const shopNowBtn = showShopNow ? `<a href="${product.productUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-shop-now">SHOP NOW</a>` : '';
+            
             return `
-                <div class="product-card">
+                <div class="product-card" data-product-id="${product.id}">
                     <div class="product-card-inner">
                         ${renderBadge(badge)}
                         <div class="product-image-container">
@@ -2079,7 +2493,8 @@
                             <h3 class="product-name">${product.name}</h3>
                             <div class="price-text">${formatPrice(product.price)}</div>
                             <div class="action-buttons">
-                                <a href="${product.productUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-shop-now">SHOP NOW</a>
+                                ${quickViewBtn}
+                                ${shopNowBtn}
                             </div>
                         </div>
                     </div>
@@ -2553,6 +2968,17 @@
                     chatPreviewContainer.querySelectorAll('.sub-carousel-nav-btn').forEach(btn => {
                         const origOnclick = btn.getAttribute('onclick');
                         if (origOnclick) btn.setAttribute('onclick', origOnclick);
+                    });
+                    // Re-attach Quick View buttons
+                    chatPreviewContainer.querySelectorAll('.btn-quick-view').forEach(btn => {
+                        const onclick = btn.getAttribute('onclick');
+                        if (onclick) {
+                            // Extract product ID from onclick attribute
+                            const match = onclick.match(/handleQuickView\('([^']+)'\)/);
+                            if (match) {
+                                btn.setAttribute('onclick', `handleQuickView('${match[1]}')`);
+                            }
+                        }
                     });
                 }
             }
@@ -3112,10 +3538,260 @@
             </div>`;
         }
 
+        // ===== QUICK VIEW HANDLERS =====
+        function getProductById(id) {
+            return [...mockProducts, ...extraProducts].find(p => p.id === id);
+        }
+
+        function renderQuickViewContent(product) {
+            const highlights = product.highlights || [];
+            const rating = product.rating || 4.5;
+            const reviewCount = product.reviewCount || 0;
+            const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+            
+            return `
+                <img src="${product.imageUrl}" alt="${product.name}" class="quick-view-image-large"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/400x400/fafaf9/706e6b?text=Coffee+Maker';">
+                <h3 class="quick-view-product-name">${product.name}</h3>
+                <div class="quick-view-price">${formatPrice(product.price)}</div>
+                ${product.description ? `<div class="quick-view-card-details">${product.description}</div>` : ''}
+                ${rating > 0 ? `<div class="quick-view-rating"><span class="quick-view-stars">${stars}</span> <span>${rating} (${reviewCount} reviews)</span></div>` : ''}
+                ${highlights.length > 0 ? `
+                    <div class="quick-view-highlights">
+                        <div class="quick-view-highlights-title">Key Features</div>
+                        <ul class="quick-view-highlights-list">
+                            ${highlights.map(h => `<li>${h}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+                <div class="quick-view-actions">
+                    <button class="btn-add-to-cart" onclick="alert('Added to cart! (Prototype)')">Add to Cart</button>
+                    <a href="${product.productUrl}" target="_blank" class="btn-view-details">View Full Details</a>
+                </div>
+            `;
+        }
+
+        function handleQuickView(productId) {
+            const product = getProductById(productId);
+            if (!product) return;
+
+            // For now, default to side panel. Can be made configurable later.
+            // In a real implementation, this could be based on user preference or device type
+            showQuickViewSidePanel(product);
+        }
+
+        function showQuickViewSidePanel(product) {
+            activeQuickView = product;
+            quickViewType = 'sidePanel';
+            
+            // Determine the correct parent container based on current mode
+            let parentContainer = null;
+            const isProto = document.getElementById('prototypeModeToggle')?.checked;
+            const mobileFrame = document.getElementById('mobileFrame');
+            const desktopSidebar = document.getElementById('desktopSidebar');
+            
+            if (isProto && mobileFrame && mobileFrame.style.display !== 'none') {
+                // Mobile prototype mode - append to phone-screen
+                parentContainer = document.getElementById('mobileScreen');
+            } else if (isProto && desktopSidebar && desktopSidebar.style.display !== 'none') {
+                // Desktop prototype mode - append to desktop-sidebar
+                parentContainer = desktopSidebar;
+            } else {
+                // Standalone mode - append to standaloneContainer or preview-container
+                parentContainer = document.getElementById('standaloneContainer') || 
+                                 document.querySelector('.preview-container');
+            }
+            
+            if (!parentContainer) return;
+            
+            // Find or create Quick View container
+            let qvContainer = parentContainer.querySelector('.quick-view-container');
+            if (!qvContainer) {
+                qvContainer = document.createElement('div');
+                qvContainer.className = 'quick-view-container';
+                parentContainer.appendChild(qvContainer);
+                
+                // Move overlay and panel into container if they exist, or create them
+                const existingOverlay = document.getElementById('quickViewOverlay');
+                const existingPanel = document.getElementById('quickViewSidePanel');
+                
+                if (existingOverlay && existingPanel) {
+                    qvContainer.appendChild(existingOverlay);
+                    qvContainer.appendChild(existingPanel);
+                } else {
+                    // Create new overlay and panel
+                    qvContainer.innerHTML = `
+                        <div class="quick-view-overlay" id="quickViewOverlay" onclick="closeQuickView()"></div>
+                        <div class="quick-view-side-panel" id="quickViewSidePanel" onclick="event.stopPropagation()">
+                            <div class="quick-view-panel-header">
+                                <div class="quick-view-panel-title" id="quickViewPanelTitle">Quick View</div>
+                                <button class="quick-view-close" onclick="closeQuickView()">&times;</button>
+                            </div>
+                            <div class="quick-view-panel-body" id="quickViewPanelBody"></div>
+                        </div>
+                    `;
+                }
+            }
+            
+            const overlay = qvContainer.querySelector('.quick-view-overlay');
+            const panel = qvContainer.querySelector('.quick-view-side-panel');
+            const body = qvContainer.querySelector('.quick-view-panel-body');
+            
+            if (!overlay || !panel || !body) return;
+            
+            // Ensure container is visible
+            qvContainer.style.display = 'block';
+            
+            body.innerHTML = renderQuickViewContent(product);
+            
+            overlay.classList.add('visible');
+            setTimeout(() => panel.classList.add('visible'), 10);
+            
+            // Close on ESC key
+            document.addEventListener('keydown', handleQuickViewEsc);
+        }
+
+        function showQuickViewCard(product) {
+            activeQuickView = product;
+            quickViewType = 'card';
+            
+            // Find the product card and expand it
+            const card = document.querySelector(`.product-card[data-product-id="${product.id}"]`);
+            if (card) {
+                const cardInner = card.querySelector('.product-card-inner');
+                if (cardInner) {
+                    cardInner.classList.add('expanded');
+                    let contentDiv = cardInner.querySelector('.quick-view-card-content');
+                    if (!contentDiv) {
+                        contentDiv = document.createElement('div');
+                        contentDiv.className = 'quick-view-card-content';
+                        cardInner.appendChild(contentDiv);
+                    }
+                    const highlights = product.highlights || [];
+                    const rating = product.rating || 4.5;
+                    const reviewCount = product.reviewCount || 0;
+                    const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+                    
+                    contentDiv.innerHTML = `
+                        <img src="${product.imageUrl}" alt="${product.name}" class="quick-view-card-image"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x400/fafaf9/706e6b?text=Coffee+Maker';">
+                        ${product.description ? `<div class="quick-view-card-details">${product.description}</div>` : ''}
+                        ${rating > 0 ? `<div class="quick-view-rating"><span class="quick-view-stars">${stars}</span> <span>${rating} (${reviewCount} reviews)</span></div>` : ''}
+                        ${highlights.length > 0 ? `
+                            <div class="quick-view-highlights">
+                                <div class="quick-view-highlights-title">Key Features</div>
+                                <ul class="quick-view-highlights-list">
+                                    ${highlights.map(h => `<li>${h}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        <div class="quick-view-actions">
+                            <button class="btn-add-to-cart" onclick="alert('Added to cart! (Prototype)')">Add to Cart</button>
+                            <a href="${product.productUrl}" target="_blank" class="btn-view-details">View Full Details</a>
+                            <button class="btn-quick-view" onclick="closeQuickView()" style="margin-top:0.5rem;">Close</button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function showQuickViewModal(product) {
+            activeQuickView = product;
+            quickViewType = 'modal';
+            
+            const overlay = document.getElementById('quickViewOverlay');
+            const modal = document.getElementById('quickViewModal');
+            const body = document.getElementById('quickViewModalBody');
+            
+            body.innerHTML = renderQuickViewContent(product);
+            
+            overlay.classList.add('visible');
+            setTimeout(() => modal.classList.add('visible'), 10);
+            
+            // Close on ESC key
+            document.addEventListener('keydown', handleQuickViewEsc);
+        }
+
+        function handleQuickViewEsc(e) {
+            if (e.key === 'Escape') {
+                closeQuickView();
+            }
+        }
+
+        function closeQuickView() {
+            activeQuickView = null;
+            quickViewType = null;
+            
+            // Find and close all visible side panels first (animate out)
+            const visiblePanels = document.querySelectorAll('.quick-view-side-panel.visible');
+            visiblePanels.forEach(panel => {
+                panel.classList.remove('visible');
+            });
+            
+            // Find and close all visible overlays after panel animation
+            setTimeout(() => {
+                const visibleOverlays = document.querySelectorAll('.quick-view-overlay.visible');
+                visibleOverlays.forEach(overlay => {
+                    overlay.classList.remove('visible');
+                });
+                
+                // Hide all Quick View containers after animation completes
+                document.querySelectorAll('.quick-view-container').forEach(container => {
+                    container.style.display = 'none';
+                });
+            }, 350);
+            
+            // Handle modal (uses fixed overlay)
+            const modal = document.getElementById('quickViewModal');
+            if (modal && modal.classList.contains('visible')) {
+                modal.classList.remove('visible');
+                const modalOverlay = document.getElementById('quickViewOverlay');
+                if (modalOverlay && modalOverlay.classList.contains('visible')) {
+                    setTimeout(() => modalOverlay.classList.remove('visible'), 300);
+                }
+            }
+            
+            // Remove expanded state from cards
+            document.querySelectorAll('.product-card-inner.expanded').forEach(card => {
+                card.classList.remove('expanded');
+            });
+            
+            document.removeEventListener('keydown', handleQuickViewEsc);
+        }
+
+        // Expose globally for onclick handlers
+        window.handleQuickView = handleQuickView;
+        window.closeQuickView = closeQuickView;
+        window.showQuickViewSidePanel = showQuickViewSidePanel;
+        window.showQuickViewCard = showQuickViewCard;
+        window.showQuickViewModal = showQuickViewModal;
+
+        // ===== CTA PATTERN HANDLER =====
+        function applyCtaPattern(value) {
+            activeCtaPattern = value;
+            // Close any open Quick View when switching patterns
+            if (activeQuickView) {
+                closeQuickView();
+            }
+            // Update selected state in panel
+            document.querySelectorAll('[data-cta]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.cta === value);
+            });
+            // Re-render carousel to update buttons
+            renderCarousel();
+            syncChatContainer();
+        }
+
+        // Wire up CTA pattern radio buttons
+        document.querySelectorAll('input[name="cta"]').forEach(radio => {
+            radio.addEventListener('change', () => applyCtaPattern(radio.value));
+        });
+
         // ===== INIT =====
-        // Initialize with default placement and disclosure
+        // Initialize with default placement, disclosure, and CTA pattern
         applyPlacement('a');
         applyDisclosure('1');
+        applyCtaPattern('d');
         renderCarousel();
         renderUxExplanations();
     </script>
