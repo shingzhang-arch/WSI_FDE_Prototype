@@ -101,9 +101,90 @@
             line-height: 1.4;
         }
 
+        .panel-option-badge {
+            font-size: 0.5625rem;
+            font-weight: 700;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .panel-option-badge.recommended {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .panel-option-badge.tech-limit {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .panel-option-badge.current-state {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
         .panel-divider {
             height: 1px;
             background-color: #e5e5e5;
+        }
+
+        /* Accordion sections */
+        .panel-accordion {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .panel-accordion:last-child {
+            border-bottom: none;
+        }
+        .panel-accordion-header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #181818;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.75rem 0.5rem;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+        .panel-accordion-header::-webkit-details-marker { display: none; }
+        .panel-accordion-header::after {
+            content: '\25BC';
+            font-size: 0.625rem;
+            color: #706e6b;
+            transition: transform 0.2s ease;
+        }
+        .panel-accordion[open] .panel-accordion-header::after {
+            transform: rotate(-180deg);
+        }
+        .panel-accordion-header:hover {
+            color: #0176d3;
+        }
+        .panel-accordion-body {
+            padding: 0 0.5rem 0.75rem 0.5rem;
+        }
+        .panel-accordion-body .panel-section {
+            padding: 0;
+        }
+
+        .panel-accordion-controls {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 0.5rem 0.25rem;
+            font-size: 0.6875rem;
+        }
+        .panel-accordion-controls button {
+            background: none;
+            border: none;
+            color: #0176d3;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .panel-accordion-controls button:hover {
+            text-decoration: underline;
         }
 
         .panel-toggle {
@@ -520,6 +601,31 @@
             flex-shrink: 0;
         }
         .pagination-dot:hover:not(.active) { background-color: #a0a0a0; }
+
+        .carousel-scrollbar-container {
+            margin-top: 0.75rem;
+            width: 100%;
+        }
+        .carousel-scrollbar-track {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e5e5e5;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .carousel-scrollbar-thumb {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 8px;
+            min-width: 24px;
+            background-color: #a0a0a0;
+            border-radius: 4px;
+            cursor: grab;
+            transition: left 0.1s ease;
+        }
+        .carousel-scrollbar-thumb:active { cursor: grabbing; }
         .pagination-dot.active { background-color: #181818; }
 
         /* ===== DISCLOSURE AREAS ===== */
@@ -533,6 +639,12 @@
         }
         .expanded-grid.visible {
             display: block;
+        }
+        .expanded-grid-section {
+            margin-bottom: 1rem;
+        }
+        .expanded-grid-section:last-child {
+            margin-bottom: 0;
         }
         .expanded-grid-title {
             font-size: 0.75rem;
@@ -1364,7 +1476,85 @@
             border-color: #0176d3;
         }
 
-        
+        /* Persistent agent nudges in chat input (nudge patterns section) */
+        .input-bar-nudge-section {
+            margin-bottom: 0.625rem;
+        }
+        .input-bar-nudge-header {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: #181818;
+            margin-bottom: 0.375rem;
+        }
+        .input-bar-nudge-subheader {
+            font-size: 0.5625rem;
+            color: #706e6b;
+            margin-bottom: 0.5rem;
+        }
+        .input-bar-nudges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+            overflow-x: auto;
+            padding-bottom: 0.25rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        .input-bar-nudges::-webkit-scrollbar { height: 4px; }
+        .input-bar-nudge-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.375rem 0.625rem;
+            border-radius: 100px;
+            border: 1px solid #c9c7c5;
+            background: #fafaf9;
+            color: #181818;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .input-bar-nudge-chip:hover {
+            background-color: #eef4ff;
+            border-color: #0176d3;
+            color: #0176d3;
+        }
+        .input-bar-nudge-chip .nudge-chip-icon {
+            font-size: 0.75rem;
+            line-height: 1;
+            color: #2e844a;
+        }
+        /* Nudge pattern 1: Grammarly-style categorized */
+        .nudge-category {
+            margin-bottom: 0.5rem;
+        }
+        .nudge-category-title {
+            font-size: 0.5625rem;
+            font-weight: 700;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+        .nudge-category-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+        /* Nudge pattern 3: Prompt builder (compact inline) */
+        .input-bar-nudge-try {
+            font-size: 0.5625rem;
+            color: #706e6b;
+            margin-top: 0.375rem;
+            font-style: italic;
+        }
+        .input-bar-nudge-try span {
+            color: #0176d3;
+            cursor: pointer;
+            text-decoration: underline;
+        }
 
         /* WS sister brands bar */
         .ws-brands-bar {
@@ -1478,11 +1668,192 @@
             flex: 1;
             overflow-y: auto;
             padding: 1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .ux-rail-body.comments-mode {
+            padding: 0;
+        }
+        .ux-rail-body.comments-mode .comments-rail.visible {
+            padding: 1rem 1.25rem;
         }
         .ux-explanations {
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
+        }
+
+        /* ===== COMMENTS RAIL (Prototype mode) ===== */
+        .comments-rail {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+        .comments-rail.visible {
+            display: flex;
+        }
+        .comments-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .comments-form > div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .comments-form input,
+        .comments-form select,
+        .comments-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 0.8125rem;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        .comments-form input:focus,
+        .comments-form select:focus,
+        .comments-form textarea:focus {
+            outline: none;
+            border-color: #0176d3;
+        }
+        .comments-form textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .comments-form label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .comments-submit-btn {
+            width: 100%;
+            box-sizing: border-box;
+            background: #0176d3;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .comments-submit-btn:hover {
+            background: #014a8f;
+        }
+        .comments-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .comment-card {
+            background: #fafaf9;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+        }
+        .comment-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .comment-author {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #181818;
+        }
+        .comment-type-badge {
+            font-size: 0.5625rem;
+            font-weight: 700;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .comment-type-badge.tech { background: #e3f2fd; color: #1565c0; }
+        .comment-type-badge.golive { background: #e8f5e9; color: #2e7d32; }
+        .comment-type-badge.date { background: #fff3e0; color: #e65100; }
+        .comment-type-badge.general { background: #f5f5f5; color: #616161; }
+        .comments-form-comment-type {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .comments-form-comment-type label.radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            color: #181818;
+            cursor: pointer;
+        }
+        .comments-form-comment-type input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+        .comment-text {
+            font-size: 0.8125rem;
+            color: #181818;
+            line-height: 1.5;
+        }
+        .comment-date {
+            font-size: 0.6875rem;
+            color: #706e6b;
+            margin-top: 0.5rem;
+        }
+        .comment-target {
+            font-size: 0.6875rem;
+            color: #0176d3;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .comments-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.5rem 0;
+            font-size: 0.6875rem;
+        }
+        .comments-filter label {
+            font-weight: 600;
+            color: #706e6b;
+        }
+        .comments-filter select {
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 0.8125rem;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+        }
+        .panel-option-comment-badge {
+            display: none;
+            margin-left: 0.25rem;
+            font-size: 0.625rem;
+            color: #706e6b;
+        }
+        .panel-option-comment-badge.has-comments {
+            display: inline-flex;
+            cursor: pointer;
+            align-items: center;
+            gap: 0.125rem;
+        }
+        .panel-option-comment-badge::before {
+            content: '\1F4AC';
+            font-size: 0.75rem;
         }
         .ux-card {
             background: #ffffff;
@@ -1661,7 +2032,7 @@
             max-width: 400px;
         }
         
-        /* In mobile prototype mode, Quick View is within phone-screen */
+        /* In mobile prototype mode, Quick View takes full screen */
         .phone-screen .quick-view-container {
             position: absolute;
             top: 0;
@@ -1671,8 +2042,8 @@
             z-index: 100;
         }
         .phone-screen .quick-view-side-panel {
-            width: 85%;
-            max-width: 300px;
+            width: 100%;
+            max-width: none;
         }
         
         /* In desktop prototype mode, Quick View is within desktop-sidebar */
@@ -1994,115 +2365,12 @@
     <div class="settings-panel">
         <div class="panel-title">Variation Controls</div>
 
-        <!-- Placement Variations -->
-        <div class="panel-section">
-            <div class="panel-section-title">See More Placement</div>
-
-            <label class="panel-option selected" data-placement="a">
-                <input type="radio" name="placement" value="a" checked>
-                <div class="panel-option-content">
-                    <div class="panel-option-label">A: Header-Right Link</div>
-                    <div class="panel-option-desc">Blue text link next to "Coffee Makers" heading</div>
-                </div>
-            </label>
-
-            <label class="panel-option" data-placement="b">
-                <input type="radio" name="placement" value="b">
-                <div class="panel-option-content">
-                    <div class="panel-option-label">B: Full-Width Button</div>
-                    <div class="panel-option-desc">Outlined button below the carousel navigation</div>
-                </div>
-            </label>
-
-            <label class="panel-option" data-placement="c">
-                <input type="radio" name="placement" value="c">
-                <div class="panel-option-content">
-                    <div class="panel-option-label">C: See More Card</div>
-                    <div class="panel-option-desc">"See More" appears as the last card in the carousel</div>
-                </div>
-            </label>
-        </div>
-
-        <div class="panel-divider"></div>
-
-        <!-- Disclosure Variations -->
-        <div class="panel-section">
-            <div class="panel-section-title">Disclosure Pattern</div>
-
-            <label class="panel-option selected" data-disclosure="1">
-                <input type="radio" name="disclosure" value="1" checked>
-                <div class="panel-option-content">
-                    <div class="panel-option-label">1: Stacked Carousels</div>
-                    <div class="panel-option-desc">Reveals additional carousels grouped by sub-category</div>
-                </div>
-            </label>
-
-            <label class="panel-option" data-disclosure="2">
-                <input type="radio" name="disclosure" value="2">
-                <div class="panel-option-content">
-                    <div class="panel-option-label">2: Expand Grid Below</div>
-                    <div class="panel-option-desc">Additional products appear in a 2-column grid below the carousel</div>
-                </div>
-            </label>
-
-            <label class="panel-option" data-disclosure="3">
-                <input type="radio" name="disclosure" value="3">
-                <div class="panel-option-content">
-                    <div class="panel-option-label">3: Carousel Extends</div>
-                    <div class="panel-option-desc">More products load into the carousel, adding extra dots</div>
-                </div>
-            </label>
-
-            <label class="panel-option" data-disclosure="4">
-                <input type="radio" name="disclosure" value="4">
-                <div class="panel-option-content">
-                    <div class="panel-option-label">4: Open Product Page</div>
-                    <div class="panel-option-desc">Opens Williams Sonoma category page in a new tab</div>
-                </div>
-            </label>
-
-            <label class="panel-option" data-disclosure="5">
-                <input type="radio" name="disclosure" value="5">
-                <div class="panel-option-content">
-                    <div class="panel-option-label">5: Replace with List</div>
-                    <div class="panel-option-desc">Carousel switches to a compact scrollable list view</div>
-                </div>
-            </label>
-        </div>
-
-        <div class="panel-divider"></div>
-
-        <!-- CTA Pattern Variations -->
-        <div class="panel-section">
-            <div class="panel-section-title">CTA Pattern</div>
-
-            <label class="panel-option selected" data-cta="d">
-                <input type="radio" name="cta" value="d" checked>
-                <div class="panel-option-content">
-                    <div class="panel-option-label">D: Quick View from Sidebar</div>
-                    <div class="panel-option-desc">Quick View opens in a side panel overlay</div>
-                </div>
-            </label>
-
-            <label class="panel-option" data-cta="e">
-                <input type="radio" name="cta" value="e">
-                <div class="panel-option-content">
-                    <div class="panel-option-label">E: Quick View In-Chat Card</div>
-                    <div class="panel-option-desc">Quick View opens a detailed card as a new message in chat</div>
-                </div>
-            </label>
-        </div>
-
-        <!-- Spacer to push prototype toggle to bottom -->
-        <div style="flex:1;"></div>
-
-        <!-- Live Prototype Mode Toggle (bottom of panel) -->
+        <!-- Live Prototype Mode Toggle (top of panel) -->
         <div class="panel-proto-footer">
-            <div class="panel-divider"></div>
             <label class="panel-proto-toggle" for="prototypeModeToggle">
                 <span class="panel-proto-toggle-label">Live Prototype Mode</span>
                 <span class="toggle-switch">
-                    <input type="checkbox" id="prototypeModeToggle">
+                    <input type="checkbox" id="prototypeModeToggle" checked>
                     <span class="toggle-slider"></span>
                 </span>
             </label>
@@ -2123,6 +2391,225 @@
                 </label>
             </div>
         </div>
+
+        <div class="panel-divider"></div>
+
+        <div class="panel-accordion-controls">
+            <button type="button" id="accordionExpandAll">Expand all</button>
+            <button type="button" id="accordionCollapseAll">Collapse all</button>
+        </div>
+
+        <!-- 1. See More Placement -->
+        <details class="panel-accordion" open data-accordion-section>
+            <summary class="panel-accordion-header">1. See More Placement</summary>
+            <div class="panel-accordion-body">
+                <div class="panel-section">
+                    <label class="panel-option selected" data-placement="b" data-comment-target="1.1">
+                        <input type="radio" name="placement" value="b" checked>
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">1.1 Full-Width Button <span class="panel-option-badge recommended">Recommended</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Outlined button below the carousel navigation</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-placement="a" data-comment-target="1.2">
+                        <input type="radio" name="placement" value="a">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">1.2 Header-Right Link<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Blue text link next to "Coffee Makers" heading</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <!-- 2. Carousel Scroll -->
+        <details class="panel-accordion" data-accordion-section>
+            <summary class="panel-accordion-header">2. Carousel Scroll</summary>
+            <div class="panel-accordion-body">
+                <div class="panel-section">
+                    <label class="panel-option selected" data-carousel-scrolling="dots" data-comment-target="2.1">
+                        <input type="radio" name="carouselScrolling" value="dots" checked>
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">2.1 Dots and Arrows <span class="panel-option-badge recommended">Recommended</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Five pagination dots with left/right arrow buttons</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-carousel-scrolling="scrollbar" data-comment-target="2.2">
+                        <input type="radio" name="carouselScrolling" value="scrollbar">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">2.2 Scroll Bar <span class="panel-option-badge tech-limit">AgentForce Custom</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Horizontal scroll bar with track and draggable thumb. AgentForce complete customization — tech debt involved.</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <!-- 3. Disclosure Pattern -->
+        <details class="panel-accordion" data-accordion-section>
+            <summary class="panel-accordion-header">3. Disclosure Pattern</summary>
+            <div class="panel-accordion-body">
+                <div class="panel-section">
+                    <label class="panel-option" data-disclosure="2" data-comment-target="3.1">
+                        <input type="radio" name="disclosure" value="2">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">3.1 Expand Grid Below <span class="panel-option-badge recommended">Recommended</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Additional products appear in a 2-column grid below the carousel</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-disclosure="1" data-comment-target="3.2">
+                        <input type="radio" name="disclosure" value="1">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">3.2 Stacked Multiple Carousels <span class="panel-option-badge tech-limit">API Limited</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Reveals additional carousels grouped by sub-category</div>
+                        </div>
+                    </label>
+                    <label class="panel-option selected" data-disclosure="4" data-comment-target="3.3">
+                        <input type="radio" name="disclosure" value="4" checked>
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">3.3 Open Product Page <span class="panel-option-badge current-state">Current state</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Opens Williams Sonoma category page in a new tab</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-disclosure="6" data-comment-target="3.4">
+                        <input type="radio" name="disclosure" value="6">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">3.4 Single Stacked Carousel<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">One additional carousel below with more products</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-disclosure="5" data-comment-target="3.5">
+                        <input type="radio" name="disclosure" value="5">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">3.5 Replace with List<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Carousel switches to a compact scrollable list view</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <!-- 4. See more title -->
+        <details class="panel-accordion" data-accordion-section>
+            <summary class="panel-accordion-header">4. See more title</summary>
+            <div class="panel-accordion-body">
+                <div class="panel-section">
+                    <label class="panel-option selected" data-see-more-labels="1" data-comment-target="4.1">
+                        <input type="radio" name="seeMoreLabels" value="1" checked>
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">4.1 Customers also viewed<span class="panel-option-comment-badge"></span></div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-see-more-labels="2" data-comment-target="4.2">
+                        <input type="radio" name="seeMoreLabels" value="2">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">4.2 Customers also bought<span class="panel-option-comment-badge"></span></div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-see-more-labels="3" data-comment-target="4.3">
+                        <input type="radio" name="seeMoreLabels" value="3">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">4.3 Also in this collection<span class="panel-option-comment-badge"></span></div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-see-more-labels="4" data-comment-target="4.4">
+                        <input type="radio" name="seeMoreLabels" value="4">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">4.4 Your recently viewed<span class="panel-option-comment-badge"></span></div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-see-more-labels="5" data-comment-target="4.5">
+                        <input type="radio" name="seeMoreLabels" value="5">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">4.5 Recommended for you<span class="panel-option-comment-badge"></span></div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <!-- 5. CTA Pattern -->
+        <details class="panel-accordion" data-accordion-section>
+            <summary class="panel-accordion-header">5. CTA Pattern</summary>
+            <div class="panel-accordion-body">
+                <div class="panel-section">
+                    <label class="panel-option selected" data-cta="d" data-comment-target="5.1">
+                        <input type="radio" name="cta" value="d" checked>
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">5.1 Quick View from Sidebar <span class="panel-option-badge recommended">Recommended</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Mobile: full-screen overlay. Desktop: side panel, chat visible behind.</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-cta="e" data-comment-target="5.2">
+                        <input type="radio" name="cta" value="e">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">5.2 Quick View In-Chat Card <span class="panel-option-badge tech-limit">AgentForce Limited</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Quick View opens a detailed card as a new message in chat</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <!-- 6. Conversational AI nudges -->
+        <details class="panel-accordion" data-accordion-section>
+            <summary class="panel-accordion-header">6. Conversational AI nudges</summary>
+            <div class="panel-accordion-body">
+                <div class="panel-section">
+                    <label class="panel-option selected" data-ai-nudges="refine" data-comment-target="6.1">
+                        <input type="radio" name="aiNudges" value="refine" checked>
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">6.1 Refine your picks <span class="panel-option-badge recommended">Recommended</span><span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Filter by price, badges, categories, and help decide</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-ai-nudges="seemore" data-comment-target="6.2">
+                        <input type="radio" name="aiNudges" value="seemore">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">6.2 See more<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Discovery-focused: show more options, similar products, categories</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-ai-nudges="decide" data-comment-target="6.3">
+                        <input type="radio" name="aiNudges" value="decide">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">6.3 Decide or explore<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Frames as "decide" vs "explore" to reduce choice paralysis</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-ai-nudges="narrow" data-comment-target="6.4">
+                        <input type="radio" name="aiNudges" value="narrow">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">6.4 Narrow or explore<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Balanced: price/badge filters plus see more like this</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <!-- 7. Persistent Nudge Pattern -->
+        <details class="panel-accordion" data-accordion-section>
+            <summary class="panel-accordion-header">7. Persistent Nudge Pattern</summary>
+            <div class="panel-accordion-body">
+                <div class="panel-section">
+                    <label class="panel-option selected" data-nudge-pattern="1" data-comment-target="7.1">
+                        <input type="radio" name="nudgePattern" value="1" checked>
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">7.1 Grammarly-style<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Same options, categorized by intent (Discover, Decide, Shop)</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-nudge-pattern="3" data-comment-target="7.2">
+                        <input type="radio" name="nudgePattern" value="3">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">7.2 Prompt Builder<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">Same options, "Try asking" / "Add to your search" framing</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </details>
     </div>
 
     <!-- ===== RIGHT PREVIEW AREA ===== -->
@@ -2146,7 +2633,18 @@
                         <!-- chatContainer is moved here in mobile mode -->
                     </div>
                     <div class="mobile-input-bar">
-                        <input type="text" class="mobile-input-field" placeholder="Type your message..." disabled>
+                        <div class="input-bar-nudge-section">
+                            <div class="input-bar-nudge-header">What do you want to do?</div>
+                            <div class="input-bar-nudge-subheader">Here are some ideas</div>
+                            <div class="input-bar-nudges" id="mobileInputBarNudges">
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('What are the 6 modes for?')"><span class="nudge-chip-icon">✦</span>What are the 6 modes for?</button>
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('How does it compare to others?')"><span class="nudge-chip-icon">✦</span>How does it compare to others?</button>
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('What&#39;s included with the maker?')"><span class="nudge-chip-icon">✦</span>What's included with the maker?</button>
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('Show me cheaper options')"><span class="nudge-chip-icon">✦</span>Show me cheaper options</button>
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('Show me better reviewed')"><span class="nudge-chip-icon">✦</span>Show me better reviewed</button>
+                            </div>
+                        </div>
+                        <input type="text" class="mobile-input-field" placeholder="Ask me anything." disabled>
                     </div>
                     <div class="chat-minimized-fab" id="mobileMinimizedFab" onclick="restoreChat('mobile')">
                         <img src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="Open chat">
@@ -2259,7 +2757,18 @@
                     </div>
                     <!-- chatContainer is moved here in desktop mode -->
                     <div class="sidebar-input-bar" id="sidebarInputBar">
-                        <input type="text" class="sidebar-input-field" placeholder="Type your message..." disabled>
+                        <div class="input-bar-nudge-section">
+                            <div class="input-bar-nudge-header">What do you want to do?</div>
+                            <div class="input-bar-nudge-subheader">Here are some ideas</div>
+                            <div class="input-bar-nudges" id="sidebarInputBarNudges">
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('What are the 6 modes for?')"><span class="nudge-chip-icon">✦</span>What are the 6 modes for?</button>
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('How does it compare to others?')"><span class="nudge-chip-icon">✦</span>How does it compare to others?</button>
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('What&#39;s included with the maker?')"><span class="nudge-chip-icon">✦</span>What's included with the maker?</button>
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('Show me cheaper options')"><span class="nudge-chip-icon">✦</span>Show me cheaper options</button>
+                                <button type="button" class="input-bar-nudge-chip" onclick="handleInputBarNudge('Show me better reviewed')"><span class="nudge-chip-icon">✦</span>Show me better reviewed</button>
+                            </div>
+                        </div>
+                        <input type="text" class="sidebar-input-field" placeholder="Ask me anything." disabled>
                     </div>
                 </div>
                 <div class="chat-minimized-fab" id="desktopMinimizedFab" onclick="restoreChat('desktop')" style="position:absolute;bottom:20px;right:20px;">
@@ -2306,10 +2815,15 @@
                 </div>
 
                 <!-- Carousel Navigation -->
-                <div class="carousel-navigation">
+                <div class="carousel-navigation" id="carouselNavigation">
                     <button class="carousel-nav" id="prevBtn" onclick="handlePrevious()" disabled>&lsaquo;</button>
                     <div class="pagination-container" id="paginationDots"></div>
                     <button class="carousel-nav" id="nextBtn" onclick="handleNext()">&rsaquo;</button>
+                </div>
+                <div class="carousel-scrollbar-container" id="carouselScrollbar" style="display:none">
+                    <div class="carousel-scrollbar-track" id="carouselScrollbarTrack">
+                        <div class="carousel-scrollbar-thumb" id="carouselScrollbarThumb"></div>
+                    </div>
                 </div>
             </div>
 
@@ -2337,14 +2851,100 @@
 
     </div>
 
-    <!-- ===== RIGHT RAIL (UX Commentary) ===== -->
+    <!-- ===== RIGHT RAIL (UX Commentary or Comments in prototype mode) ===== -->
     <div class="ux-rail" id="uxRail">
-        <button class="ux-rail-toggle" id="uxRailToggle" title="Collapse UX commentary">&#x276F;</button>
+        <button class="ux-rail-toggle" id="uxRailToggle" title="Collapse">&#x276F;</button>
         <div class="ux-rail-header">
-            <div class="ux-rail-title">UX Commentary</div>
+            <div class="ux-rail-title" id="uxRailTitle">UX Commentary</div>
         </div>
         <div class="ux-rail-body">
             <div class="ux-explanations" id="uxExplanations"></div>
+            <div class="comments-rail" id="commentsRail">
+                <div class="comments-form">
+                    <div>
+                        <label for="commentTarget">Comment on</label>
+                        <select id="commentTarget">
+                            <option value="1.1">1.1 Full-Width Button</option>
+                            <option value="1.2">1.2 Header-Right Link</option>
+                            <option value="2.1">2.1 Dots and Arrows</option>
+                            <option value="2.2">2.2 Scroll Bar</option>
+                            <option value="3.1">3.1 Expand Grid Below</option>
+                            <option value="3.2">3.2 Stacked Multiple Carousels</option>
+                            <option value="3.3">3.3 Open Product Page</option>
+                            <option value="3.4">3.4 Single Stacked Carousel</option>
+                            <option value="3.5">3.5 Replace with List</option>
+                            <option value="4.1">4.1 Customers also viewed</option>
+                            <option value="4.2">4.2 Customers also bought</option>
+                            <option value="4.3">4.3 Also in this collection</option>
+                            <option value="4.4">4.4 Your recently viewed</option>
+                            <option value="4.5">4.5 Recommended for you</option>
+                            <option value="5.1">5.1 Quick View from Sidebar</option>
+                            <option value="5.2">5.2 Quick View In-Chat Card</option>
+                            <option value="6.1">6.1 Refine your picks</option>
+                            <option value="6.2">6.2 See more</option>
+                            <option value="6.3">6.3 Decide or explore</option>
+                            <option value="6.4">6.4 Narrow or explore</option>
+                            <option value="7.1">7.1 Grammarly-style</option>
+                            <option value="7.2">7.2 Prompt Builder</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="commentAuthor">Your name</label>
+                        <input type="text" id="commentAuthor" placeholder="Enter your name" maxlength="80">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:0.25rem;">Comment type</label>
+                        <div class="comments-form-comment-type" id="commentTypeGroup">
+                            <label class="radio-option">
+                                <input type="radio" name="commentType" value="tech" checked>
+                                Tech considerations
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="commentType" value="golive">
+                                Expected go live date
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="commentType" value="general">
+                                General
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="commentText">Comment</label>
+                        <textarea id="commentText" placeholder="Share feedback, questions, or notes... (Ctrl+Enter to submit)"></textarea>
+                    </div>
+                    <button type="button" class="comments-submit-btn" onclick="submitComment()">Post comment</button>
+                </div>
+                <div class="comments-filter">
+                    <label for="commentsFilter">View:</label>
+                    <select id="commentsFilter" onchange="setCommentsFilter(this.value)">
+                        <option value="">All comments</option>
+                        <option value="1.1">1.1 Full-Width Button</option>
+                        <option value="1.2">1.2 Header-Right Link</option>
+                        <option value="2.1">2.1 Dots and Arrows</option>
+                        <option value="2.2">2.2 Scroll Bar</option>
+                        <option value="3.1">3.1 Expand Grid Below</option>
+                        <option value="3.2">3.2 Stacked Multiple Carousels</option>
+                        <option value="3.3">3.3 Open Product Page</option>
+                        <option value="3.4">3.4 Single Stacked Carousel</option>
+                        <option value="3.5">3.5 Replace with List</option>
+                        <option value="4.1">4.1 Customers also viewed</option>
+                        <option value="4.2">4.2 Customers also bought</option>
+                        <option value="4.3">4.3 Also in this collection</option>
+                        <option value="4.4">4.4 Your recently viewed</option>
+                        <option value="4.5">4.5 Recommended for you</option>
+                        <option value="5.1">5.1 Quick View from Sidebar</option>
+                        <option value="5.2">5.2 Quick View In-Chat Card</option>
+                        <option value="6.1">6.1 Refine your picks</option>
+                        <option value="6.2">6.2 See more</option>
+                        <option value="6.3">6.3 Decide or explore</option>
+                        <option value="6.4">6.4 Narrow or explore</option>
+                        <option value="7.1">7.1 Grammarly-style</option>
+                        <option value="7.2">7.2 Prompt Builder</option>
+                    </select>
+                </div>
+                <div class="comments-list" id="commentsList"></div>
+            </div>
         </div>
     </div>
 
@@ -2452,39 +3052,48 @@
 
         // Extra products for disclosure patterns
         const extraProducts = [
-            {
-                id: '6',
-                name: 'Cuisinart Touchscreen 14-Cup Coffee Maker',
-                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202514/0010/cuisinart-touchscreen-14-cup-coffee-maker-o.jpg',
-                price: 129.95,
-                badge: 'topRated',
-                productUrl: 'https://www.williams-sonoma.com/products/cuisinart-touchscreen-12-cup-coffee-maker/'
-            },
-            {
-                id: '7',
-                name: 'De\'Longhi TrueBrew Automatic Coffee Maker',
-                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202509/0002/delonghi-truebrew-automatic-coffee-maker-with-bean-extract-1-o.jpg',
-                price: 329.95,
-                badge: 'bestSeller',
-                productUrl: 'https://www.williams-sonoma.com/products/delonghi-truebrew-auto-coffee-with-bean-extract-carafe/'
-            },
-            {
-                id: '8',
-                name: 'Cuisinart Coffee-On-Demand 12-Cup Programmable',
-                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202406/0092/img7o.jpg',
-                price: 99.95,
-                badge: null,
-                productUrl: 'https://www.williams-sonoma.com/products/cuisinart-coffee-on-demand-coffee-maker/'
-            },
-            {
-                id: '9',
-                name: 'Open Kitchen Programmable Coffee Maker, 12-cup',
-                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg',
-                price: 59.95,
-                badge: 'topRated',
-                productUrl: 'https://www.williams-sonoma.com/products/open-kitchen-by-ws-programmable-coffee-maker/'
-            }
+            { id: '6', name: 'Cuisinart Touchscreen 14-Cup Coffee Maker', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202514/0010/cuisinart-touchscreen-14-cup-coffee-maker-o.jpg', price: 129.95, badge: 'topRated', productUrl: 'https://www.williams-sonoma.com/products/cuisinart-touchscreen-12-cup-coffee-maker/' },
+            { id: '7', name: 'De\'Longhi TrueBrew Automatic Coffee Maker', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202509/0002/delonghi-truebrew-automatic-coffee-maker-with-bean-extract-1-o.jpg', price: 329.95, badge: 'bestSeller', productUrl: 'https://www.williams-sonoma.com/products/delonghi-truebrew-auto-coffee-with-bean-extract-carafe/' },
+            { id: '8', name: 'Cuisinart Coffee-On-Demand 12-Cup Programmable', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202406/0092/img7o.jpg', price: 99.95, badge: null, productUrl: 'https://www.williams-sonoma.com/products/cuisinart-coffee-on-demand-coffee-maker/' },
+            { id: '9', name: 'Open Kitchen Programmable Coffee Maker, 12-cup', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg', price: 59.95, badge: 'topRated', productUrl: 'https://www.williams-sonoma.com/products/open-kitchen-by-ws-programmable-coffee-maker/' }
         ];
+
+        // See more title label presets (label1, label2 for the two sections)
+        const seeMoreLabelPresets = {
+            '1': { label1: 'Customers also viewed', label2: 'Customers also bought' },
+            '2': { label1: 'Customers also bought', label2: 'Also in this collection' },
+            '3': { label1: 'Also in this collection', label2: 'Your recently viewed' },
+            '4': { label1: 'Your recently viewed', label2: 'Recommended for you' },
+            '5': { label1: 'Recommended for you', label2: 'Customers also viewed' }
+        };
+        let activeSeeMoreLabels = '1';
+
+        // Customers also viewed & Your recently viewed (~20 items for See More disclosure)
+        const peopleAlsoViewed = [
+            { id: 'pav1', name: 'Breville Barista Express', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg', price: 749.95, badge: 'bestSeller', productUrl: '#' },
+            { id: 'pav2', name: 'De\'Longhi La Specialista', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202509/0002/delonghi-truebrew-automatic-coffee-maker-with-bean-extract-1-o.jpg', price: 599.95, badge: 'topRated', productUrl: '#' },
+            { id: 'pav3', name: 'Nespresso Vertuo Next', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202414/0036/moccamaster-by-technivorm-kbgv-select-10-cup-coffee-maker-o.jpg', price: 199.95, badge: 'olivePick', productUrl: '#' },
+            { id: 'pav4', name: 'Baratza Encore ESP Grinder', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg', price: 199.95, badge: 'topRated', productUrl: '#' },
+            { id: 'pav5', name: 'Fellow Ode Brew Grinder Gen 2', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg', price: 345.00, badge: 'olivePick', productUrl: '#' },
+            { id: 'pav6', name: 'JURA E8 Automatic Coffee Center', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg', price: 1499.95, badge: null, productUrl: '#' },
+            { id: 'pav7', name: 'SMEG Espresso Machine', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg', price: 449.95, badge: 'bestSeller', productUrl: '#' },
+            { id: 'pav8', name: 'Comandante C40 Hand Grinder', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg', price: 275.00, badge: 'bestSeller', productUrl: '#' },
+            { id: 'pav9', name: 'Breville Smart Grinder Pro', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg', price: 199.95, badge: 'topRated', productUrl: '#' },
+            { id: 'pav10', name: '1Zpresso J-Max Manual Grinder', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg', price: 199.00, badge: 'olivePick', productUrl: '#' }
+        ];
+        const recentlyViewed = [
+            { id: 'rv1', name: 'Hamilton Beach FlexBrew', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg', price: 79.99, badge: null, productUrl: '#' },
+            { id: 'rv2', name: 'Ninja Dual Brew Pro', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg', price: 229.99, badge: 'bestSeller', productUrl: '#' },
+            { id: 'rv3', name: 'Keurig K-Elite', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg', price: 149.99, badge: 'topRated', productUrl: '#' },
+            { id: 'rv4', name: 'Mr. Coffee 12-Cup Programmable', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg', price: 39.99, badge: null, productUrl: '#' },
+            { id: 'rv5', name: 'Bunn Velocity Brew', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202414/0036/moccamaster-by-technivorm-kbgv-select-10-cup-coffee-maker-o.jpg', price: 169.99, badge: 'olivePick', productUrl: '#' },
+            { id: 'rv6', name: 'Black+Decker 12-Cup', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202514/0010/cuisinart-touchscreen-14-cup-coffee-maker-o.jpg', price: 34.99, badge: null, productUrl: '#' },
+            { id: 'rv7', name: 'Cafe Specialty Drip', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg', price: 199.99, badge: 'topRated', productUrl: '#' },
+            { id: 'rv8', name: 'Bonavita Connoisseur', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202509/0002/delonghi-truebrew-automatic-coffee-maker-with-bean-extract-1-o.jpg', price: 159.99, badge: null, productUrl: '#' },
+            { id: 'rv9', name: 'KitchenAid Pour-Over', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202406/0092/img7o.jpg', price: 179.99, badge: 'bestSeller', productUrl: '#' },
+            { id: 'rv10', name: 'Bodum Bistro Electric', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg', price: 89.99, badge: null, productUrl: '#' }
+        ];
+        const seeMoreProducts = [...peopleAlsoViewed, ...recentlyViewed]; // ~20 items
 
         // Sub-category data for Disclosure 5
         const subCategories = [
@@ -2514,9 +3123,11 @@
         let currentIndex = 0;
         let itemsPerView = 2;
         let TOTAL_DOTS = 5;
-        let activePlacement = 'a';
-        let activeDisclosure = '1';
+        let activePlacement = 'b';
+        let activeCarouselScrolling = 'dots';
+        let activeDisclosure = '4';
         let activeCtaPattern = 'd';
+        let activeAiNudges = 'refine';
         let isExpanded = false;
         let allProducts = [...mockProducts]; // used for disclosure 2
         let activeQuickView = null; // Currently open Quick View product
@@ -2529,18 +3140,9 @@
 
         function getVisibleItems() {
             const items = [];
-            // Only show See More card for placement C when NOT yet expanded
-            const showSeeMoreCard = activePlacement === 'c' && !isExpanded;
-            const totalItems = showSeeMoreCard ? allProducts.length + 1 : allProducts.length;
-            
             for (let i = 0; i < itemsPerView; i++) {
-                const idx = (currentIndex + i) % totalItems;
-                
-                if (showSeeMoreCard && idx === allProducts.length) {
-                    items.push({ type: 'seeMore' });
-                } else {
-                    items.push({ type: 'product', product: allProducts[idx] });
-                }
+                const idx = (currentIndex + i) % allProducts.length;
+                items.push({ type: 'product', product: allProducts[idx] });
             }
             return items;
         }
@@ -2588,25 +3190,13 @@
                 </div>`;
         }
 
-        function renderSeeMoreCard() {
-            return `
-                <div class="see-more-card see-more-c">
-                    <div class="see-more-card-inner" onclick="handleSeeMore(event)">
-                        <div class="see-more-card-icon">&rsaquo;</div>
-                        <div class="see-more-card-text">See More</div>
-                    </div>
-                </div>`;
-        }
-
         function renderCarousel() {
             // Render in standalone container (source of truth)
             const standalone = document.getElementById('standaloneContainer');
             const track = standalone ? standalone.querySelector('#carouselTrack') : document.getElementById('carouselTrack');
             if (track) {
                 const items = getVisibleItems();
-                track.innerHTML = items.map(item => 
-                    item.type === 'seeMore' ? renderSeeMoreCard() : renderProductCard(item.product)
-                ).join('');
+                track.innerHTML = items.map(item => renderProductCard(item.product)).join('');
             }
             
             updateNavigation();
@@ -2627,8 +3217,39 @@
             if (nextBtn) nextBtn.disabled = currentIndex >= TOTAL_DOTS - 1;
         }
 
+        function applyCarouselScrolling(value) {
+            activeCarouselScrolling = value || 'dots';
+            document.querySelectorAll('[data-carousel-scrolling]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.carouselScrolling === activeCarouselScrolling);
+            });
+            const standalone = document.getElementById('standaloneContainer');
+            const nav = standalone ? standalone.querySelector('#carouselNavigation') : document.getElementById('carouselNavigation');
+            const scrollbar = standalone ? standalone.querySelector('#carouselScrollbar') : document.getElementById('carouselScrollbar');
+            if (nav) nav.style.display = activeCarouselScrolling === 'dots' ? '' : 'none';
+            if (scrollbar) scrollbar.style.display = activeCarouselScrolling === 'scrollbar' ? 'block' : 'none';
+            renderCarousel();
+        }
+        window.applyCarouselScrolling = applyCarouselScrolling;
+
+        function updateScrollbar(container) {
+            if (activeCarouselScrolling !== 'scrollbar') return;
+            const track = container ? container.querySelector('#carouselScrollbarTrack') : document.getElementById('carouselScrollbarTrack');
+            const thumb = container ? container.querySelector('#carouselScrollbarThumb') : document.getElementById('carouselScrollbarThumb');
+            if (!track || !thumb || TOTAL_DOTS < 1) return;
+            const trackWidth = track.offsetWidth;
+            const thumbWidth = Math.max(24, (trackWidth / TOTAL_DOTS));
+            const maxLeft = trackWidth - thumbWidth;
+            const left = TOTAL_DOTS <= 1 ? 0 : (currentIndex / (TOTAL_DOTS - 1)) * maxLeft;
+            thumb.style.width = thumbWidth + 'px';
+            thumb.style.left = left + 'px';
+        }
+
         function renderPagination() {
             const standalone = document.getElementById('standaloneContainer');
+            if (activeCarouselScrolling === 'scrollbar') {
+                updateScrollbar(standalone);
+                return;
+            }
             const dots = standalone ? standalone.querySelector('#paginationDots') : document.getElementById('paginationDots');
             if (dots) {
                 dots.innerHTML = Array.from({ length: TOTAL_DOTS }, (_, i) =>
@@ -2640,6 +3261,52 @@
         function handlePrevious() { if (currentIndex > 0) { currentIndex--; renderCarousel(); } }
         function handleNext() { if (currentIndex < TOTAL_DOTS - 1) { currentIndex++; renderCarousel(); } }
         function goToSlide(i) { if (i >= 0 && i < TOTAL_DOTS) { currentIndex = i; renderCarousel(); } }
+
+        function setupScrollbarHandlers() {
+            document.addEventListener('click', (e) => {
+                const track = e.target.closest('.carousel-scrollbar-track');
+                if (!track || e.target.closest('.carousel-scrollbar-thumb')) return;
+                const rect = track.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const trackWidth = track.offsetWidth;
+                const thumbWidth = Math.max(24, trackWidth / TOTAL_DOTS);
+                const maxLeft = trackWidth - thumbWidth;
+                if (TOTAL_DOTS <= 1 || maxLeft <= 0) return;
+                const frac = Math.max(0, Math.min(1, (x - thumbWidth / 2) / maxLeft));
+                const idx = Math.round(frac * (TOTAL_DOTS - 1));
+                goToSlide(Math.max(0, Math.min(idx, TOTAL_DOTS - 1)));
+            });
+            let scrollbarDragging = false;
+            let dragStartX = 0, dragStartLeft = 0, dragTrackWidth = 0, dragThumbWidth = 0;
+            document.addEventListener('mousedown', (e) => {
+                const thumb = e.target.closest('.carousel-scrollbar-thumb');
+                if (!thumb) return;
+                e.preventDefault();
+                scrollbarDragging = true;
+                const track = thumb.closest('.carousel-scrollbar-track');
+                if (!track) return;
+                dragStartX = e.clientX;
+                dragStartLeft = thumb.offsetLeft;
+                dragTrackWidth = track.offsetWidth;
+                dragThumbWidth = thumb.offsetWidth;
+            });
+            document.addEventListener('mousemove', (e) => {
+                if (!scrollbarDragging) return;
+                const maxLeft = dragTrackWidth - dragThumbWidth;
+                if (maxLeft <= 0) return;
+                const delta = e.clientX - dragStartX;
+                const newLeft = Math.max(0, Math.min(maxLeft, dragStartLeft + delta));
+                const frac = newLeft / maxLeft;
+                const idx = Math.round(frac * (TOTAL_DOTS - 1));
+                const newIdx = Math.max(0, Math.min(idx, TOTAL_DOTS - 1));
+                if (newIdx !== currentIndex) {
+                    currentIndex = newIdx;
+                    renderCarousel();
+                }
+            });
+            document.addEventListener('mouseup', () => { scrollbarDragging = false; });
+        }
+        setupScrollbarHandlers();
 
         // ===== HELPERS: always target standalone container (source of truth) =====
         function getStandalone() {
@@ -2663,7 +3330,30 @@
             { id: 'cat_grinder',  label: 'Coffee Grinders',    icon: '⚙️', type: 'category', value: 1, accent: true },
             { id: 'link_browse',  label: 'Browse All on WS',   icon: '→',  type: 'link',    accent: true },
             { id: 'help_decide',  label: 'Help Me Decide',     icon: '💬', type: 'help',    accent: true },
+            { id: 'more_options', label: 'Show me more options', icon: '➕', type: 'more' },
+            { id: 'similar_products', label: 'Similar products', icon: '🔄', type: 'similar' },
+            { id: 'compare_top',  label: 'Compare top picks', icon: '⚖️', type: 'help' },
+            { id: 'more_like_this', label: 'See more like this', icon: '🔄', type: 'similar' },
         ];
+
+        const aiNudgePresets = {
+            refine: {
+                label: 'Refine your picks',
+                chipIds: ['price_200', 'price_400', 'price_999', 'badge_top', 'badge_best', 'badge_olive', 'cat_espresso', 'cat_grinder', 'help_decide', 'link_browse']
+            },
+            seemore: {
+                label: 'See more',
+                chipIds: ['more_options', 'similar_products', 'cat_espresso', 'cat_grinder', 'help_decide', 'link_browse']
+            },
+            decide: {
+                label: 'What would you like to do?',
+                chipIds: ['help_decide', 'compare_top', 'more_options', 'cat_espresso', 'cat_grinder', 'link_browse']
+            },
+            narrow: {
+                label: 'Narrow your search or explore more',
+                chipIds: ['price_200', 'price_400', 'price_999', 'badge_top', 'badge_olive', 'more_like_this', 'cat_espresso', 'cat_grinder', 'help_decide', 'link_browse']
+            }
+        };
 
         // Contextual commentary per chip type/value
         const commentary = {
@@ -2676,6 +3366,10 @@
             cat_espresso: 'Take a look at our espresso machines:',
             cat_grinder:  'Here are some coffee grinders to pair with your maker:',
             help_decide:  'Based on ratings and popularity, here are my top 3 recommendations:',
+            compare_top:  'Based on ratings and popularity, here are my top 3 recommendations:',
+            more_options: 'Here are more coffee maker options:',
+            similar_products: 'Here are similar products you might like:',
+            more_like_this: 'Here are more like the ones you\'ve seen:',
         };
 
         // Which chip IDs to offer NEXT after a given chip type
@@ -2692,6 +3386,8 @@
                 return ['price_200', 'price_400', 'price_999', 'badge_top', 'badge_best', 'badge_olive', 'help_decide'];
             } else if (usedType === 'help') {
                 return ['price_200', 'price_400', 'price_999', 'link_browse'];
+            } else if (usedType === 'more' || usedType === 'similar') {
+                return ['price_200', 'price_400', 'price_999', 'badge_top', 'badge_best', 'badge_olive', 'cat_espresso', 'cat_grinder', 'help_decide', 'link_browse'];
             }
             return allChipDefs.filter(c => c.type !== 'link').map(c => c.id);
         }
@@ -2714,6 +3410,8 @@
             } else if (chipDef.type === 'help') {
                 const priority = { olivePick: 1, bestSeller: 2, topRated: 3 };
                 return [...allItems].sort((a, b) => (priority[a.badge] || 99) - (priority[b.badge] || 99)).slice(0, 3);
+            } else if (chipDef.type === 'more' || chipDef.type === 'similar') {
+                return [...seeMoreProducts].slice(0, 6);
             }
             return [];
         }
@@ -2735,9 +3433,11 @@
         // Render the initial nudge chips row (after See More)
         function renderNudgeChips() {
             const row = $id('nudgeChipsRow');
+            const labelEl = $id('nudgeChips')?.querySelector('.nudge-chips-label');
             if (!row) return;
-            const initialIds = allChipDefs.filter(c => c.type !== 'link').map(c => c.id);
-            row.innerHTML = renderChipButtons(initialIds, -1);
+            const preset = aiNudgePresets[activeAiNudges] || aiNudgePresets.refine;
+            if (labelEl) labelEl.textContent = preset.label;
+            row.innerHTML = renderChipButtons(preset.chipIds, -1);
         }
 
         function showNudgeChips() {
@@ -2796,7 +3496,7 @@
 
         // Render products in the style matching the active disclosure pattern
         function renderTurnProducts(products, turnId) {
-            if (activeDisclosure === '1' || activeDisclosure === '3') {
+            if (activeDisclosure === '1' || activeDisclosure === '6') {
                 return renderTurnCarousel(products, turnId);
             } else if (activeDisclosure === '5') {
                 return renderTurnList(products);
@@ -2806,7 +3506,7 @@
             }
         }
 
-        // Mini-carousel for turn (disclosures 1 & 3)
+        // Mini-carousel for turn (disclosures 1 & 6)
         function renderTurnCarousel(products, turnId) {
             const carouselId = `turnCarousel_${turnId}`;
             turnCarouselIndices[carouselId] = 0;
@@ -2837,7 +3537,7 @@
                 </div>`;
         }
 
-        // Compact list for turn (disclosure 4)
+        // Compact list for turn (disclosure 5)
         function renderTurnList(products) {
             return `<div class="turn-list">${products.map(p => `
                 <a href="${p.productUrl}" target="_blank" rel="noopener noreferrer" class="list-item">
@@ -2966,6 +3666,124 @@
         // Make nudge handler global
         window.handleNudgeChip = handleNudgeChip;
 
+        // ===== PERSISTENT INPUT BAR NUDGES =====
+        let activeNudgePattern = '1';
+
+        // Shared options for all persistent nudge patterns (Williams-Sonoma retail UX)
+        const persistentNudgeOptions = [
+            { id: 'help_decide', label: 'Help me decide', icon: '💬' },
+            { id: 'best_sellers', label: 'Best sellers', icon: '🔥' },
+            { id: 'gift_ideas', label: 'Gift ideas', icon: '🎁' },
+            { id: 'compare_products', label: 'Compare products', icon: '⚖️' },
+            { id: 'whats_new', label: "What's new", icon: '✨' },
+            { id: 'track_order', label: 'Track my order', icon: '📦' }
+        ];
+
+        function renderPersistentChip(opt, onclick) {
+            const escaped = opt.label.replace(/'/g, "\\'");
+            return `<button type="button" class="input-bar-nudge-chip" onclick="${onclick}('${escaped}')"><span class="nudge-chip-icon">${opt.icon}</span>${opt.label}</button>`;
+        }
+
+        const nudgePatternData = {
+            '1': { // Grammarly-style: categorized by intent
+                header: '',
+                subheader: '',
+                html: (onclick) => {
+                    const discover = persistentNudgeOptions.filter(o => ['best_sellers', 'whats_new', 'gift_ideas'].includes(o.id));
+                    const decide = persistentNudgeOptions.filter(o => ['help_decide', 'compare_products'].includes(o.id));
+                    const shop = persistentNudgeOptions.filter(o => ['track_order'].includes(o.id));
+                    return `
+                    <div class="nudge-category">
+                        <div class="nudge-category-title">Discover</div>
+                        <div class="nudge-category-chips">${discover.map(o => renderPersistentChip(o, onclick)).join('')}</div>
+                    </div>
+                    <div class="nudge-category">
+                        <div class="nudge-category-title">Decide</div>
+                        <div class="nudge-category-chips">${decide.map(o => renderPersistentChip(o, onclick)).join('')}</div>
+                    </div>
+                    <div class="nudge-category">
+                        <div class="nudge-category-title">Shop</div>
+                        <div class="nudge-category-chips">${shop.map(o => renderPersistentChip(o, onclick)).join('')}</div>
+                    </div>`;
+                }
+            },
+            '3': { // Prompt Builder: Add to your search
+                header: 'Try asking',
+                subheader: 'Add to your search',
+                html: (onclick) => `
+                    <div class="input-bar-nudges">${persistentNudgeOptions.map(o => renderPersistentChip(o, onclick)).join('')}</div>
+                `
+            }
+        };
+
+        function renderNudgePattern() {
+            const data = nudgePatternData[activeNudgePattern];
+            if (!data) return;
+            const onclick = "handleInputBarNudge";
+
+            const sectionHtml = `
+                <div class="input-bar-nudge-section">
+                    ${data.header ? `<div class="input-bar-nudge-header">${data.header}</div>` : ''}
+                    ${data.subheader ? `<div class="input-bar-nudge-subheader">${data.subheader}</div>` : ''}
+                    ${data.html(onclick)}
+                </div>
+            `;
+
+            const mobileSection = document.querySelector('.mobile-input-bar .input-bar-nudge-section');
+            const sidebarSection = document.querySelector('.sidebar-input-bar .input-bar-nudge-section');
+            if (mobileSection) mobileSection.outerHTML = sectionHtml;
+            if (sidebarSection) sidebarSection.outerHTML = sectionHtml;
+        }
+
+        function applyNudgePattern(value) {
+            activeNudgePattern = value;
+            document.querySelectorAll('[data-nudge-pattern]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.nudgePattern === value);
+            });
+            renderNudgePattern();
+        }
+
+        document.querySelectorAll('input[name="nudgePattern"]').forEach(radio => {
+            radio.addEventListener('change', () => applyNudgePattern(radio.value));
+        });
+
+        function handleInputBarNudge(text) {
+            const thread = $id('conversationThread');
+            if (!thread) return;
+
+            const responses = {
+                'Help me decide': 'Based on ratings and popularity, here are my top 3 recommendations for coffee makers.',
+                'Best sellers': 'Here are our current best-selling coffee makers.',
+                'Gift ideas': 'Here are some great gift ideas from our coffee and kitchen collection.',
+                'Compare products': 'Let me compare these options for you. The Breville and Moccamaster are premium picks; the Café and OXO offer great value.',
+                "What's new": 'Here are our newest arrivals in coffee makers and accessories.',
+                'Track my order': 'I can help you track your order. Please share your order number, or visit the Order Status page in your account.'
+            };
+            const responseText = responses[text] || "Here's what I found.";
+
+            const userMsg = `
+                <div class="chat-message user">
+                    <div class="message-bubble">
+                        <div class="message-text">${text}</div>
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>`;
+            const agentMsg = `
+                <div class="chat-message agent">
+                    <div class="chat-avatar"><img src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="Agent Olive"></div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">${responseText}</div>
+                        </div>
+                    </div>
+                </div>`;
+
+            thread.insertAdjacentHTML('beforeend', userMsg + agentMsg);
+            syncChatContainer();
+            autoScrollToLatestTurn();
+        }
+        window.handleInputBarNudge = handleInputBarNudge;
+
         // ===== SEE MORE HANDLER =====
         function handleSeeMore(e) {
             if (e) {
@@ -2978,8 +3796,8 @@
                 showStackedCarousels();
             } else if (activeDisclosure === '2') {
                 expandGrid();
-            } else if (activeDisclosure === '3') {
-                extendCarousel();
+            } else if (activeDisclosure === '6') {
+                showSingleStackedCarousel();
             } else if (activeDisclosure === '4') {
                 window.open('https://www.williams-sonoma.com/shop/electrics/coffee-makers/', '_blank');
                 return; // Don't hide See More for external link
@@ -2995,25 +3813,27 @@
         }
 
         function hideSeeMore() {
-            // Hide all See More elements
             getStandalone().querySelectorAll('.see-more-a, .see-more-b').forEach(el => {
                 el.classList.add('is-hidden');
             });
-            // For placement C, re-render carousel without the See More card
-            if (activePlacement === 'c') {
-                TOTAL_DOTS = allProducts.length;
-                currentIndex = Math.min(currentIndex, TOTAL_DOTS - 1);
-                renderCarousel();
-            }
         }
 
-        // Disclosure 1: Expand grid (one-way, no toggle)
+        // Disclosure 1: Expand grid (one-way, no toggle) — uses active see more labels
         function expandGrid() {
+            const preset = seeMoreLabelPresets[activeSeeMoreLabels] || seeMoreLabelPresets['1'];
             const grid = $id('expandedGrid');
             grid.innerHTML = `
-                <div class="expanded-grid-title">More Coffee Makers</div>
-                <div class="expanded-grid-track">
-                    ${extraProducts.map(renderProductCard).join('')}
+                <div class="expanded-grid-section">
+                    <div class="expanded-grid-title">${preset.label1}</div>
+                    <div class="expanded-grid-track">
+                        ${peopleAlsoViewed.map(renderProductCard).join('')}
+                    </div>
+                </div>
+                <div class="expanded-grid-section">
+                    <div class="expanded-grid-title">${preset.label2}</div>
+                    <div class="expanded-grid-track">
+                        ${recentlyViewed.map(renderProductCard).join('')}
+                    </div>
                 </div>
             `;
             grid.classList.add('visible');
@@ -3088,17 +3908,10 @@
             hideNudgeChips();
         }
 
-        // Disclosure 2: Extend carousel (one-way)
-        function extendCarousel() {
-            allProducts = [...mockProducts, ...extraProducts];
-            TOTAL_DOTS = allProducts.length + (activePlacement === 'c' ? 1 : 0);
-            renderCarousel();
-        }
-
-        // Disclosure 4: List view (one-way)
+        // Disclosure 5: List view (one-way) — People also viewed + Recently viewed (~20 items)
         function showListView() {
             const list = $id('scrollableList');
-            const allItems = [...mockProducts, ...extraProducts];
+            const allItems = [...mockProducts, ...seeMoreProducts];
             list.innerHTML = allItems.map(p => `
                 <a href="${p.productUrl}" target="_blank" rel="noopener noreferrer" class="list-item">
                     <img src="${p.imageUrl}" class="list-item-img" alt="${p.name}"
@@ -3194,7 +4007,18 @@
             syncChatContainer();
         }
         
-        // Disclosure 5: Stacked carousels (one-way)
+        // Disclosure 3: Single stacked carousel (one-way) — People also viewed + Recently viewed (~20 items)
+        function showSingleStackedCarousel() {
+            const container = $id('stackedCarousels');
+            if (!container) return;
+            const preset = seeMoreLabelPresets[activeSeeMoreLabels] || seeMoreLabelPresets['1'];
+            const singleCategory = { title: preset.label1 + ' & ' + preset.label2, products: seeMoreProducts };
+            subCarouselIndices['subCarousel_0'] = 0;
+            container.innerHTML = renderSubCarousel(0, singleCategory);
+            container.classList.add('visible');
+        }
+
+        // Disclosure 1: Stacked multiple carousels (one-way)
         function showStackedCarousels() {
             const container = $id('stackedCarousels');
             if (!container) return;
@@ -3216,28 +4040,16 @@
 
         // ===== PLACEMENT / DISCLOSURE TOGGLING =====
         function applyPlacement(value) {
-            // Reset any open disclosure
             resetDisclosure();
             allProducts = [...mockProducts];
-
             activePlacement = value;
-            // Hide all placement elements (A, B are separate UI elements)
             getStandalone().querySelectorAll('.see-more-a, .see-more-b').forEach(el => {
                 el.classList.add('is-hidden');
             });
-
-            if (value === 'c') {
-                TOTAL_DOTS = 6; // 5 products + 1 See More card
-            } else {
-                TOTAL_DOTS = 5;
-            }
-            
-            // Show selected placement element (A or B)
-            if (value !== 'c') {
-                getStandalone().querySelectorAll(`.see-more-${value}`).forEach(el => {
-                    el.classList.remove('is-hidden');
-                });
-            }
+            TOTAL_DOTS = 5;
+            getStandalone().querySelectorAll(`.see-more-${value}`).forEach(el => {
+                el.classList.remove('is-hidden');
+            });
             
             // Reset carousel index if needed
             currentIndex = 0;
@@ -3257,16 +4069,11 @@
             resetDisclosure();
             // Reset carousel to original products
             allProducts = [...mockProducts];
-            // Set TOTAL_DOTS based on active placement
-            TOTAL_DOTS = activePlacement === 'c' ? 6 : 5;
+            TOTAL_DOTS = 5;
             currentIndex = 0;
-
-            // Re-show See More elements for the active placement
-            if (activePlacement !== 'c') {
-                getStandalone().querySelectorAll(`.see-more-${activePlacement}`).forEach(el => {
-                    el.classList.remove('is-hidden');
-                });
-            }
+            getStandalone().querySelectorAll(`.see-more-${activePlacement}`).forEach(el => {
+                el.classList.remove('is-hidden');
+            });
 
             renderCarousel();
 
@@ -3286,6 +4093,9 @@
         });
         document.querySelectorAll('input[name="disclosure"]').forEach(radio => {
             radio.addEventListener('change', () => applyDisclosure(radio.value));
+        });
+        document.querySelectorAll('input[name="carouselScrolling"]').forEach(radio => {
+            radio.addEventListener('change', () => applyCarouselScrolling(radio.value));
         });
 
         // ===== PROTOTYPE MODE & DEVICE TOGGLE =====
@@ -3450,36 +4260,33 @@
             const track = container.querySelector('#carouselTrack');
             if (track) {
                 const items = getVisibleItems();
-                track.innerHTML = items.map(item => 
-                    item.type === 'seeMore' ? renderSeeMoreCard() : renderProductCard(item.product)
-                ).join('');
+                track.innerHTML = items.map(item => renderProductCard(item.product)).join('');
             }
             
-            // Update navigation buttons
-            const prevBtn = container.querySelector('#prevBtn');
-            const nextBtn = container.querySelector('#nextBtn');
-            if (prevBtn) prevBtn.disabled = currentIndex === 0;
-            if (nextBtn) nextBtn.disabled = currentIndex >= TOTAL_DOTS - 1;
+            const nav = container.querySelector('#carouselNavigation');
+            const scrollbar = container.querySelector('#carouselScrollbar');
+            if (nav) nav.style.display = activeCarouselScrolling === 'dots' ? '' : 'none';
+            if (scrollbar) scrollbar.style.display = activeCarouselScrolling === 'scrollbar' ? 'block' : 'none';
             
-            // Update pagination dots
-            const paginationDots = container.querySelector('#paginationDots');
-            if (paginationDots) {
-                paginationDots.innerHTML = Array.from({ length: TOTAL_DOTS }, (_, i) =>
-                    `<button class="pagination-dot ${i === currentIndex ? 'active' : ''}" onclick="goToSlide(${i})" aria-label="Go to slide ${i + 1}"></button>`
-                ).join('');
+            if (activeCarouselScrolling === 'scrollbar') {
+                updateScrollbar(container);
+            } else {
+                const prevBtn = container.querySelector('#prevBtn');
+                const nextBtn = container.querySelector('#nextBtn');
+                if (prevBtn) prevBtn.disabled = currentIndex === 0;
+                if (nextBtn) nextBtn.disabled = currentIndex >= TOTAL_DOTS - 1;
+                const paginationDots = container.querySelector('#paginationDots');
+                if (paginationDots) {
+                    paginationDots.innerHTML = Array.from({ length: TOTAL_DOTS }, (_, i) =>
+                        `<button class="pagination-dot ${i === currentIndex ? 'active' : ''}" onclick="goToSlide(${i})" aria-label="Go to slide ${i + 1}"></button>`
+                    ).join('');
+                }
             }
             
             // Update See More elements visibility based on active placement
             if (!isExpanded) {
-                if (activePlacement === 'a') {
-                    container.querySelectorAll('.see-more-a').forEach(el => el.classList.remove('is-hidden'));
-                    container.querySelectorAll('.see-more-b').forEach(el => el.classList.add('is-hidden'));
-                } else if (activePlacement === 'b') {
-                    container.querySelectorAll('.see-more-b').forEach(el => el.classList.remove('is-hidden'));
-                    container.querySelectorAll('.see-more-a').forEach(el => el.classList.add('is-hidden'));
-                } else {
-                    container.querySelectorAll('.see-more-a, .see-more-b').forEach(el => el.classList.add('is-hidden'));
-                }
+                container.querySelectorAll(`.see-more-${activePlacement}`).forEach(el => el.classList.remove('is-hidden'));
+                container.querySelectorAll(`.see-more-${activePlacement === 'a' ? 'b' : 'a'}`).forEach(el => el.classList.add('is-hidden'));
             } else {
                 container.querySelectorAll('.see-more-a, .see-more-b').forEach(el => el.classList.add('is-hidden'));
             }
@@ -3501,6 +4308,18 @@
                 togglePrototypeMode(e.target.checked);
             });
         }
+
+        // Click on comment badge: filter comments and scroll to right rail
+        document.addEventListener('click', (e) => {
+            const badge = e.target.closest('.panel-option-comment-badge.has-comments');
+            if (!badge) return;
+            e.preventDefault();
+            e.stopPropagation();
+            const option = badge.closest('[data-comment-target]');
+            if (!option) return;
+            const target = option.dataset.commentTarget;
+            focusCommentsForTarget(target);
+        });
 
         // Wire up device toggle
         document.querySelectorAll('input[name="device"]').forEach(radio => {
@@ -3526,13 +4345,6 @@
                 pros: ['High visibility — impossible to miss', 'Strong affordance (button = clickable)', 'Large tap target on mobile', 'Clear, actionable CTA that drives engagement'],
                 cons: ['Takes extra vertical space', 'Can feel aggressive/pushy if overused', 'May compete visually with product cards', 'Adds visual weight below the carousel'],
                 bestPractice: 'Best overall choice for driving discovery. Place below the carousel where users naturally look after browsing. Use outlined (not filled) style to feel inviting without overpowering product cards.'
-            },
-            c: {
-                icon: '🃏', title: 'See More Card in Carousel',
-                desc: 'The "See More" action appears as the last card in the carousel, discoverable during the natural browsing flow.',
-                pros: ['Contextual — discovered while browsing', 'No extra UI elements or layout shifts', 'Maintains the carousel paradigm', 'Feels integrated and non-intrusive'],
-                cons: ['User may never scroll far enough to see it', 'Competes with product cards for attention', 'Breaks expectation that all cards are products', 'Pagination dots may not convey a CTA exists'],
-                bestPractice: 'Works well when users are actively engaged with the carousel. Consider adding a visual indicator (e.g., a different card color or arrow icon) to differentiate it from product cards.'
             }
         };
 
@@ -3551,13 +4363,6 @@
                 cons: ['Pushes content below the fold', 'Increases page length and scrolling', 'User may lose their scroll position', 'Can feel overwhelming if too many items are shown'],
                 bestPractice: 'Best for progressive disclosure in conversational AI. Keeps context visible while revealing more. Limit expanded items to 4-6 to prevent overload. Pair with nudge chips for guided refinement.'
             },
-            '3': {
-                icon: '➕', title: 'Carousel Extends',
-                desc: 'More products load directly into the carousel, adding extra pagination dots. The interaction pattern remains consistent.',
-                pros: ['Seamless — no layout changes', 'Consistent interaction (same carousel gestures)', 'Minimal cognitive load', 'No content shift or page reflow'],
-                cons: ['Hard to notice items were added', 'Old vs. new items are indistinguishable', 'Pagination dots can get crowded (7+ dots)', 'Feels less like "discovery" and more invisible'],
-                bestPractice: 'Works best when additions are modest (2-4 items). Signal the change clearly — e.g., briefly highlight the new dots or show a toast. Not ideal for large product sets.'
-            },
             '4': {
                 icon: '↗️', title: 'Open Product Page',
                 desc: 'Clicking "See More" opens the Williams-Sonoma category page in a new tab. No in-chat expansion occurs.',
@@ -3571,6 +4376,13 @@
                 pros: ['Compact — shows more products in less space', 'Highly scannable (one product per row)', 'Efficient for quick comparison', 'Good information density for mobile'],
                 cons: ['Loses visual richness of product images', 'Less engaging than card/carousel view', 'Removes the carousel (can\'t go back easily)', 'Not ideal for visual products (fashion, decor)'],
                 bestPractice: 'Best for utility-focused browsing where users want to quickly scan options (e.g., accessories, tools). For visually-driven categories (furniture, fashion), the grid or carousel is preferable.'
+            },
+            '6': {
+                icon: '📜', title: 'Single Stacked Carousel',
+                desc: 'One additional carousel appears below the main carousel with more products. Maintains the carousel paradigm with a single horizontal strip.',
+                pros: ['Consistent interaction — same carousel gestures', 'Single focus, less overwhelming than multiple carousels', 'Preserves visual richness of product cards', 'Good for moderate expansion (4–9 items)'],
+                cons: ['Takes vertical space', 'User must scroll to see expansion', 'Less structured than category-grouped carousels', 'Pagination dots can get long with many items'],
+                bestPractice: 'Best when you have a modest set of additional products (4–9) to show. Keeps the experience simple. For larger sets, consider Expand Grid or List View.'
             }
         };
 
@@ -3582,21 +4394,210 @@
             uxRailOpen = !uxRailOpen;
             uxRail.classList.toggle('collapsed', !uxRailOpen);
             uxRailToggle.innerHTML = uxRailOpen ? '&#x276F;' : '&#x276E;';
-            uxRailToggle.title = uxRailOpen ? 'Collapse UX commentary' : 'Expand UX commentary';
+            const isProto = document.getElementById('prototypeModeToggle').checked;
+            uxRailToggle.title = uxRailOpen ? 'Collapse' : 'Expand';
+        });
+
+        // ===== COMMENTS (localStorage, shared per origin) =====
+        const COMMENTS_STORAGE_KEY = 'wsi-prototype-comments';
+        const COMMENT_AUTHOR_KEY = 'wsi-prototype-comment-author';
+        const OPTION_LABELS = {
+            '1.1': '1.1 Full-Width Button', '1.2': '1.2 Header-Right Link',
+            '2.1': '2.1 Dots and Arrows', '2.2': '2.2 Scroll Bar',
+            '3.1': '3.1 Expand Grid Below', '3.2': '3.2 Stacked Multiple Carousels', '3.3': '3.3 Open Product Page',
+            '3.4': '3.4 Single Stacked Carousel', '3.5': '3.5 Replace with List',
+            '4.1': '4.1 Customers also viewed', '4.2': '4.2 Customers also bought', '4.3': '4.3 Also in this collection',
+            '4.4': '4.4 Your recently viewed', '4.5': '4.5 Recommended for you',
+            '5.1': '5.1 Quick View from Sidebar', '5.2': '5.2 Quick View In-Chat Card',
+            '6.1': '6.1 Refine your picks', '6.2': '6.2 See more', '6.3': '6.3 Decide or explore', '6.4': '6.4 Narrow or explore',
+            '7.1': '7.1 Grammarly-style', '7.2': '7.2 Prompt Builder'
+        };
+        let commentsFilter = '';
+        let commentsFilterInitialized = false;
+
+        function getSelectedCommentTarget() {
+            const disclosureMap = { '2': '3.1', '1': '3.2', '4': '3.3', '6': '3.4', '5': '3.5' };
+            return disclosureMap[activeDisclosure] || '3.3';
+        }
+
+        function loadComments() {
+            try {
+                const raw = localStorage.getItem(COMMENTS_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveComments(comments) {
+            try {
+                localStorage.setItem(COMMENTS_STORAGE_KEY, JSON.stringify(comments));
+            } catch (e) {}
+        }
+
+        function submitComment() {
+            const authorEl = document.getElementById('commentAuthor');
+            const typeEl = document.querySelector('input[name="commentType"]:checked');
+            const targetEl = document.getElementById('commentTarget');
+            const textEl = document.getElementById('commentText');
+            const author = (authorEl?.value || '').trim();
+            const text = (textEl?.value || '').trim();
+            const targetOption = targetEl?.value || '';
+            if (!author || !text) {
+                alert('Please enter your name and comment.');
+                return;
+            }
+            const comment = {
+                id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+                author,
+                type: typeEl?.value || 'general',
+                targetOption: targetOption || '',
+                text,
+                date: new Date().toISOString()
+            };
+            const comments = loadComments();
+            comments.unshift(comment);
+            saveComments(comments);
+            try { localStorage.setItem(COMMENT_AUTHOR_KEY, author); } catch (e) {}
+            if (textEl) textEl.value = '';
+            renderComments();
+            updateCommentIcons();
+        }
+
+        function initCommentAuthor() {
+            const el = document.getElementById('commentAuthor');
+            if (el) {
+                try {
+                    const saved = localStorage.getItem(COMMENT_AUTHOR_KEY);
+                    if (saved) el.value = saved;
+                } catch (e) {}
+            }
+        }
+
+        function setCommentsFilter(value) {
+            commentsFilter = value || '';
+            renderComments();
+            const filterEl = document.getElementById('commentsFilter');
+            if (filterEl) filterEl.value = value || '';
+        }
+        window.setCommentsFilter = setCommentsFilter;
+
+        function focusCommentsForTarget(target) {
+            setCommentsFilter(target);
+            const protoToggle = document.getElementById('prototypeModeToggle');
+            if (protoToggle && !protoToggle.checked) {
+                protoToggle.checked = true;
+                togglePrototypeMode(true);
+            }
+            const rail = document.getElementById('uxRail');
+            if (rail) {
+                rail.classList.remove('collapsed');
+                uxRailOpen = true;
+                uxRailToggle.innerHTML = '&#x276F;';
+            }
+            const commentsRail = document.getElementById('commentsRail');
+            if (commentsRail) commentsRail.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateCommentIcons() {
+            const comments = loadComments();
+            const counts = {};
+            comments.forEach(c => {
+                const t = c.targetOption || '';
+                counts[t] = (counts[t] || 0) + 1;
+            });
+            document.querySelectorAll('[data-comment-target]').forEach(el => {
+                const target = el.dataset.commentTarget;
+                const badge = el.querySelector('.panel-option-comment-badge');
+                if (!badge) return;
+                const count = counts[target] || 0;
+                if (count > 0) {
+                    badge.classList.add('has-comments');
+                    badge.textContent = count > 1 ? count : '';
+                    badge.title = count === 1 ? '1 comment — click to view' : count + ' comments — click to view';
+                } else {
+                    badge.classList.remove('has-comments');
+                    badge.textContent = '';
+                    badge.title = '';
+                }
+            });
+        }
+
+        function renderComments() {
+            const list = document.getElementById('commentsList');
+            if (!list) return;
+            let comments = loadComments();
+            if (commentsFilter) {
+                comments = comments.filter(c => (c.targetOption || '') === commentsFilter);
+            }
+            const typeLabels = { tech: 'Tech considerations', golive: 'Expected go live date', date: 'Expected go live date', general: 'General' };
+            const typeClasses = { tech: 'tech', golive: 'golive', date: 'date', general: 'general' };
+            list.innerHTML = comments.length === 0
+                ? '<div class="comment-card" style="color:#706e6b;font-size:0.8125rem;">No comments yet. Be the first to share feedback!</div>'
+                : comments.map(c => {
+                    const d = new Date(c.date);
+                    const dateStr = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const targetLabel = (c.targetOption && OPTION_LABELS[c.targetOption]) ? OPTION_LABELS[c.targetOption] : '';
+                    return `<div class="comment-card" data-comment-id="${c.id}">
+                        ${targetLabel ? `<div class="comment-target">${escapeHtml(targetLabel)}</div>` : ''}
+                        <div class="comment-card-header">
+                            <span class="comment-author">${escapeHtml(c.author)}</span>
+                            <span class="comment-type-badge ${typeClasses[c.type] || 'general'}">${typeLabels[c.type] || 'General'}</span>
+                        </div>
+                        <div class="comment-text">${escapeHtml(c.text).replace(/\n/g, '<br>')}</div>
+                        <div class="comment-date">${dateStr}</div>
+                    </div>`;
+                }).join('');
+        }
+
+        function escapeHtml(s) {
+            const div = document.createElement('div');
+            div.textContent = s;
+            return div.innerHTML;
+        }
+
+        window.submitComment = submitComment;
+
+        document.getElementById('commentText')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                submitComment();
+            }
         });
 
         function renderUxExplanations() {
             const panel = document.getElementById('uxExplanations');
-            if (!panel) return;
             const rail = document.getElementById('uxRail');
+            const commentsRail = document.getElementById('commentsRail');
+            const railTitle = document.getElementById('uxRailTitle');
             const isProto = document.getElementById('prototypeModeToggle').checked;
-            if (isProto) { rail.classList.add('is-hidden'); return; }
+
             rail.classList.remove('is-hidden');
-
-            const p = uxPlacementData[activePlacement];
-            const d = uxDisclosureData[activeDisclosure];
-
-            panel.innerHTML = renderUxCard(p, 'placement', 'Placement ' + activePlacement.toUpperCase()) + renderUxCard(d, 'disclosure', 'Disclosure ' + activeDisclosure);
+            const railBody = rail.querySelector('.ux-rail-body');
+            if (isProto) {
+                panel.style.display = 'none';
+                commentsRail.classList.add('visible');
+                if (railBody) railBody.classList.add('comments-mode');
+                railTitle.textContent = 'Comments';
+                initCommentAuthor();
+                if (!commentsFilterInitialized) {
+                    setCommentsFilter(getSelectedCommentTarget());
+                    commentsFilterInitialized = true;
+                }
+                renderComments();
+                updateCommentIcons();
+            } else {
+                panel.style.display = '';
+                commentsRail.classList.remove('visible');
+                if (railBody) railBody.classList.remove('comments-mode');
+                railTitle.textContent = 'UX Commentary';
+                const p = uxPlacementData[activePlacement];
+                const d = uxDisclosureData[activeDisclosure];
+                const placementLabel = activePlacement === 'b' ? '1.1' : '1.2';
+                const disclosureLabelMap = { '2': '3.1', '1': '3.2', '4': '3.3', '6': '3.4', '5': '3.5' };
+                const disclosureLabel = disclosureLabelMap[activeDisclosure] || activeDisclosure;
+                panel.innerHTML = renderUxCard(p, 'placement', placementLabel) + renderUxCard(d, 'disclosure', disclosureLabel);
+            }
         }
 
         function renderUxCard(data, type, label) {
@@ -3627,7 +4628,8 @@
 
         // ===== QUICK VIEW HANDLERS =====
         function getProductById(id) {
-            return [...mockProducts, ...extraProducts].find(p => p.id === id);
+            const fromSubs = subCategories.flatMap(c => c.products);
+            return [...mockProducts, ...extraProducts, ...seeMoreProducts, ...fromSubs].find(p => p.id === id);
         }
 
         function renderQuickViewContent(product) {
@@ -3955,13 +4957,73 @@
             radio.addEventListener('change', () => applyCtaPattern(radio.value));
         });
 
+        // ===== AI NUDGES HANDLER =====
+        function applyAiNudges(value) {
+            activeAiNudges = value || 'refine';
+            document.querySelectorAll('[data-ai-nudges]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.aiNudges === activeAiNudges);
+            });
+            const preset = aiNudgePresets[activeAiNudges];
+            if (preset) {
+                const labelEl = getStandalone().querySelector('#nudgeChips .nudge-chips-label');
+                if (labelEl) labelEl.textContent = preset.label;
+                if (isExpanded) {
+                    renderNudgeChips();
+                    syncChatContainer();
+                }
+            }
+        }
+        document.querySelectorAll('input[name="aiNudges"]').forEach(radio => {
+            radio.addEventListener('change', () => applyAiNudges(radio.value));
+        });
+
+        // ===== SEE MORE LABELS HANDLER =====
+        function applySeeMoreLabels(value) {
+            activeSeeMoreLabels = value;
+            document.querySelectorAll('[data-see-more-labels]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.seeMoreLabels === value);
+            });
+            if (isExpanded) {
+                if (activeDisclosure === '2') expandGrid();
+                else if (activeDisclosure === '6') showSingleStackedCarousel();
+            }
+            syncChatContainer();
+        }
+        document.querySelectorAll('input[name="seeMoreLabels"]').forEach(radio => {
+            radio.addEventListener('change', () => applySeeMoreLabels(radio.value));
+        });
+
+        // ===== ACCORDION BEHAVIOR =====
+        const accordionSections = document.querySelectorAll('.panel-accordion[data-accordion-section]');
+        accordionSections.forEach((details) => {
+            details.addEventListener('toggle', () => {
+                if (details.open) {
+                    accordionSections.forEach((other) => {
+                        if (other !== details) other.removeAttribute('open');
+                    });
+                }
+            });
+        });
+        document.getElementById('accordionExpandAll')?.addEventListener('click', () => {
+            accordionSections.forEach((d) => d.setAttribute('open', ''));
+        });
+        document.getElementById('accordionCollapseAll')?.addEventListener('click', () => {
+            accordionSections.forEach((d) => d.removeAttribute('open'));
+        });
+
         // ===== INIT =====
-        // Initialize with default placement, disclosure, and CTA pattern
-        applyPlacement('a');
-        applyDisclosure('1');
+        // Initialize with default placement, carousel scrolling, disclosure, CTA pattern, and nudge pattern
+        applyPlacement('b');
+        applyCarouselScrolling('dots');
+        applyDisclosure('4');
         applyCtaPattern('d');
+        applyAiNudges('refine');
+        applySeeMoreLabels('1');
+        applyNudgePattern('1');
         renderCarousel();
         renderUxExplanations();
+        // Default to prototype mode + mobile view so input box with nudges is visible
+        togglePrototypeMode(true);
     </script>
 </body>
 </html>
