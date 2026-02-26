@@ -2450,8 +2450,8 @@
             <summary class="panel-accordion-header">3. Disclosure Pattern</summary>
             <div class="panel-accordion-body">
                 <div class="panel-section">
-                    <label class="panel-option" data-disclosure="2" data-comment-target="3.1">
-                        <input type="radio" name="disclosure" value="2">
+                    <label class="panel-option selected" data-disclosure="2" data-comment-target="3.1">
+                        <input type="radio" name="disclosure" value="2" checked>
                         <div class="panel-option-content">
                             <div class="panel-option-label">3.1 Expand Grid Below <span class="panel-option-badge recommended">Recommended</span><span class="panel-option-comment-badge"></span></div>
                             <div class="panel-option-desc">Additional products appear in a 2-column grid below the carousel</div>
@@ -2464,8 +2464,8 @@
                             <div class="panel-option-desc">Reveals additional carousels grouped by sub-category</div>
                         </div>
                     </label>
-                    <label class="panel-option selected" data-disclosure="4" data-comment-target="3.3">
-                        <input type="radio" name="disclosure" value="4" checked>
+                    <label class="panel-option" data-disclosure="4" data-comment-target="3.3">
+                        <input type="radio" name="disclosure" value="4">
                         <div class="panel-option-content">
                             <div class="panel-option-label">3.3 Open Product Page <span class="panel-option-badge current-state">Current state</span><span class="panel-option-comment-badge"></span></div>
                             <div class="panel-option-desc">Opens Williams Sonoma category page in a new tab</div>
@@ -3125,7 +3125,7 @@
         let TOTAL_DOTS = 5;
         let activePlacement = 'b';
         let activeCarouselScrolling = 'dots';
-        let activeDisclosure = '4';
+        let activeDisclosure = '2';
         let activeCtaPattern = 'd';
         let activeAiNudges = 'refine';
         let isExpanded = false;
@@ -4321,6 +4321,25 @@
             focusCommentsForTarget(target);
         });
 
+        // When user clicks any panel option, sync comment target and filter to that feature.
+        // Comments default to the selection you're on; new comments are automatically about that feature.
+        document.addEventListener('click', (e) => {
+            const option = e.target.closest('.panel-option[data-comment-target]');
+            if (!option) return;
+            const target = option.dataset.commentTarget;
+            if (!target) return;
+            lastClickedCommentTarget = target;
+            if (document.getElementById('prototypeModeToggle')?.checked) {
+                setCommentsFilter(target);
+                const rail = document.getElementById('uxRail');
+                if (rail?.classList.contains('collapsed')) {
+                    rail.classList.remove('collapsed');
+                    uxRailOpen = true;
+                    uxRailToggle.innerHTML = '&#x276F;';
+                }
+            }
+        });
+
         // Wire up device toggle
         document.querySelectorAll('input[name="device"]').forEach(radio => {
             radio.addEventListener('change', () => {
@@ -4399,6 +4418,8 @@
         });
 
         // ===== COMMENTS (localStorage, shared per origin) =====
+        // Comments persist across Heroku deployments — localStorage is per-origin in the browser.
+        // Deploying new HTML/JS does NOT overwrite localStorage; existing comments are preserved.
         const COMMENTS_STORAGE_KEY = 'wsi-prototype-comments';
         const COMMENT_AUTHOR_KEY = 'wsi-prototype-comment-author';
         const OPTION_LABELS = {
@@ -4414,10 +4435,36 @@
         };
         let commentsFilter = '';
         let commentsFilterInitialized = false;
+        // Track last-clicked panel option so comments default to the feature the user is focused on.
+        // With 7 panels, multiple options are selected at once; we comment on one at a time (the last clicked).
+        // Multi-selection strategies considered: (a) last-clicked = primary, (b) show union of comments for
+        // all selected, (c) "Comment on" dropdown to pick which of the 7 to comment on. Current: (a).
+        let lastClickedCommentTarget = '';
+
+        // Maps internal state values to comment target IDs (e.g. '1.1', '3.3').
+        function getCommentTargetFromSelection() {
+            const placementMap = { b: '1.1', a: '1.2' };
+            const carouselMap = { dots: '2.1', scrollbar: '2.2' };
+            const disclosureMap = { '2': '3.1', '1': '3.2', '4': '3.3', '6': '3.4', '5': '3.5' };
+            const seeMoreMap = { '1': '4.1', '2': '4.2', '3': '4.3', '4': '4.4', '5': '4.5' };
+            const ctaMap = { d: '5.1', e: '5.2' };
+            const aiNudgesMap = { refine: '6.1', seemore: '6.2', decide: '6.3', narrow: '6.4' };
+            const nudgeMap = { '1': '7.1', '3': '7.2' };
+            return {
+                placement: placementMap[activePlacement] || '1.1',
+                carousel: carouselMap[activeCarouselScrolling] || '2.1',
+                disclosure: disclosureMap[activeDisclosure] || '3.3',
+                seeMore: seeMoreMap[activeSeeMoreLabels] || '4.1',
+                cta: ctaMap[activeCtaPattern] || '5.1',
+                aiNudges: aiNudgesMap[activeAiNudges] || '6.1',
+                nudge: nudgeMap[activeNudgePattern] || '7.1'
+            };
+        }
 
         function getSelectedCommentTarget() {
-            const disclosureMap = { '2': '3.1', '1': '3.2', '4': '3.3', '6': '3.4', '5': '3.5' };
-            return disclosureMap[activeDisclosure] || '3.3';
+            if (lastClickedCommentTarget) return lastClickedCommentTarget;
+            const sel = getCommentTargetFromSelection();
+            return sel.disclosure;
         }
 
         function loadComments() {
@@ -4479,10 +4526,13 @@
             renderComments();
             const filterEl = document.getElementById('commentsFilter');
             if (filterEl) filterEl.value = value || '';
+            const targetEl = document.getElementById('commentTarget');
+            if (targetEl && value) targetEl.value = value;
         }
         window.setCommentsFilter = setCommentsFilter;
 
         function focusCommentsForTarget(target) {
+            lastClickedCommentTarget = target || '';
             setCommentsFilter(target);
             const protoToggle = document.getElementById('prototypeModeToggle');
             if (protoToggle && !protoToggle.checked) {
