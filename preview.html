@@ -1480,6 +1480,9 @@
         .input-bar-nudge-section {
             margin-bottom: 0.625rem;
         }
+        .input-bar-nudge-section.no-nudges {
+            display: none;
+        }
         .input-bar-nudge-header {
             font-size: 0.6875rem;
             font-weight: 700;
@@ -2464,24 +2467,17 @@
                             <div class="panel-option-desc">Reveals additional carousels grouped by sub-category</div>
                         </div>
                     </label>
-                    <label class="panel-option" data-disclosure="4" data-comment-target="3.3">
-                        <input type="radio" name="disclosure" value="4">
-                        <div class="panel-option-content">
-                            <div class="panel-option-label">3.3 Open Product Page <span class="panel-option-badge current-state">Current state</span><span class="panel-option-comment-badge"></span></div>
-                            <div class="panel-option-desc">Opens Williams Sonoma category page in a new tab</div>
-                        </div>
-                    </label>
-                    <label class="panel-option" data-disclosure="6" data-comment-target="3.4">
+                    <label class="panel-option" data-disclosure="6" data-comment-target="3.3">
                         <input type="radio" name="disclosure" value="6">
                         <div class="panel-option-content">
-                            <div class="panel-option-label">3.4 Single Stacked Carousel<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-label">3.3 Single Stacked Carousel<span class="panel-option-comment-badge"></span></div>
                             <div class="panel-option-desc">One additional carousel below with more products</div>
                         </div>
                     </label>
-                    <label class="panel-option" data-disclosure="5" data-comment-target="3.5">
+                    <label class="panel-option" data-disclosure="5" data-comment-target="3.4">
                         <input type="radio" name="disclosure" value="5">
                         <div class="panel-option-content">
-                            <div class="panel-option-label">3.5 Replace with List<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-label">3.4 Replace with List<span class="panel-option-comment-badge"></span></div>
                             <div class="panel-option-desc">Carousel switches to a compact scrollable list view</div>
                         </div>
                     </label>
@@ -2593,17 +2589,24 @@
             <summary class="panel-accordion-header">7. Persistent Nudge Pattern</summary>
             <div class="panel-accordion-body">
                 <div class="panel-section">
-                    <label class="panel-option selected" data-nudge-pattern="1" data-comment-target="7.1">
-                        <input type="radio" name="nudgePattern" value="1" checked>
+                    <label class="panel-option selected" data-nudge-pattern="0" data-comment-target="7.1">
+                        <input type="radio" name="nudgePattern" value="0" checked>
                         <div class="panel-option-content">
-                            <div class="panel-option-label">7.1 Grammarly-style<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-label">7.1 None<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-desc">No persistent nudges; input box only</div>
+                        </div>
+                    </label>
+                    <label class="panel-option" data-nudge-pattern="1" data-comment-target="7.2">
+                        <input type="radio" name="nudgePattern" value="1">
+                        <div class="panel-option-content">
+                            <div class="panel-option-label">7.2 Grammarly-style<span class="panel-option-comment-badge"></span></div>
                             <div class="panel-option-desc">Same options, categorized by intent (Discover, Decide, Shop)</div>
                         </div>
                     </label>
-                    <label class="panel-option" data-nudge-pattern="3" data-comment-target="7.2">
+                    <label class="panel-option" data-nudge-pattern="3" data-comment-target="7.3">
                         <input type="radio" name="nudgePattern" value="3">
                         <div class="panel-option-content">
-                            <div class="panel-option-label">7.2 Prompt Builder<span class="panel-option-comment-badge"></span></div>
+                            <div class="panel-option-label">7.3 Prompt Builder<span class="panel-option-comment-badge"></span></div>
                             <div class="panel-option-desc">Same options, "Try asking" / "Add to your search" framing</div>
                         </div>
                     </label>
@@ -2870,9 +2873,8 @@
                             <option value="2.2">2.2 Scroll Bar</option>
                             <option value="3.1">3.1 Expand Grid Below</option>
                             <option value="3.2">3.2 Stacked Multiple Carousels</option>
-                            <option value="3.3">3.3 Open Product Page</option>
-                            <option value="3.4">3.4 Single Stacked Carousel</option>
-                            <option value="3.5">3.5 Replace with List</option>
+                            <option value="3.3">3.3 Single Stacked Carousel</option>
+                            <option value="3.4">3.4 Replace with List</option>
                             <option value="4.1">4.1 Customers also viewed</option>
                             <option value="4.2">4.2 Customers also bought</option>
                             <option value="4.3">4.3 Also in this collection</option>
@@ -2884,8 +2886,9 @@
                             <option value="6.2">6.2 See more</option>
                             <option value="6.3">6.3 Decide or explore</option>
                             <option value="6.4">6.4 Narrow or explore</option>
-                            <option value="7.1">7.1 Grammarly-style</option>
-                            <option value="7.2">7.2 Prompt Builder</option>
+                            <option value="7.1">7.1 None</option>
+                            <option value="7.2">7.2 Grammarly-style</option>
+                            <option value="7.3">7.3 Prompt Builder</option>
                         </select>
                     </div>
                     <div>
@@ -2925,9 +2928,8 @@
                         <option value="2.2">2.2 Scroll Bar</option>
                         <option value="3.1">3.1 Expand Grid Below</option>
                         <option value="3.2">3.2 Stacked Multiple Carousels</option>
-                        <option value="3.3">3.3 Open Product Page</option>
-                        <option value="3.4">3.4 Single Stacked Carousel</option>
-                        <option value="3.5">3.5 Replace with List</option>
+                        <option value="3.3">3.3 Single Stacked Carousel</option>
+                        <option value="3.4">3.4 Replace with List</option>
                         <option value="4.1">4.1 Customers also viewed</option>
                         <option value="4.2">4.2 Customers also bought</option>
                         <option value="4.3">4.3 Also in this collection</option>
@@ -2939,8 +2941,9 @@
                         <option value="6.2">6.2 See more</option>
                         <option value="6.3">6.3 Decide or explore</option>
                         <option value="6.4">6.4 Narrow or explore</option>
-                        <option value="7.1">7.1 Grammarly-style</option>
-                        <option value="7.2">7.2 Prompt Builder</option>
+                        <option value="7.1">7.1 None</option>
+                        <option value="7.2">7.2 Grammarly-style</option>
+                        <option value="7.3">7.3 Prompt Builder</option>
                     </select>
                 </div>
                 <div class="comments-list" id="commentsList"></div>
@@ -3667,7 +3670,7 @@
         window.handleNudgeChip = handleNudgeChip;
 
         // ===== PERSISTENT INPUT BAR NUDGES =====
-        let activeNudgePattern = '1';
+        let activeNudgePattern = '0';
 
         // Shared options for all persistent nudge patterns (Williams-Sonoma retail UX)
         const persistentNudgeOptions = [
@@ -3685,6 +3688,12 @@
         }
 
         const nudgePatternData = {
+            '0': { // None: input box only, no persistent nudges
+                header: '',
+                subheader: '',
+                html: () => '',
+                noNudges: true
+            },
             '1': { // Grammarly-style: categorized by intent
                 header: '',
                 subheader: '',
@@ -3720,12 +3729,13 @@
             const data = nudgePatternData[activeNudgePattern];
             if (!data) return;
             const onclick = "handleInputBarNudge";
+            const noNudgesClass = data.noNudges ? ' no-nudges' : '';
 
             const sectionHtml = `
-                <div class="input-bar-nudge-section">
+                <div class="input-bar-nudge-section${noNudgesClass}">
                     ${data.header ? `<div class="input-bar-nudge-header">${data.header}</div>` : ''}
                     ${data.subheader ? `<div class="input-bar-nudge-subheader">${data.subheader}</div>` : ''}
-                    ${data.html(onclick)}
+                    ${data.html ? data.html(onclick) : ''}
                 </div>
             `;
 
@@ -3798,9 +3808,6 @@
                 expandGrid();
             } else if (activeDisclosure === '6') {
                 showSingleStackedCarousel();
-            } else if (activeDisclosure === '4') {
-                window.open('https://www.williams-sonoma.com/shop/electrics/coffee-makers/', '_blank');
-                return; // Don't hide See More for external link
             } else if (activeDisclosure === '5') {
                 showListView();
             }
@@ -4382,13 +4389,6 @@
                 cons: ['Pushes content below the fold', 'Increases page length and scrolling', 'User may lose their scroll position', 'Can feel overwhelming if too many items are shown'],
                 bestPractice: 'Best for progressive disclosure in conversational AI. Keeps context visible while revealing more. Limit expanded items to 4-6 to prevent overload. Pair with nudge chips for guided refinement.'
             },
-            '4': {
-                icon: '↗️', title: 'Open Product Page',
-                desc: 'Clicking "See More" opens the Williams-Sonoma category page in a new tab. No in-chat expansion occurs.',
-                pros: ['Full e-commerce browsing experience', 'Leverages existing WS product pages', 'No additional chat complexity', 'Good for "browse at your own pace" users'],
-                cons: ['Leaves the conversation entirely', 'Loses AI context and history', 'User must navigate back to chat', 'Breaks the conversational flow the AI built'],
-                bestPractice: 'Use as a fallback "escape hatch" alongside another disclosure pattern, not as the primary action. Best when paired with a "Browse All" link at the end of a conversation, after initial guided exploration.'
-            },
             '5': {
                 icon: '📋', title: 'Replace with List View',
                 desc: 'The carousel switches to a compact scrollable list view. Products are shown in a scannable row format with thumbnail, name, and price.',
@@ -4425,13 +4425,13 @@
         const OPTION_LABELS = {
             '1.1': '1.1 Full-Width Button', '1.2': '1.2 Header-Right Link',
             '2.1': '2.1 Dots and Arrows', '2.2': '2.2 Scroll Bar',
-            '3.1': '3.1 Expand Grid Below', '3.2': '3.2 Stacked Multiple Carousels', '3.3': '3.3 Open Product Page',
-            '3.4': '3.4 Single Stacked Carousel', '3.5': '3.5 Replace with List',
+            '3.1': '3.1 Expand Grid Below', '3.2': '3.2 Stacked Multiple Carousels',
+            '3.3': '3.3 Single Stacked Carousel', '3.4': '3.4 Replace with List',
             '4.1': '4.1 Customers also viewed', '4.2': '4.2 Customers also bought', '4.3': '4.3 Also in this collection',
             '4.4': '4.4 Your recently viewed', '4.5': '4.5 Recommended for you',
             '5.1': '5.1 Quick View from Sidebar', '5.2': '5.2 Quick View In-Chat Card',
             '6.1': '6.1 Refine your picks', '6.2': '6.2 See more', '6.3': '6.3 Decide or explore', '6.4': '6.4 Narrow or explore',
-            '7.1': '7.1 Grammarly-style', '7.2': '7.2 Prompt Builder'
+            '7.1': '7.1 None', '7.2': '7.2 Grammarly-style', '7.3': '7.3 Prompt Builder'
         };
         let commentsFilter = '';
         let commentsFilterInitialized = false;
@@ -4441,19 +4441,19 @@
         // all selected, (c) "Comment on" dropdown to pick which of the 7 to comment on. Current: (a).
         let lastClickedCommentTarget = '';
 
-        // Maps internal state values to comment target IDs (e.g. '1.1', '3.3').
+        // Maps internal state values to comment target IDs (e.g. '1.1', '3.1').
         function getCommentTargetFromSelection() {
             const placementMap = { b: '1.1', a: '1.2' };
             const carouselMap = { dots: '2.1', scrollbar: '2.2' };
-            const disclosureMap = { '2': '3.1', '1': '3.2', '4': '3.3', '6': '3.4', '5': '3.5' };
+            const disclosureMap = { '2': '3.1', '1': '3.2', '6': '3.3', '5': '3.4' };
             const seeMoreMap = { '1': '4.1', '2': '4.2', '3': '4.3', '4': '4.4', '5': '4.5' };
             const ctaMap = { d: '5.1', e: '5.2' };
             const aiNudgesMap = { refine: '6.1', seemore: '6.2', decide: '6.3', narrow: '6.4' };
-            const nudgeMap = { '1': '7.1', '3': '7.2' };
+            const nudgeMap = { '0': '7.1', '1': '7.2', '3': '7.3' };
             return {
                 placement: placementMap[activePlacement] || '1.1',
                 carousel: carouselMap[activeCarouselScrolling] || '2.1',
-                disclosure: disclosureMap[activeDisclosure] || '3.3',
+                disclosure: disclosureMap[activeDisclosure] || '3.1',
                 seeMore: seeMoreMap[activeSeeMoreLabels] || '4.1',
                 cta: ctaMap[activeCtaPattern] || '5.1',
                 aiNudges: aiNudgesMap[activeAiNudges] || '6.1',
@@ -4644,7 +4644,7 @@
                 const p = uxPlacementData[activePlacement];
                 const d = uxDisclosureData[activeDisclosure];
                 const placementLabel = activePlacement === 'b' ? '1.1' : '1.2';
-                const disclosureLabelMap = { '2': '3.1', '1': '3.2', '4': '3.3', '6': '3.4', '5': '3.5' };
+                const disclosureLabelMap = { '2': '3.1', '1': '3.2', '6': '3.3', '5': '3.4' };
                 const disclosureLabel = disclosureLabelMap[activeDisclosure] || activeDisclosure;
                 panel.innerHTML = renderUxCard(p, 'placement', placementLabel) + renderUxCard(d, 'disclosure', disclosureLabel);
             }
@@ -5065,11 +5065,11 @@
         // Initialize with default placement, carousel scrolling, disclosure, CTA pattern, and nudge pattern
         applyPlacement('b');
         applyCarouselScrolling('dots');
-        applyDisclosure('4');
+        applyDisclosure('2');
         applyCtaPattern('d');
         applyAiNudges('refine');
         applySeeMoreLabels('1');
-        applyNudgePattern('1');
+        applyNudgePattern('0');
         renderCarousel();
         renderUxExplanations();
         // Default to prototype mode + mobile view so input box with nudges is visible
