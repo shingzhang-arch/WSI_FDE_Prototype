@@ -1793,7 +1793,21 @@
         // Initialize
         let comments = [];
 
-        function submitComment() {
+        async function loadComments() {
+            try {
+                const response = await fetch('/api/comments');
+                if (response.ok) {
+                    comments = await response.json();
+                    renderComments();
+                }
+            } catch (err) {
+                console.error('Error loading comments:', err);
+                comments = [];
+                renderComments();
+            }
+        }
+
+        async function submitComment() {
             const author = document.getElementById('commentAuthor').value.trim();
             const text = document.getElementById('commentText').value.trim();
             const type = document.querySelector('input[name="commentType"]:checked').value;
@@ -1803,18 +1817,28 @@
                 return;
             }
 
-            const comment = {
-                id: Date.now(),
-                author,
-                text,
-                type,
-                date: new Date()
-            };
+            try {
+                const response = await fetch('/api/comments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ author, text, type })
+                });
 
-            comments.push(comment);
-            document.getElementById('commentAuthor').value = '';
-            document.getElementById('commentText').value = '';
-            renderComments();
+                if (response.ok) {
+                    const newComment = await response.json();
+                    comments.push(newComment);
+                    document.getElementById('commentAuthor').value = '';
+                    document.getElementById('commentText').value = '';
+                    renderComments();
+                } else {
+                    alert('Error posting comment');
+                }
+            } catch (err) {
+                console.error('Error submitting comment:', err);
+                alert('Error posting comment');
+            }
         }
 
         function renderComments() {
@@ -1847,7 +1871,7 @@
         renderContextCards();
         renderPhoneChat();
         renderNudgeChips();
-        renderComments();
+        loadComments();
 
         // Wire up keyboard shortcut for comment submission
         document.getElementById('commentText')?.addEventListener('keydown', (e) => {
