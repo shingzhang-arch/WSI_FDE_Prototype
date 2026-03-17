@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nudge Scenarios - Preview</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.25.0/assets/styles/salesforce-lightning-design-system.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f3f3f3;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ===== TAB BAR ===== */
+        .tab-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 0.75rem 1.5rem;
+            flex-shrink: 0;
+            height: 60px;
+        }
+
+        .tab {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #706e6b;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .tab:hover {
+            color: #181818;
+        }
+
+        .tab.active {
+            color: #181818;
+            border-bottom-color: #0176d3;
+        }
+
+        /* ===== MAIN CONTENT WRAPPER ===== */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ===== LEFT PANEL ===== */
+        .left-rail {
+            width: 280px;
+            min-width: 280px;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 1.25rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .rail-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .scenario-button {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #444;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background-color: #f3f3f3;
+        }
+
+        .scenario-button.active {
+            background-color: #eef4ff;
+            border-color: #0176d3;
+            color: #181818;
+        }
+
+        .scenario-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            height: 24px;
+            background: #181818;
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .scenario-button.active .scenario-num {
+            background: #0176d3;
+        }
+
+        .scenario-label {
+            flex: 1;
+            line-height: 1.2;
+        }
+
+        .context-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .context-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .context-card-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .context-card-content {
+            font-size: 0.8125rem;
+            color: #181818;
+            line-height: 1.5;
+        }
+
+        .data-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .data-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .data-tag.unavailable {
+            background: #fff;
+            color: #bbb;
+            border: 1px dashed #ddd;
+            text-decoration: line-through;
+        }
+
+        .transition-item {
+            font-size: 0.75rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+            padding-left: 0.75rem;
+            border-left: 2px solid #eee;
+            line-height: 1.4;
+        }
+
+        .transition-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .context-card-note {
+            font-size: 0.75rem;
+            color: #888;
+            line-height: 1.4;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== CENTER PREVIEW AREA ===== */
+        .center-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow-y: auto;
+            background-color: #f3f3f3;
+        }
+
+        /* ===== PHONE FRAME ===== */
+        .phone-bezel {
+            width: 393px;
+            background: #1d1d1f;
+            border-radius: 50px;
+            padding: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            max-height: 800px;
+        }
+
+        .phone-dynamic-island {
+            width: 155px;
+            height: 28px;
+            background: #000;
+            border-radius: 20px;
+            margin: 0 auto 12px;
+            flex-shrink: 0;
+        }
+
+        .phone-screen {
+            background: #f8f9fa;
+            border-radius: 40px;
+            display: flex;
+            flex-direction: column;
+            height: 780px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .phone-screen-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e5e5;
+            background: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .phone-screen-header-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #181818;
+        }
+
+        .phone-screen-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .phone-screen-body::-webkit-scrollbar {
+            display: none;
+        }
+
+        .phone-screen-body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .chat-message.user .chat-bubble {
+            background: #181818;
+            color: #ffffff;
+            border-radius: 18px 4px 18px 18px;
+        }
+
+        .chat-message.agent .chat-bubble {
+            background: #e5e5e5;
+            color: #181818;
+            border-radius: 4px 18px 18px 18px;
+        }
+
+        .phone-input-bar {
+            padding: 0.75rem;
+            border-top: 1px solid #e5e5e5;
+            background: #ffffff;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .phone-input-field {
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 18px;
+            background: #f8f9fa;
+            font-size: 0.875rem;
+            color: #666;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            outline: none;
+        }
+
+        .phone-input-field::placeholder {
+            color: #999;
+        }
+
+        .nudge-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.75rem 0 0 0;
+            margin-top: 0.75rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .nudge-section-label {
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 0 0.25rem 0;
+        }
+
+        .nudge-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .nudge-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 0.875rem;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            background: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #222;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nudge-chip:hover {
+            background: #f0f0f0;
+            border-color: #bbb;
+        }
+
+        .nudge-chip.selected {
+            background: #181818;
+            color: #ffffff;
+            border-color: #181818;
+        }
+
+        .nudge-emoji {
+            font-size: 0.875rem;
+        }
+
+        /* ===== RIGHT RAIL ===== */
+        .right-rail {
+            width: 340px;
+            min-width: 340px;
+            background: #ffffff;
+            border-left: 1px solid #e5e5e5;
+            padding: 1.25rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .chip-preview {
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .chip-preview-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .chip-preview-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chip-preview-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.375rem 0.625rem;
+            border-radius: 16px;
+            border: 1px solid #ddd;
+            background: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .chip-preview-emoji {
+            font-size: 0.75rem;
+        }
+
+        .nudge-rationale {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .nudge-rationale-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nudge-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .nudge-item:last-child {
+            border-bottom: none;
+        }
+
+        .nudge-item-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .nudge-item-emoji {
+            font-size: 1rem;
+        }
+
+        .nudge-item-text {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #181818;
+        }
+
+        .nudge-item-rationale {
+            font-size: 0.75rem;
+            color: #666;
+            line-height: 1.4;
+            margin-left: 1.5rem;
+        }
+
+        /* ===== COMMENTS SECTION ===== */
+        .comments-rail {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .comments-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .comments-form > div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .comments-form input,
+        .comments-form select,
+        .comments-form textarea {
+            font-size: 0.8125rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 0.5rem 0.625rem;
+            font-family: inherit;
+        }
+
+        .comments-form input:focus,
+        .comments-form select:focus,
+        .comments-form textarea:focus {
+            outline: none;
+            border-color: #0176d3;
+            box-shadow: 0 0 0 2px rgba(1, 118, 211, 0.1);
+        }
+
+        .comments-form textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 0.75rem;
+        }
+
+        .comments-form label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #181818;
+        }
+
+        .comments-form-comment-type {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .comments-form-comment-type label.radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: #555;
+            padding: 0.25rem 0;
+        }
+
+        .comments-form-comment-type input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #0176d3;
+        }
+
+        .comments-submit-btn {
+            background: #0176d3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.625rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comments-submit-btn:hover {
+            background: #0165b8;
+        }
+
+        .comment-card {
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .comment-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #181818;
+        }
+
+        .comment-type-badge {
+            font-size: 0.625rem;
+            font-weight: 700;
+            padding: 0.25rem 0.375rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .comment-type-badge.tech { background: #e3f2fd; color: #1565c0; }
+        .comment-type-badge.feature { background: #e8f5e9; color: #2e7d32; }
+        .comment-type-badge.general { background: #f5f5f5; color: #616161; }
+
+        .comment-text {
+            font-size: 0.8125rem;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 0.375rem;
+        }
+
+        .comment-date {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        /* ===== NEW INTERACTIVE STYLES ===== */
+
+        /* Disabled nudge chips */
+        .nudge-chip.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        /* Transition highlight on scenario buttons */
+        .scenario-button.transition-highlight {
+            box-shadow: 0 0 0 2px #0176d3;
+            position: relative;
+        }
+
+        .scenario-button.transition-highlight::after {
+            content: '→';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0176d3;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        /* Reset button styling */
+        .reset-button {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            color: #0176d3;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+
+        .reset-button:hover {
+            background: #eef4ff;
+        }
+
+        /* Chat carousel grid */
+        .chat-carousel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Product card in chat */
+        .chat-product-card {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .chat-product-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-product-image {
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .chat-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-product-info {
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .chat-product-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #181818;
+            line-height: 1.2;
+        }
+
+        .chat-product-price {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #0176d3;
+        }
+
+        .chat-product-badge {
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: #2e7d32;
+            background: #e8f5e9;
+            padding: 0.25rem 0.375rem;
+            border-radius: 3px;
+            width: fit-content;
+        }
+
+        /* Recipe card in chat */
+        .chat-recipe-card {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .chat-recipe-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-recipe-image {
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .chat-recipe-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-recipe-info {
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .chat-recipe-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #181818;
+            line-height: 1.2;
+        }
+
+        .chat-recipe-meta {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.65rem;
+            color: #706e6b;
+        }
+
+        .chat-recipe-time {
+            white-space: nowrap;
+        }
+
+        .chat-recipe-difficulty {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== TAB BAR ===== -->
+    <div class="tab-bar">
+        <a href="/" class="tab">V1 Prototype (carousel, see more)</a>
+        <a href="/nudges" class="tab active">Nudge Scenarios</a>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <!-- ===== LEFT RAIL ===== -->
+        <div class="left-rail" id="leftRail">
+            <div class="scenario-buttons" id="scenarioButtons"></div>
+            <div id="contextCards"></div>
+        </div>
+
+        <!-- ===== CENTER AREA ===== -->
+        <div class="center-area">
+            <div class="phone-bezel">
+                <div class="phone-dynamic-island"></div>
+                <div class="phone-screen">
+                    <div class="phone-screen-header">
+                        <span class="phone-screen-header-title">✦ AI Sous Chef</span>
+                        <button class="reset-button" onclick="resetConversation()" title="Reset conversation">↻</button>
+                    </div>
+                    <div class="phone-screen-body" id="phoneScreenBody"></div>
+                    <div class="phone-input-bar">
+                        <input type="text" class="phone-input-field" placeholder="Ask me anything." disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== RIGHT RAIL ===== -->
+        <div class="right-rail" id="rightRail">
+            <div class="comments-rail" id="commentsRail">
+                <div class="comments-form">
+                    <div>
+                        <label for="commentAuthor">Your name</label>
+                        <input type="text" id="commentAuthor" placeholder="Enter your name" maxlength="80">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:0.25rem;">Comment type</label>
+                        <div class="comments-form-comment-type" id="commentTypeGroup">
+                            <label class="radio-option">
+                                <input type="radio" name="commentType" value="general" checked>
+                                General feedback
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="commentType" value="tech">
+                                Technical note
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="commentType" value="feature">
+                                Feature idea
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="commentText">Comment</label>
+                        <textarea id="commentText" placeholder="Share feedback, questions, or notes... (Ctrl+Enter to submit)"></textarea>
+                    </div>
+                    <button type="button" class="comments-submit-btn" onclick="submitComment()">Post comment</button>
+                </div>
+                <div id="commentsList" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCENARIOS = [
+            {
+                id: "browse_products",
+                num: "1",
+                label: "Browsing Multiple Products",
+                trigger: "User asked for recommendations → carousel shown",
+                goal: "Find a better group OR narrow to a single product",
+                data: ["Category", "Product title"],
+                dataNote: "High-level only. No pricing, specs, or reviews in carousel response.",
+                cantDo: ["Filter by price (not in data)", "Show reviews/ratings", "Side-by-side comparison"],
+                nudges: [
+                    { text: "Narrow by Type", emoji: "🔍", rationale: "Helps reframe the category with available category data" },
+                    { text: "Olive Picks", emoji: "🫒", rationale: "Curated selection — works with titles + category" },
+                    { text: "Help Me Decide", emoji: "🤔", rationale: "Escalates to guided questions using category context" },
+                    { text: "Tell Me About [Product]", emoji: "👁️", rationale: "Transitions to single product eval (Scenario 2)" },
+                    { text: "Browse All on WS", emoji: "→", rationale: "Exit ramp to full site experience" },
+                ],
+                transitions: ["If user taps Tell Me About → Scenario 2", "If user taps Help Me Decide → guided use-case questions → refined carousel"],
+                userMessage: "I'm looking for a new coffee maker. Can you recommend some options?",
+                agentMessage: "I found some great coffee makers for you! Here are my top recommendations."
+            },
+            {
+                id: "eval_product",
+                num: "2",
+                label: "Evaluating a Single Product",
+                trigger: "User clicked a nudge from PIP, or asked about a specific product",
+                goal: "Decide if THIS product is the right one",
+                data: ["Product summary (from PIP)", "Specs & materials", "Category context"],
+                dataNote: "Richer data. Can highlight specs, describe differences in text. No reviews/ratings.",
+                cantDo: ["Show star ratings or review counts", "Visual side-by-side comparison UI", "Show pricing tiers"],
+                nudges: [
+                    { text: "Is This Dishwasher Safe?", emoji: "❓", rationale: "Product Q&A — answerable from product summary" },
+                    { text: "What Size Is Right for Me?", emoji: "📏", rationale: "Spec-based guidance from product data" },
+                    { text: "How Is This Different from [X]?", emoji: "⚖️", rationale: "Text-based comparison of two product summaries" },
+                    { text: "What's This Best For?", emoji: "🍳", rationale: "Use-case matching — strong nudge pattern per customer" },
+                    { text: "See Similar Products", emoji: "🔄", rationale: "Back to carousel with related items" },
+                    { text: "Add to Cart", emoji: "🛒", rationale: "Commit CTA — always present in eval mode" },
+                ],
+                transitions: ["If user taps How Is This Different → text comparison of two products", "If user taps See Similar → back to Scenario 1 with refined results"],
+                userMessage: "Tell me more about the Breville coffee maker.",
+                agentMessage: "The Breville The Luxe Brewer is a premium automatic coffee maker with a built-in grinder. It features a thermal carafe for temperature retention."
+            },
+            {
+                id: "browse_recipes",
+                num: "3",
+                label: "Evaluating Groups of Recipes",
+                trigger: "User asked about cooking/food → recipe carousel shown",
+                goal: "Find the right recipe from a set of results",
+                data: ["Short recipe summary", "Recipe title"],
+                dataNote: "Same constraint as product carousel — short summaries only.",
+                cantDo: ["Show full ingredients list", "Filter by ingredient", "Show cooking time if not in summary"],
+                nudges: [
+                    { text: "Under 30 Minutes", emoji: "⏱️", rationale: "Time filter — works if time data is in summary" },
+                    { text: "Weeknight Dinner", emoji: "🍽️", rationale: "Occasion-based filtering" },
+                    { text: "Vegetarian", emoji: "🥬", rationale: "Dietary filtering" },
+                    { text: "Tell Me More About This One", emoji: "📖", rationale: "Transitions to single recipe eval (Scenario 4)" },
+                    { text: "Search a Different Recipe", emoji: "🔍", rationale: "Restart with different criteria" },
+                ],
+                transitions: ["If user taps Tell Me More → Scenario 4", "If user taps a filter → refined recipe carousel"],
+                userMessage: "What are some quick recipes I can make tonight?",
+                agentMessage: "I found several quick recipes you might like! Here are some weeknight dinner options."
+            },
+            {
+                id: "eval_recipe",
+                num: "4",
+                label: "Evaluating a Single Recipe",
+                trigger: "User selected a specific recipe",
+                goal: "Understand this recipe and connect to products",
+                data: ["Full recipe text", "Ingredients list", "Steps", "Recipe metadata"],
+                dataNote: "Richest data scenario. Full recipe content available.",
+                cantDo: ["Show product prices inline", "Auto-add ingredients to cart"],
+                nudges: [
+                    { text: "Shop the Ingredients", emoji: "🛒", rationale: "Content-to-commerce bridge — triggers product search" },
+                    { text: "What Cookware Do I Need?", emoji: "🍳", rationale: "Cross-links to product recommendations" },
+                    { text: "Related Techniques", emoji: "🔪", rationale: "Links to Tips & Techniques content" },
+                    { text: "Simpler Version?", emoji: "👋", rationale: "Alternative recipe suggestion" },
+                    { text: "Find Similar Recipes", emoji: "🔍", rationale: "Back to Scenario 3 with related results" },
+                ],
+                transitions: ["If user taps Shop the Ingredients → Scenario 1 (product carousel)", "If user taps What Cookware → Scenario 2 (single product eval)"],
+                userMessage: "I want to try making this recipe.",
+                agentMessage: "Great choice! This recipe will help you master a classic cooking technique. Here's what you'll need to get started."
+            },
+            {
+                id: "general",
+                num: "5",
+                label: "General Conversational",
+                trigger: "No active product/recipe context — or conversation has drifted",
+                goal: "Guide the user toward a productive scenario",
+                data: ["No specific product or recipe context"],
+                dataNote: "Fallback nudges. Always available. Should feel like a helpful starting menu.",
+                cantDo: ["Be product-specific", "Reference previous searches (no session memory yet)"],
+                nudges: [
+                    { text: "Search Products", emoji: "🔍", rationale: "Entry to Scenario 1" },
+                    { text: "Find a Recipe", emoji: "📖", rationale: "Entry to Scenario 3" },
+                    { text: "Explore Menus", emoji: "🍽️", rationale: "Menu carousel" },
+                    { text: "Tips & Techniques", emoji: "🔪", rationale: "Content exploration" },
+                    { text: "Ask Me Anything", emoji: "💬", rationale: "Open-ended — user types their own question" },
+                ],
+                transitions: ["Each chip routes to the appropriate scenario above"],
+                userMessage: "Hi, I need some help.",
+                agentMessage: "I'm here to help! What would you like to explore today?"
+            },
+        ];
+
+        // Mock product data
+        const mockProducts = [
+            {
+                id: '1',
+                name: 'Breville The Luxe Brewer with Thermal Carafe',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/img1z.jpg',
+                price: 349.95,
+                badge: 'olivePick',
+                productUrl: 'https://www.williams-sonoma.com/products/breville-the-luxe-brewer-with-thermal-carafe/',
+                description: 'Premium coffee maker with thermal carafe that keeps coffee hot for hours. Features precision temperature control and pre-infusion brewing for optimal flavor extraction.',
+                rating: 4.8,
+                reviewCount: 324,
+                highlights: [
+                    'Thermal carafe keeps coffee hot up to 4 hours',
+                    'Precision temperature control (195-205°F)',
+                    'Pre-infusion cycle for even extraction',
+                    '12-cup capacity'
+                ]
+            },
+            {
+                id: '2',
+                name: 'Fellow Aiden Coffee Brewer',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202536/0183/img39z.jpg',
+                price: 299.95,
+                badge: 'bestSeller',
+                productUrl: 'https://www.williams-sonoma.com/products/fellow-aiden-coffee-brewer/',
+                description: 'Sleek, modern coffee maker with precise water temperature and flow rate control. Designed for coffee enthusiasts who want restaurant-quality coffee at home.',
+                rating: 4.6,
+                reviewCount: 187,
+                highlights: [
+                    'Precise water temperature control',
+                    'Adjustable flow rate',
+                    'Sleek, compact design',
+                    '8-cup capacity'
+                ]
+            },
+            {
+                id: '3',
+                name: 'Cafe Specialty Drip Coffee Maker with Glass Carafe',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/cafe-specialty-drip-coffee-maker-with-glass-carafe-o.jpg',
+                price: 199.95,
+                badge: 'topRated',
+                productUrl: 'https://www.williams-sonoma.com/products/cafe-specialty-drip-coffee-maker-with-glass/',
+                description: 'Classic drip coffee maker with programmable timer and auto-shutoff. Features a glass carafe with warming plate and 12-cup capacity.',
+                rating: 4.5,
+                reviewCount: 256,
+                highlights: [
+                    'Programmable 24-hour timer',
+                    'Auto-shutoff feature',
+                    'Glass carafe with warming plate',
+                    '12-cup capacity'
+                ]
+            },
+            {
+                id: '4',
+                name: 'Moccamaster by Technivorm KBGV Select Coffee Maker, 10-cup',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202414/0036/moccamaster-by-technivorm-kbgv-select-10-cup-coffee-maker-o.jpg',
+                price: 369.95,
+                badge: 'olivePick',
+                productUrl: 'https://www.williams-sonoma.com/products/technivorm-moccamaster-kgb-select/',
+                description: 'Dutch-engineered coffee maker with copper heating element for optimal brewing temperature. SCAA certified for perfect coffee extraction.',
+                rating: 4.9,
+                reviewCount: 412,
+                highlights: [
+                    'SCAA certified brewing',
+                    'Copper heating element',
+                    'Brews at optimal 196-205°F',
+                    '10-cup capacity'
+                ]
+            },
+            {
+                id: '5',
+                name: 'OXO Brew 12-Cup Coffee Maker',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg',
+                price: 199.95,
+                badge: 'bestSeller',
+                productUrl: 'https://www.williams-sonoma.com/products/oxo-brew-12-cup-coffee-maker-with-podless-single-serve-function/',
+                description: 'Versatile coffee maker with both carafe and single-serve options. Features precision brewing technology and reusable filter basket.',
+                rating: 4.4,
+                reviewCount: 298,
+                highlights: [
+                    'Dual brewing modes (carafe + single-serve)',
+                    'Precision brewing technology',
+                    'Reusable filter basket',
+                    '12-cup capacity'
+                ]
+            }
+        ];
+
+        const extraProducts = [
+            { id: '6', name: 'Cuisinart Touchscreen 14-Cup Coffee Maker', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202514/0010/cuisinart-touchscreen-14-cup-coffee-maker-o.jpg', price: 129.95, badge: 'topRated', productUrl: 'https://www.williams-sonoma.com/products/cuisinart-touchscreen-12-cup-coffee-maker/' },
+            { id: '7', name: 'De\'Longhi TrueBrew Automatic Coffee Maker', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202509/0002/delonghi-truebrew-automatic-coffee-maker-with-bean-extract-1-o.jpg', price: 329.95, badge: 'bestSeller', productUrl: 'https://www.williams-sonoma.com/products/delonghi-truebrew-auto-coffee-with-bean-extract-carafe/' },
+            { id: '8', name: 'Cuisinart Coffee-On-Demand 12-Cup Programmable', imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202406/0092/img7o.jpg', price: 99.95, badge: null, productUrl: 'https://www.williams-sonoma.com/products/cuisinart-coffee-on-demand-coffee-maker/' },
+            { id: '9', name: 'Open Kitchen Programmable Coffee Maker, 12-cup', imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202451/0005/img97o.jpg', price: 59.95, badge: 'topRated', productUrl: 'https://www.williams-sonoma.com/products/open-kitchen-by-ws-programmable-coffee-maker/' }
+        ];
+
+        // Mock recipe data
+        const mockRecipes = [
+            {
+                id: 'r1',
+                name: 'Classic French Onion Soup',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202438/0034/classic-french-onion-soup-m.jpg',
+                time: '45 min',
+                difficulty: 'Medium',
+                description: 'A warming classic with caramelized onions, beef broth, and melted cheese.'
+            },
+            {
+                id: 'r2',
+                name: 'Pan-Seared Salmon with Herbs',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202440/0021/pan-seared-salmon-with-herbs-o.jpg',
+                time: '25 min',
+                difficulty: 'Easy',
+                description: 'Fresh salmon fillet with a crispy exterior and tender interior, topped with fresh herbs.'
+            },
+            {
+                id: 'r3',
+                name: 'Creamy Mushroom Risotto',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202543/0340/creamy-mushroom-risotto-m.jpg',
+                time: '35 min',
+                difficulty: 'Medium',
+                description: 'Arborio rice with sautéed mushrooms, white wine, and Parmesan cheese.'
+            },
+            {
+                id: 'r4',
+                name: 'Quick Stir-Fry with Vegetables',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/ab/images/dp/wcm/202414/0036/quick-stir-fry-m.jpg',
+                time: '20 min',
+                difficulty: 'Easy',
+                description: 'Colorful vegetables and your choice of protein, tossed in a savory sauce.'
+            },
+            {
+                id: 'r5',
+                name: 'Homemade Chocolate Brownies',
+                imageUrl: 'https://assets.wsimgs.com/wsimgs/rk/images/dp/wcm/202509/0002/chocolate-brownies-m.jpg',
+                time: '40 min',
+                difficulty: 'Easy',
+                description: 'Fudgy, rich brownies with a crispy top and gooey center.'
+            }
+        ];
+
+        let activeScenario = SCENARIOS[0];
+        let conversationHistory = []; // Track all messages in the conversation
+
+        // Define responses for each nudge chip
+        const NUDGE_RESPONSES = {
+            // Scenario 1: Browsing Multiple Products
+            'browse_products_Narrow by Type': {
+                userText: 'Can you narrow this down by type?',
+                agentText: 'Great! Here are coffee makers grouped by brewing method:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.slice(0, 3),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
+                    { text: 'Help Me Decide', emoji: '🤔', scenarioId: 'browse_products' },
+                    { text: 'Olive Picks', emoji: '🫒', scenarioId: 'browse_products' }
+                ]
+            },
+            'browse_products_Olive Picks': {
+                userText: 'Show me your Olive Picks.',
+                agentText: 'Here are our curated selections - these are top-rated by our customers:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.filter(p => p.badge === 'olivePick'),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
+                    { text: 'Help Me Decide', emoji: '🤔', scenarioId: 'browse_products' },
+                    { text: 'Browse All on WS', emoji: '→', scenarioId: 'browse_products' }
+                ]
+            },
+            'browse_products_Help Me Decide': {
+                userText: 'I need help deciding. What questions should I answer?',
+                agentText: 'To narrow this down, tell me: Are you looking for speed or quality? Do you prefer a carafe or single-serve? What\'s your budget range?',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Speed -- I need it fast', emoji: '⚡', scenarioId: 'browse_products' },
+                    { text: 'Quality -- I want the best brew', emoji: '✨', scenarioId: 'browse_products' },
+                    { text: 'Budget -- Under $200', emoji: '💰', scenarioId: 'browse_products' },
+                    { text: 'I entertain a lot', emoji: '👥', scenarioId: 'browse_products' }
+                ]
+            },
+            'browse_products_Tell Me About [Product]': {
+                userText: 'Tell me more about the Breville coffee maker.',
+                agentText: 'The Breville The Luxe Brewer is our premium recommendation. It features a thermal carafe, precision temperature control (195-205°F), and a pre-infusion cycle for optimal flavor. Highly rated with 324 reviews at 4.8 stars. Perfect for serious coffee enthusiasts.',
+                showCarousel: false,
+                transitionTo: 'eval_product'
+            },
+            'browse_products_Browse All on WS': {
+                userText: 'Can I see all coffee makers on the site?',
+                agentText: 'Of course! You can browse our full collection of coffee makers on Williams Sonoma.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
+                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
+                    { text: 'Ask Me Anything', emoji: '💬', scenarioId: 'general' }
+                ]
+            },
+
+            // Follow-up response entries for "Help Me Decide" preference chips
+            'browse_products_Speed -- I need it fast': {
+                userText: 'I need speed -- I want something fast to brew.',
+                agentText: 'Perfect! Here are the fastest-brewing coffee makers in our collection:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: [mockProducts[1], mockProducts[4], extraProducts[2]],
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
+                    { text: 'Help Me Decide', emoji: '🤔', scenarioId: 'browse_products' },
+                    { text: 'Quality -- I want the best brew', emoji: '✨', scenarioId: 'browse_products' }
+                ]
+            },
+            'browse_products_Quality -- I want the best brew': {
+                userText: 'I\'m all about quality -- I want the best brew possible.',
+                agentText: 'Great choice! Here are our highest-rated and most premium coffee makers:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.filter(p => p.price > 300),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
+                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'Speed -- I need it fast', emoji: '⚡', scenarioId: 'browse_products' }
+                ]
+            },
+            'browse_products_Budget -- Under $200': {
+                userText: 'I\'m looking for something under $200.',
+                agentText: 'Excellent! Here are our best value coffee makers under $200:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.filter(p => p.price < 200).concat(extraProducts.filter(p => p.price < 200)),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
+                    { text: 'Quality -- I want the best brew', emoji: '✨', scenarioId: 'browse_products' },
+                    { text: 'I entertain a lot', emoji: '👥', scenarioId: 'browse_products' }
+                ]
+            },
+            'browse_products_I entertain a lot': {
+                userText: 'I entertain guests frequently and need larger capacity.',
+                agentText: 'Perfect! Here are coffee makers with larger capacity, ideal for entertaining:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.slice(0, 4),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
+                    { text: 'Quality -- I want the best brew', emoji: '✨', scenarioId: 'browse_products' },
+                    { text: 'Budget -- Under $200', emoji: '💰', scenarioId: 'browse_products' }
+                ]
+            },
+
+            // Scenario 2: Evaluating a Single Product
+            'eval_product_Is This Dishwasher Safe?': {
+                userText: 'Is the Breville dishwasher safe?',
+                agentText: 'The carafe and removable parts are dishwasher safe, but the main unit should be hand-cleaned to protect the heating element.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'What Size Is Right for Me?', emoji: '📏', scenarioId: 'eval_product' },
+                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' },
+                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' }
+                ]
+            },
+            'eval_product_What Size Is Right for Me?': {
+                userText: 'What size should I get?',
+                agentText: 'The Breville has a 12-cup capacity, which is ideal for households of 4-6 people or if you like to brew a larger batch. The thermal carafe keeps it hot for hours without losing flavor.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Is This Dishwasher Safe?', emoji: '❓', scenarioId: 'eval_product' },
+                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' },
+                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' }
+                ]
+            },
+            'eval_product_How Is This Different from [X]?': {
+                userText: 'How is this different from the Fellow Aiden?',
+                agentText: 'Great question! The Breville emphasizes consistency and larger capacity (12-cup with thermal carafe), while the Fellow Aiden is more compact (8-cup) and appeals to coffee enthusiasts who want precise flow control. Breville is better for families; Fellow is better for coffee perfectionists.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' },
+                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' }
+                ]
+            },
+            'eval_product_What\'s This Best For?': {
+                userText: 'What\'s this coffee maker best for?',
+                agentText: 'The Breville is best for morning routines where you want to brew once and enjoy coffee throughout the morning thanks to the thermal carafe. It\'s also ideal if you entertain guests and need larger quantities.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' },
+                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' },
+                    { text: 'Is This Dishwasher Safe?', emoji: '❓', scenarioId: 'eval_product' }
+                ]
+            },
+            'eval_product_See Similar Products': {
+                userText: 'Show me similar products.',
+                agentText: 'Here are other premium coffee makers in a similar price range:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.filter(p => p.price > 250),
+                transitionTo: 'browse_products'
+            },
+            'eval_product_Add to Cart': {
+                userText: 'Great, I\'ll add it to my cart.',
+                agentText: 'Perfect! Breville The Luxe Brewer has been added to your cart. Would you like to continue shopping or proceed to checkout?',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
+                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
+                    { text: 'Ask Me Anything', emoji: '💬', scenarioId: 'general' }
+                ]
+            },
+
+            // Scenario 3: Evaluating Groups of Recipes
+            'browse_recipes_Under 30 Minutes': {
+                userText: 'Show me recipes under 30 minutes.',
+                agentText: 'Here are quick recipes you can make tonight:',
+                showCarousel: true,
+                carouselType: 'recipes',
+                carouselData: mockRecipes.filter(r => parseInt(r.time) < 30),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'browse_recipes' },
+                    { text: 'Search a Different Recipe', emoji: '🔍', scenarioId: 'browse_recipes' },
+                    { text: 'Weeknight Dinner', emoji: '🍽️', scenarioId: 'browse_recipes' },
+                    { text: 'Vegetarian', emoji: '🥬', scenarioId: 'browse_recipes' }
+                ]
+            },
+            'browse_recipes_Weeknight Dinner': {
+                userText: 'What\'s good for a weeknight dinner?',
+                agentText: 'Here are some easy weeknight favorites:',
+                showCarousel: true,
+                carouselType: 'recipes',
+                carouselData: mockRecipes.filter(r => r.difficulty === 'Easy'),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'browse_recipes' },
+                    { text: 'Search a Different Recipe', emoji: '🔍', scenarioId: 'browse_recipes' },
+                    { text: 'Under 30 Minutes', emoji: '⏱️', scenarioId: 'browse_recipes' },
+                    { text: 'Vegetarian', emoji: '🥬', scenarioId: 'browse_recipes' }
+                ]
+            },
+            'browse_recipes_Vegetarian': {
+                userText: 'Do you have vegetarian options?',
+                agentText: 'Here are delicious vegetarian recipes:',
+                showCarousel: true,
+                carouselType: 'recipes',
+                carouselData: [mockRecipes[0], mockRecipes[2]],
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'browse_recipes' },
+                    { text: 'Search a Different Recipe', emoji: '🔍', scenarioId: 'browse_recipes' },
+                    { text: 'Under 30 Minutes', emoji: '⏱️', scenarioId: 'browse_recipes' },
+                    { text: 'Weeknight Dinner', emoji: '🍽️', scenarioId: 'browse_recipes' }
+                ]
+            },
+            'browse_recipes_Tell Me More About This One': {
+                userText: 'Tell me more about one of these recipes.',
+                agentText: 'The Pan-Seared Salmon is a quick, elegant main course that takes just 25 minutes. It pairs beautifully with roasted vegetables or a fresh salad. Would you like the full recipe and ingredients?',
+                showCarousel: false,
+                transitionTo: 'eval_recipe'
+            },
+            'browse_recipes_Search a Different Recipe': {
+                userText: 'Can I search for something different?',
+                agentText: 'Absolutely! What type of recipe are you looking for? Just let me know the cuisine, main ingredient, or occasion.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Under 30 Minutes', emoji: '⏱️', scenarioId: 'browse_recipes' },
+                    { text: 'Weeknight Dinner', emoji: '🍽️', scenarioId: 'browse_recipes' },
+                    { text: 'Vegetarian', emoji: '🥬', scenarioId: 'browse_recipes' }
+                ]
+            },
+
+            // Scenario 4: Evaluating a Single Recipe
+            'eval_recipe_Shop the Ingredients': {
+                userText: 'Can I shop for the ingredients?',
+                agentText: 'Of course! Let me show you cookware and ingredients you\'ll need for this dish:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.slice(0, 2),
+                transitionTo: 'browse_products'
+            },
+            'eval_recipe_What Cookware Do I Need?': {
+                userText: 'What cookware do I need for this?',
+                agentText: 'For pan-seared salmon, you\'ll need a good stainless steel or cast iron skillet. Here are our top recommendations:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: extraProducts.slice(0, 2),
+                transitionTo: 'eval_product'
+            },
+            'eval_recipe_Related Techniques': {
+                userText: 'Are there related cooking techniques I should know?',
+                agentText: 'Pan-searing is all about temperature control and timing. The key is getting your pan hot enough to create a crispy exterior while keeping the inside tender. Check out our Tips & Techniques section for detailed videos.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Shop the Ingredients', emoji: '🛒', scenarioId: 'eval_recipe' },
+                    { text: 'What Cookware Do I Need?', emoji: '🍳', scenarioId: 'eval_recipe' },
+                    { text: 'Find Similar Recipes', emoji: '🔍', scenarioId: 'eval_recipe' }
+                ]
+            },
+            'eval_recipe_Simpler Version?': {
+                userText: 'Is there a simpler version of this recipe?',
+                agentText: 'Yes! A simpler version would skip the herbs and use pre-seasoned salmon. Or try the Quick Stir-Fry recipe - it\'s similar but takes only 20 minutes.',
+                showCarousel: true,
+                carouselType: 'recipes',
+                carouselData: mockRecipes.slice(3, 5),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'eval_recipe' },
+                    { text: 'Shop the Ingredients', emoji: '🛒', scenarioId: 'eval_recipe' },
+                    { text: 'Find Similar Recipes', emoji: '🔍', scenarioId: 'eval_recipe' }
+                ]
+            },
+            'eval_recipe_Find Similar Recipes': {
+                userText: 'Show me similar recipes.',
+                agentText: 'Here are other quick, elegant recipes:',
+                showCarousel: true,
+                carouselType: 'recipes',
+                carouselData: mockRecipes,
+                transitionTo: 'browse_recipes'
+            },
+
+            // Follow-up response entries for eval_recipe
+            'eval_recipe_Shop the Ingredients': {
+                userText: 'Can I shop for the ingredients?',
+                agentText: 'Absolutely! Here are some essential ingredients for this salmon recipe:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.slice(0, 2),
+                transitionTo: 'browse_products',
+                followUpChips: [
+                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
+                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
+                    { text: 'Ask Me Anything', emoji: '💬', scenarioId: 'general' }
+                ]
+            },
+            'eval_recipe_What Cookware Do I Need?': {
+                userText: 'What cookware do I need for this recipe?',
+                agentText: 'For pan-searing salmon, you\'ll need: a stainless steel or cast iron skillet (10-12 inches), a wooden spoon or spatula, and tongs. Here are some options:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: extraProducts,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Shop the Ingredients', emoji: '🛒', scenarioId: 'eval_recipe' },
+                    { text: 'Related Techniques', emoji: '📖', scenarioId: 'eval_recipe' },
+                    { text: 'Find Similar Recipes', emoji: '🔍', scenarioId: 'eval_recipe' }
+                ]
+            },
+
+            // Scenario 5: General Conversational
+            'general_Search Products': {
+                userText: 'I want to search for products.',
+                agentText: 'Great! Here are some of our popular coffee makers to get you started:',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts,
+                transitionTo: 'browse_products'
+            },
+            'general_Find a Recipe': {
+                userText: 'Can you help me find a recipe?',
+                agentText: 'Absolutely! Here are some popular recipes to inspire your cooking:',
+                showCarousel: true,
+                carouselType: 'recipes',
+                carouselData: mockRecipes,
+                transitionTo: 'browse_recipes'
+            },
+            'general_Explore Menus': {
+                userText: 'Show me some menus.',
+                agentText: 'Here are some curated menus perfect for different occasions.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
+                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
+                    { text: 'Ask Me Anything', emoji: '💬', scenarioId: 'general' }
+                ]
+            },
+            'general_Tips & Techniques': {
+                userText: 'Tell me about cooking tips and techniques.',
+                agentText: 'We have a comprehensive Tips & Techniques library covering everything from knife skills to advanced cooking methods.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
+                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
+                    { text: 'Explore Menus', emoji: '🍽️', scenarioId: 'general' }
+                ]
+            },
+            'general_Ask Me Anything': {
+                userText: 'What else can I ask you about?',
+                agentText: 'I can help you find products, recipes, cooking tips, and much more. What sounds interesting?',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
+                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
+                    { text: 'Explore Menus', emoji: '🍽️', scenarioId: 'general' },
+                    { text: 'Tips & Techniques', emoji: '🔪', scenarioId: 'general' }
+                ]
+            }
+        };
+
+        function renderScenarioButtons() {
+            const container = document.getElementById('scenarioButtons');
+            container.innerHTML = SCENARIOS.map(s => `
+                <button class="scenario-button ${s.id === activeScenario.id ? 'active' : ''}" data-scenario-id="${s.id}" onclick="selectScenario('${s.id}')">
+                    <div class="scenario-num">${s.num}</div>
+                    <div class="scenario-label">${s.label}</div>
+                </button>
+            `).join('');
+        }
+
+        function renderContextCards() {
+            const container = document.getElementById('contextCards');
+            const s = activeScenario;
+
+            const dataHtml = s.data.map(d => `<div class="data-tag">${d}</div>`).join('');
+            const cantDoHtml = s.cantDo.map(d => `<div class="data-tag unavailable">${d}</div>`).join('');
+            const transitionsHtml = s.transitions.map(t => `<div class="transition-item">${t}</div>`).join('');
+
+            container.innerHTML = `
+                <div class="context-card">
+                    <div class="context-card-title">Trigger</div>
+                    <div class="context-card-content">${s.trigger}</div>
+                </div>
+                <div class="context-card">
+                    <div class="context-card-title">User Goal</div>
+                    <div class="context-card-content">${s.goal}</div>
+                </div>
+                <div class="context-card">
+                    <div class="context-card-title">Data Available</div>
+                    <div class="data-tags">${dataHtml}</div>
+                    <div class="context-card-note">${s.dataNote}</div>
+                </div>
+                <div class="context-card">
+                    <div class="context-card-title">Not Available Yet</div>
+                    <div class="data-tags">${cantDoHtml}</div>
+                </div>
+                <div class="context-card">
+                    <div class="context-card-title">Transitions</div>
+                    ${transitionsHtml}
+                </div>
+            `;
+        }
+
+        function renderPhoneChat() {
+            const container = document.getElementById('phoneScreenBody');
+            const s = activeScenario;
+
+            container.innerHTML = `
+                <div class="chat-message agent">
+                    <div class="chat-bubble">${s.agentMessage}</div>
+                </div>
+                <div class="chat-message user">
+                    <div class="chat-bubble">${s.userMessage}</div>
+                </div>
+            `;
+        }
+
+        function renderNudgeChips() {
+            const phoneScreenBody = document.getElementById('phoneScreenBody');
+            const s = activeScenario;
+
+            // Remove old nudge section if it exists
+            const oldSection = phoneScreenBody.querySelector('.nudge-section');
+            if (oldSection) {
+                oldSection.remove();
+            }
+
+            // Create new nudge section HTML
+            const nugesHTML = s.nudges.map((n, i) => `
+                <div class="nudge-chip" data-chip-index="${i}" data-chip-scenario="${s.id}" onclick="selectFollowUpChip(this)">
+                    <span class="nudge-emoji">${n.emoji}</span>
+                    <span>${n.text}</span>
+                </div>
+            `).join('');
+
+            // Create and append the nudge section
+            const nudgeSectionHTML = `
+                <div class="nudge-section">
+                    <div class="nudge-section-label">SUGGESTED NEXT STEPS</div>
+                    <div class="nudge-chips" id="nudgeChips">
+                        ${nugesHTML}
+                    </div>
+                </div>
+            `;
+            
+            phoneScreenBody.insertAdjacentHTML('beforeend', nudgeSectionHTML);
+        }
+
+        function getNudgeResponseKey(scenarioId, nudgeText) {
+            return scenarioId + '_' + nudgeText;
+        }
+
+        function renderChatCarousel(products) {
+            const badgeMap = {
+                'olivePick': '🫒 Olive Pick',
+                'bestSeller': '⭐ Best Seller',
+                'topRated': '★ Top Rated'
+            };
+
+            return `
+                <div class="chat-carousel">
+                    ${products.map(p => `
+                        <div class="chat-product-card">
+                            <div class="chat-product-image">
+                                <img src="${p.imageUrl}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150x150/f0f0f0/999?text=Product';">
+                            </div>
+                            <div class="chat-product-info">
+                                <div class="chat-product-name">${p.name}</div>
+                                <div class="chat-product-price">$${p.price.toFixed(2)}</div>
+                                ${p.badge ? `<div class="chat-product-badge">${badgeMap[p.badge] || p.badge}</div>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderRecipeCarousel(recipes) {
+            return `
+                <div class="chat-carousel">
+                    ${recipes.map(r => `
+                        <div class="chat-recipe-card">
+                            <div class="chat-recipe-image">
+                                <img src="${r.imageUrl}" alt="${r.name}" onerror="this.src='https://via.placeholder.com/150x150/f0f0f0/999?text=Recipe';">
+                            </div>
+                            <div class="chat-recipe-info">
+                                <div class="chat-recipe-name">${r.name}</div>
+                                <div class="chat-recipe-meta">
+                                    <span class="chat-recipe-time">⏱️ ${r.time}</span>
+                                    <span class="chat-recipe-difficulty">📊 ${r.difficulty}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function selectScenario(id) {
+            activeScenario = SCENARIOS.find(s => s.id === id);
+            conversationHistory = [];
+            
+            // Reset transition highlights
+            document.querySelectorAll('.scenario-button').forEach(btn => {
+                btn.classList.remove('transition-highlight');
+            });
+            
+            renderScenarioButtons();
+            renderContextCards();
+            renderPhoneChat();
+            renderNudgeChips();
+        }
+
+        function resetConversation() {
+            conversationHistory = [];
+            document.querySelectorAll('.scenario-button').forEach(btn => {
+                btn.classList.remove('transition-highlight');
+            });
+            document.querySelectorAll('.nudge-chip').forEach(chip => {
+                chip.classList.remove('disabled', 'selected');
+                chip.style.pointerEvents = 'auto';
+            });
+            selectScenario(activeScenario.id);
+        }
+
+        function selectFollowUpChip(element) {
+            const chipIndex = parseInt(element.getAttribute('data-chip-index'));
+            const scenarioId = element.getAttribute('data-chip-scenario');
+            
+            // Get the current chips being displayed (could be scenario nudges or followUpChips)
+            const chipsToShow = document.getElementById('nudgeChips').querySelectorAll('.nudge-chip');
+            const chipText = chipsToShow[chipIndex]?.querySelector('span:last-child')?.textContent.trim();
+            
+            if (!chipText) return;
+            
+            // Build the response key using the stored scenario ID
+            const responseKey = getNudgeResponseKey(scenarioId, chipText);
+            const response = NUDGE_RESPONSES[responseKey];
+            
+            if (!response) {
+                console.warn('No response found for:', responseKey);
+                return;
+            }
+            
+            // Disable all chips in the current row
+            document.querySelectorAll('.nudge-chip').forEach(chip => {
+                chip.classList.add('disabled');
+                chip.style.pointerEvents = 'none';
+            });
+            
+            // Mark clicked chip as selected
+            element.classList.add('selected');
+            
+            // Get the phone screen body container
+            const phoneScreenBody = document.getElementById('phoneScreenBody');
+            
+            // Create user message bubble
+            const userMsg = `
+                <div class="chat-message user">
+                    <div class="chat-bubble">${response.userText}</div>
+                </div>
+            `;
+            
+            // Create agent message bubble
+            let agentMsg = `
+                <div class="chat-message agent">
+                    <div class="chat-bubble">${response.agentText}`;
+            
+            if (response.showCarousel) {
+                if (response.carouselType === 'products') {
+                    agentMsg += renderChatCarousel(response.carouselData);
+                } else if (response.carouselType === 'recipes') {
+                    agentMsg += renderRecipeCarousel(response.carouselData);
+                }
+            }
+            
+            agentMsg += `
+                    </div>
+                </div>
+            `;
+            
+            // Append messages to phone screen
+            phoneScreenBody.insertAdjacentHTML('beforeend', userMsg + agentMsg);
+            
+            // Determine which scenario to use for the next chips
+            // If response transitions to a different scenario, update activeScenario
+            let nextScenarioId = scenarioId;
+            if (response.transitionTo) {
+                activeScenario = SCENARIOS.find(s => s.id === response.transitionTo);
+                nextScenarioId = response.transitionTo;
+                
+                // Highlight the transition target in left rail
+                document.querySelectorAll('.scenario-button').forEach(btn => {
+                    btn.classList.remove('transition-highlight');
+                });
+                const targetButton = document.querySelector(`[data-scenario-id="${response.transitionTo}"]`);
+                if (targetButton) {
+                    targetButton.classList.add('transition-highlight');
+                }
+            } else {
+                // Update activeScenario to match the current scenario ID
+                activeScenario = SCENARIOS.find(s => s.id === scenarioId);
+            }
+            
+            // Update nudge chips for next interaction
+            // Remove old nudge section if it exists
+            const oldSection = phoneScreenBody.querySelector('.nudge-section');
+            if (oldSection) {
+                oldSection.remove();
+            }
+
+            // Use followUpChips if available, otherwise use default scenario chips
+            const nextScenario = SCENARIOS.find(s => s.id === nextScenarioId);
+            const chipsToRender = response.followUpChips || nextScenario.nudges;
+            
+            // Create new nudge section
+            const nudgeSection = document.createElement('div');
+            nudgeSection.className = 'nudge-section';
+            nudgeSection.innerHTML = `
+                <div class="nudge-section-label">SUGGESTED NEXT STEPS</div>
+                <div class="nudge-chips" id="nudgeChips">
+                    ${chipsToRender.map((n, i) => {
+                        // For followUpChips, use the provided scenarioId; for default chips, use nextScenarioId
+                        const chipScenarioId = n.scenarioId || nextScenarioId;
+                        return `
+                            <div class="nudge-chip" data-chip-index="${i}" data-chip-scenario="${chipScenarioId}" onclick="selectFollowUpChip(this)">
+                                <span class="nudge-emoji">${n.emoji}</span>
+                                <span>${n.text}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            phoneScreenBody.appendChild(nudgeSection);
+            
+            // Auto-scroll to latest message
+            setTimeout(() => {
+                phoneScreenBody.scrollTop = phoneScreenBody.scrollHeight;
+            }, 50);
+        }
+
+        // Alias for backward compatibility
+        const selectNudge = selectFollowUpChip;
+
+        // Initialize
+        let comments = [];
+
+        function submitComment() {
+            const author = document.getElementById('commentAuthor').value.trim();
+            const text = document.getElementById('commentText').value.trim();
+            const type = document.querySelector('input[name="commentType"]:checked').value;
+
+            if (!author || !text) {
+                alert('Please enter your name and comment');
+                return;
+            }
+
+            const comment = {
+                id: Date.now(),
+                author,
+                text,
+                type,
+                date: new Date()
+            };
+
+            comments.push(comment);
+            document.getElementById('commentAuthor').value = '';
+            document.getElementById('commentText').value = '';
+            renderComments();
+        }
+
+        function renderComments() {
+            const list = document.getElementById('commentsList');
+            if (comments.length === 0) {
+                list.innerHTML = '<div style="color:#999;font-size:0.8125rem;">No comments yet. Be the first to share feedback!</div>';
+                return;
+            }
+
+            const typeLabels = { tech: 'Technical', feature: 'Feature', general: 'General' };
+            const typeClasses = { tech: 'tech', feature: 'feature', general: 'general' };
+
+            list.innerHTML = comments.map(c => {
+                const d = new Date(c.date);
+                const dateStr = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                return `
+                    <div class="comment-card">
+                        <div class="comment-card-header">
+                            <span class="comment-author">${c.author}</span>
+                            <span class="comment-type-badge ${typeClasses[c.type] || 'general'}">${typeLabels[c.type] || 'General'}</span>
+                        </div>
+                        <div class="comment-text">${c.text.replace(/\n/g, '<br>')}</div>
+                        <div class="comment-date">${dateStr}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        renderScenarioButtons();
+        renderContextCards();
+        renderPhoneChat();
+        renderNudgeChips();
+        renderComments();
+
+        // Wire up keyboard shortcut for comment submission
+        document.getElementById('commentText')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                submitComment();
+            }
+        });
+    </script>
+</body>
+</html>

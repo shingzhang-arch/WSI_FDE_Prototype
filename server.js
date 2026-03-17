@@ -11,6 +11,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'preview.html'));
 });
 
+// Route for nudges prototype
+app.get('/nudges', (req, res) => {
+    res.sendFile(path.join(__dirname, 'nudges.html'));
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
