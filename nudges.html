@@ -815,6 +815,34 @@
         .chat-recipe-difficulty {
             white-space: nowrap;
         }
+
+        .nudges-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nudge-item {
+            font-size: 0.8125rem;
+            line-height: 1.4;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 3px solid #0176d3;
+        }
+
+        .impl-badge {
+            display: inline-block;
+            background: #e8f1fd;
+            color: #0176d3;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
     </style>
 </head>
 <body>
@@ -897,15 +925,17 @@
                 dataNote: "High-level only. No pricing, specs, or reviews in carousel response.",
                 cantDo: ["Filter by price (not in data)", "Show reviews/ratings", "Side-by-side comparison"],
                 nudges: [
-                    { text: "Narrow by Type", emoji: "🔍", rationale: "Helps reframe the category with available category data" },
-                    { text: "Olive Picks", emoji: "🫒", rationale: "Curated selection — works with titles + category" },
-                    { text: "Help Me Decide", emoji: "🤔", rationale: "Escalates to guided questions using category context" },
-                    { text: "Tell Me About [Product]", emoji: "👁️", rationale: "Transitions to single product eval (Scenario 2)" },
-                    { text: "Browse All on WS", emoji: "→", rationale: "Exit ramp to full site experience" },
+                    { text: "Olive Picks", emoji: "🫒", rationale: "Shows top-rated / most popular products across the category", implNote: "Existing action" },
+                    { text: "Help Me Decide", emoji: "🤔", rationale: "Escalates to guided questions using category context", implNote: "New action required" },
+                    { text: "Tell Me About [Product]", emoji: "👁️", rationale: "Transitions to single product eval (Scenario 2)", implNote: "Existing action" },
                 ],
                 transitions: ["If user taps Tell Me About → Scenario 2", "If user taps Help Me Decide → guided use-case questions → refined carousel"],
-                userMessage: "I'm looking for a new coffee maker. Can you recommend some options?",
-                agentMessage: "I found some great coffee makers for you! Here are my top recommendations."
+                messages: [
+                    { role: 'user', text: "I'm looking for a new coffee maker. Can you recommend some options?" },
+                    { role: 'agent', text: "I'd love to help! To find the best match, can you tell me: What kind of coffee do you usually drink? Do you have a price range? Are you looking for multi-function or single-serve?" },
+                    { role: 'user', text: "I drink drip coffee, ideally under $300, and I'd like something multi-function." },
+                    { role: 'agent', text: "Great taste! Here are coffee makers that match -- multi-function drip brewers under $300:" }
+                ]
             },
             {
                 id: "eval_product",
@@ -917,16 +947,18 @@
                 dataNote: "Richer data. Can highlight specs, describe differences in text. No reviews/ratings.",
                 cantDo: ["Show star ratings or review counts", "Visual side-by-side comparison UI", "Show pricing tiers"],
                 nudges: [
-                    { text: "Is This Dishwasher Safe?", emoji: "❓", rationale: "Product Q&A — answerable from product summary" },
-                    { text: "What Size Is Right for Me?", emoji: "📏", rationale: "Spec-based guidance from product data" },
-                    { text: "How Is This Different from [X]?", emoji: "⚖️", rationale: "Text-based comparison of two product summaries" },
-                    { text: "What's This Best For?", emoji: "🍳", rationale: "Use-case matching — strong nudge pattern per customer" },
-                    { text: "See Similar Products", emoji: "🔄", rationale: "Back to carousel with related items" },
-                    { text: "Add to Cart", emoji: "🛒", rationale: "Commit CTA — always present in eval mode" },
+                    { text: "Is This Dishwasher Safe?", emoji: "❓", rationale: "Product Q&A — answerable from product summary", implNote: "Existing action" },
+                    { text: "What Size Is Right for Me?", emoji: "📏", rationale: "Spec-based guidance from product data", implNote: "Existing action" },
+                    { text: "Compare with Another", emoji: "⚖️", rationale: "Text-based comparison of two product summaries", implNote: "New action required" },
+                    { text: "What's This Best For?", emoji: "🍳", rationale: "Use-case matching — strong nudge pattern per customer", implNote: "Existing action" },
+                    { text: "See Similar Products", emoji: "🔄", rationale: "Back to carousel with related items", implNote: "Existing action" },
+                    { text: "Add to Cart", emoji: "🛒", rationale: "Commit CTA — always present in eval mode", implNote: "Hard-coded" },
                 ],
-                transitions: ["If user taps How Is This Different → text comparison of two products", "If user taps See Similar → back to Scenario 1 with refined results"],
-                userMessage: "Tell me more about the Breville coffee maker.",
-                agentMessage: "The Breville The Luxe Brewer is a premium automatic coffee maker with a built-in grinder. It features a thermal carafe for temperature retention."
+                transitions: ["If user taps Compare with Another → text comparison of two products", "If user taps See Similar → back to Scenario 1 with refined results"],
+                messages: [
+                    { role: 'user', text: "Tell me more about the Breville coffee maker." },
+                    { role: 'agent', text: "The Breville The Luxe Brewer is a premium automatic coffee maker with a built-in grinder. It features a thermal carafe for temperature retention, precision temperature control (195-205°F), and a pre-infusion cycle for optimal flavor extraction." }
+                ]
             },
             {
                 id: "browse_recipes",
@@ -938,15 +970,17 @@
                 dataNote: "Same constraint as product carousel — short summaries only.",
                 cantDo: ["Show full ingredients list", "Filter by ingredient", "Show cooking time if not in summary"],
                 nudges: [
-                    { text: "Under 30 Minutes", emoji: "⏱️", rationale: "Time filter — works if time data is in summary" },
-                    { text: "Weeknight Dinner", emoji: "🍽️", rationale: "Occasion-based filtering" },
-                    { text: "Vegetarian", emoji: "🥬", rationale: "Dietary filtering" },
-                    { text: "Tell Me More About This One", emoji: "📖", rationale: "Transitions to single recipe eval (Scenario 4)" },
-                    { text: "Search a Different Recipe", emoji: "🔍", rationale: "Restart with different criteria" },
+                    { text: "Under 30 Minutes", emoji: "⏱️", rationale: "Time filter — works if time data is in summary", implNote: "Existing action" },
+                    { text: "Weeknight Dinner", emoji: "🍽️", rationale: "Occasion-based filtering", implNote: "Existing action" },
+                    { text: "Vegetarian", emoji: "🥬", rationale: "Dietary filtering", implNote: "Existing action" },
+                    { text: "Tell Me More About This One", emoji: "📖", rationale: "Transitions to single recipe eval (Scenario 4)", implNote: "Existing action" },
+                    { text: "Not What I Wanted", emoji: "🔄", rationale: "Reset context and explore a different direction", implNote: "Existing action" },
                 ],
                 transitions: ["If user taps Tell Me More → Scenario 4", "If user taps a filter → refined recipe carousel"],
-                userMessage: "What are some quick recipes I can make tonight?",
-                agentMessage: "I found several quick recipes you might like! Here are some weeknight dinner options."
+                messages: [
+                    { role: 'user', text: "What are some quick recipes I can make tonight?" },
+                    { role: 'agent', text: "I found several quick recipes you might like! To narrow it down, what type of cuisine are you in the mood for? And do you have any dietary preferences? Here are some weeknight dinner options that are under 30 minutes:" }
+                ]
             },
             {
                 id: "eval_recipe",
@@ -958,15 +992,18 @@
                 dataNote: "Richest data scenario. Full recipe content available.",
                 cantDo: ["Show product prices inline", "Auto-add ingredients to cart"],
                 nudges: [
-                    { text: "Shop the Ingredients", emoji: "🛒", rationale: "Content-to-commerce bridge — triggers product search" },
-                    { text: "What Cookware Do I Need?", emoji: "🍳", rationale: "Cross-links to product recommendations" },
-                    { text: "Related Techniques", emoji: "🔪", rationale: "Links to Tips & Techniques content" },
-                    { text: "Simpler Version?", emoji: "👋", rationale: "Alternative recipe suggestion" },
-                    { text: "Find Similar Recipes", emoji: "🔍", rationale: "Back to Scenario 3 with related results" },
+                    { text: "List the Ingredients", emoji: "📋", rationale: "Displays full ingredient list for reference", implNote: "Existing action" },
+                    { text: "Email Me This Recipe", emoji: "📧", rationale: "Sends recipe summary to user's email", implNote: "New action required" },
+                    { text: "What Cookware Do I Need?", emoji: "🍳", rationale: "Cross-links to product recommendations", implNote: "Existing action" },
+                    { text: "Related Techniques", emoji: "🔪", rationale: "Links to Tips & Techniques content", implNote: "Existing action" },
+                    { text: "Find a Simpler Recipe", emoji: "👋", rationale: "Searches for similar but simpler alternatives", implNote: "Existing action" },
+                    { text: "Find Similar Recipes", emoji: "🔍", rationale: "Back to Scenario 3 with related results", implNote: "Existing action" },
                 ],
-                transitions: ["If user taps Shop the Ingredients → Scenario 1 (product carousel)", "If user taps What Cookware → Scenario 2 (single product eval)"],
-                userMessage: "I want to try making this recipe.",
-                agentMessage: "Great choice! This recipe will help you master a classic cooking technique. Here's what you'll need to get started."
+                transitions: ["If user taps What Cookware → Scenario 2 (single product eval)", "If user taps Find a Simpler → Scenario 3 (recipe carousel)"],
+                messages: [
+                    { role: 'user', text: "I want to try making this Pan-Seared Salmon with Herbs recipe." },
+                    { role: 'agent', text: "Excellent choice! This recipe will help you master the classic technique of pan-searing. Here's what you'll need: Fresh salmon fillet, butter, thyme, lemon, salt and pepper. The key is getting your pan hot enough for a crispy exterior while keeping the inside tender." }
+                ]
             },
             {
                 id: "general",
@@ -978,15 +1015,17 @@
                 dataNote: "Fallback nudges. Always available. Should feel like a helpful starting menu.",
                 cantDo: ["Be product-specific", "Reference previous searches (no session memory yet)"],
                 nudges: [
-                    { text: "Search Products", emoji: "🔍", rationale: "Entry to Scenario 1" },
-                    { text: "Find a Recipe", emoji: "📖", rationale: "Entry to Scenario 3" },
-                    { text: "Explore Menus", emoji: "🍽️", rationale: "Menu carousel" },
-                    { text: "Tips & Techniques", emoji: "🔪", rationale: "Content exploration" },
-                    { text: "Ask Me Anything", emoji: "💬", rationale: "Open-ended — user types their own question" },
+                    { text: "Search Products", emoji: "🔍", rationale: "Entry to Scenario 1", implNote: "Hard-coded" },
+                    { text: "Find a Recipe", emoji: "📖", rationale: "Entry to Scenario 3", implNote: "Hard-coded" },
+                    { text: "Explore Menus", emoji: "🍽️", rationale: "Menu carousel", implNote: "Hard-coded" },
+                    { text: "Tips and Techniques", emoji: "🔪", rationale: "Content exploration", implNote: "Hard-coded" },
+                    { text: "How Can You Help?", emoji: "💬", rationale: "Open-ended — user types their own question", implNote: "Hard-coded" },
                 ],
                 transitions: ["Each chip routes to the appropriate scenario above"],
-                userMessage: "Hi, I need some help.",
-                agentMessage: "I'm here to help! What would you like to explore today?"
+                messages: [
+                    { role: 'user', text: "Hi, I need some help." },
+                    { role: 'agent', text: "I'm here to help! What would you like to explore today? You can search for products, find recipes, explore menus, learn cooking techniques, or just ask me anything." }
+                ]
             },
         ];
 
@@ -1136,35 +1175,21 @@
         // Define responses for each nudge chip
         const NUDGE_RESPONSES = {
             // Scenario 1: Browsing Multiple Products
-            'browse_products_Narrow by Type': {
-                userText: 'Can you narrow this down by type?',
-                agentText: 'Great! Here are coffee makers grouped by brewing method:',
-                showCarousel: true,
-                carouselType: 'products',
-                carouselData: mockProducts.slice(0, 3),
-                transitionTo: null,
-                followUpChips: [
-                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
-                    { text: 'Help Me Decide', emoji: '🤔', scenarioId: 'browse_products' },
-                    { text: 'Olive Picks', emoji: '🫒', scenarioId: 'browse_products' }
-                ]
-            },
             'browse_products_Olive Picks': {
                 userText: 'Show me your Olive Picks.',
-                agentText: 'Here are our curated selections - these are top-rated by our customers:',
+                agentText: 'Here are our curated top-rated selections - these are most popular across the category:',
                 showCarousel: true,
                 carouselType: 'products',
                 carouselData: mockProducts.filter(p => p.badge === 'olivePick'),
                 transitionTo: null,
                 followUpChips: [
                     { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
-                    { text: 'Help Me Decide', emoji: '🤔', scenarioId: 'browse_products' },
-                    { text: 'Browse All on WS', emoji: '→', scenarioId: 'browse_products' }
+                    { text: 'Help Me Decide', emoji: '🤔', scenarioId: 'browse_products' }
                 ]
             },
             'browse_products_Help Me Decide': {
                 userText: 'I need help deciding. What questions should I answer?',
-                agentText: 'To narrow this down, tell me: Are you looking for speed or quality? Do you prefer a carafe or single-serve? What\'s your budget range?',
+                agentText: 'To narrow this down, tell me: Are you looking for speed or quality? Do you prefer a carafe or single-serve? What's your budget range?',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
@@ -1180,57 +1205,36 @@
                 showCarousel: false,
                 transitionTo: 'eval_product'
             },
-            'browse_products_Browse All on WS': {
-                userText: 'Can I see all coffee makers on the site?',
-                agentText: 'Of course! You can browse our full collection of coffee makers on Williams Sonoma.',
-                showCarousel: false,
-                transitionTo: null,
-                followUpChips: [
-                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
-                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
-                    { text: 'Ask Me Anything', emoji: '💬', scenarioId: 'general' }
-                ]
-            },
-
-            // Follow-up response entries for "Help Me Decide" preference chips
             'browse_products_Speed -- I need it fast': {
                 userText: 'I need speed -- I want something fast to brew.',
                 agentText: 'Perfect! Here are the fastest-brewing coffee makers in our collection:',
                 showCarousel: true,
                 carouselType: 'products',
-                carouselData: [mockProducts[1], mockProducts[4], extraProducts[2]],
+                carouselData: mockProducts.slice(0, 3),
                 transitionTo: null,
                 followUpChips: [
                     { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
-                    { text: 'Help Me Decide', emoji: '🤔', scenarioId: 'browse_products' },
                     { text: 'Quality -- I want the best brew', emoji: '✨', scenarioId: 'browse_products' }
                 ]
             },
             'browse_products_Quality -- I want the best brew': {
-                userText: 'I\'m all about quality -- I want the best brew possible.',
+                userText: 'I'm all about quality -- I want the best brew possible.',
                 agentText: 'Great choice! Here are our highest-rated and most premium coffee makers:',
                 showCarousel: true,
                 carouselType: 'products',
                 carouselData: mockProducts.filter(p => p.price > 300),
                 transitionTo: null,
                 followUpChips: [
-                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
-                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
-                    { text: 'Speed -- I need it fast', emoji: '⚡', scenarioId: 'browse_products' }
+                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' }
                 ]
             },
             'browse_products_Budget -- Under $200': {
-                userText: 'I\'m looking for something under $200.',
+                userText: 'I'm looking for something under $200.',
                 agentText: 'Excellent! Here are our best value coffee makers under $200:',
                 showCarousel: true,
                 carouselType: 'products',
-                carouselData: mockProducts.filter(p => p.price < 200).concat(extraProducts.filter(p => p.price < 200)),
-                transitionTo: null,
-                followUpChips: [
-                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
-                    { text: 'Quality -- I want the best brew', emoji: '✨', scenarioId: 'browse_products' },
-                    { text: 'I entertain a lot', emoji: '👥', scenarioId: 'browse_products' }
-                ]
+                carouselData: mockProducts.filter(p => p.price < 200),
+                transitionTo: null
             },
             'browse_products_I entertain a lot': {
                 userText: 'I entertain guests frequently and need larger capacity.',
@@ -1238,12 +1242,7 @@
                 showCarousel: true,
                 carouselType: 'products',
                 carouselData: mockProducts.slice(0, 4),
-                transitionTo: null,
-                followUpChips: [
-                    { text: 'Tell Me About [Product]', emoji: '👁️', scenarioId: 'browse_products' },
-                    { text: 'Quality -- I want the best brew', emoji: '✨', scenarioId: 'browse_products' },
-                    { text: 'Budget -- Under $200', emoji: '💰', scenarioId: 'browse_products' }
-                ]
+                transitionTo: null
             },
 
             // Scenario 2: Evaluating a Single Product
@@ -1254,9 +1253,8 @@
                 transitionTo: null,
                 followUpChips: [
                     { text: 'What Size Is Right for Me?', emoji: '📏', scenarioId: 'eval_product' },
-                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
-                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' },
-                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' }
+                    { text: 'What's This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' }
                 ]
             },
             'eval_product_What Size Is Right for Me?': {
@@ -1265,51 +1263,46 @@
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
-                    { text: 'Is This Dishwasher Safe?', emoji: '❓', scenarioId: 'eval_product' },
-                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
-                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' },
-                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' }
+                    { text: 'What's This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' }
                 ]
             },
-            'eval_product_How Is This Different from [X]?': {
-                userText: 'How is this different from the Fellow Aiden?',
+            'eval_product_Compare with Another': {
+                userText: 'How does this compare to the Fellow Aiden?',
                 agentText: 'Great question! The Breville emphasizes consistency and larger capacity (12-cup with thermal carafe), while the Fellow Aiden is more compact (8-cup) and appeals to coffee enthusiasts who want precise flow control. Breville is better for families; Fellow is better for coffee perfectionists.',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
-                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
-                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' },
-                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' }
+                    { text: 'What's This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' }
                 ]
             },
-            'eval_product_What\'s This Best For?': {
-                userText: 'What\'s this coffee maker best for?',
-                agentText: 'The Breville is best for morning routines where you want to brew once and enjoy coffee throughout the morning thanks to the thermal carafe. It\'s also ideal if you entertain guests and need larger quantities.',
+            'eval_product_What's This Best For?': {
+                userText: 'What's this coffee maker best for?',
+                agentText: 'The Breville is best for morning routines where you want to brew once and enjoy coffee throughout the morning thanks to the thermal carafe. It's also ideal if you entertain guests and need larger quantities.',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
                     { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' },
-                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' },
-                    { text: 'Is This Dishwasher Safe?', emoji: '❓', scenarioId: 'eval_product' }
+                    { text: 'See Similar Products', emoji: '🔄', scenarioId: 'eval_product' }
                 ]
             },
             'eval_product_See Similar Products': {
                 userText: 'Show me similar products.',
-                agentText: 'Here are other premium coffee makers in a similar price range:',
+                agentText: 'Here are other coffee makers with similar features and quality:',
                 showCarousel: true,
                 carouselType: 'products',
-                carouselData: mockProducts.filter(p => p.price > 250),
+                carouselData: mockProducts.slice(1, 4),
                 transitionTo: 'browse_products'
             },
             'eval_product_Add to Cart': {
-                userText: 'Great, I\'ll add it to my cart.',
+                userText: 'Great, I'll add it to my cart.',
                 agentText: 'Perfect! Breville The Luxe Brewer has been added to your cart. Would you like to continue shopping or proceed to checkout?',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
                     { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
-                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
-                    { text: 'Ask Me Anything', emoji: '💬', scenarioId: 'general' }
+                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' }
                 ]
             },
 
@@ -1323,13 +1316,11 @@
                 transitionTo: null,
                 followUpChips: [
                     { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'browse_recipes' },
-                    { text: 'Search a Different Recipe', emoji: '🔍', scenarioId: 'browse_recipes' },
-                    { text: 'Weeknight Dinner', emoji: '🍽️', scenarioId: 'browse_recipes' },
-                    { text: 'Vegetarian', emoji: '🥬', scenarioId: 'browse_recipes' }
+                    { text: 'Not What I Wanted', emoji: '🔄', scenarioId: 'browse_recipes' }
                 ]
             },
             'browse_recipes_Weeknight Dinner': {
-                userText: 'What\'s good for a weeknight dinner?',
+                userText: 'What's good for a weeknight dinner?',
                 agentText: 'Here are some easy weeknight favorites:',
                 showCarousel: true,
                 carouselType: 'recipes',
@@ -1337,9 +1328,7 @@
                 transitionTo: null,
                 followUpChips: [
                     { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'browse_recipes' },
-                    { text: 'Search a Different Recipe', emoji: '🔍', scenarioId: 'browse_recipes' },
-                    { text: 'Under 30 Minutes', emoji: '⏱️', scenarioId: 'browse_recipes' },
-                    { text: 'Vegetarian', emoji: '🥬', scenarioId: 'browse_recipes' }
+                    { text: 'Not What I Wanted', emoji: '🔄', scenarioId: 'browse_recipes' }
                 ]
             },
             'browse_recipes_Vegetarian': {
@@ -1350,21 +1339,18 @@
                 carouselData: [mockRecipes[0], mockRecipes[2]],
                 transitionTo: null,
                 followUpChips: [
-                    { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'browse_recipes' },
-                    { text: 'Search a Different Recipe', emoji: '🔍', scenarioId: 'browse_recipes' },
-                    { text: 'Under 30 Minutes', emoji: '⏱️', scenarioId: 'browse_recipes' },
-                    { text: 'Weeknight Dinner', emoji: '🍽️', scenarioId: 'browse_recipes' }
+                    { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'browse_recipes' }
                 ]
             },
             'browse_recipes_Tell Me More About This One': {
-                userText: 'Tell me more about one of these recipes.',
-                agentText: 'The Pan-Seared Salmon is a quick, elegant main course that takes just 25 minutes. It pairs beautifully with roasted vegetables or a fresh salad. Would you like the full recipe and ingredients?',
+                userText: 'Tell me more about this recipe.',
+                agentText: 'This is a fantastic choice! Pan-Seared Salmon with Herbs is quick (25 min), easy to prepare, and delicious. You'll learn a classic French cooking technique.',
                 showCarousel: false,
                 transitionTo: 'eval_recipe'
             },
-            'browse_recipes_Search a Different Recipe': {
-                userText: 'Can I search for something different?',
-                agentText: 'Absolutely! What type of recipe are you looking for? Just let me know the cuisine, main ingredient, or occasion.',
+            'browse_recipes_Not What I Wanted': {
+                userText: 'This isn't what I'm looking for.',
+                agentText: 'No problem! Let's explore a different direction. What are you in the mood for instead?',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
@@ -1375,81 +1361,64 @@
             },
 
             // Scenario 4: Evaluating a Single Recipe
-            'eval_recipe_Shop the Ingredients': {
-                userText: 'Can I shop for the ingredients?',
-                agentText: 'Of course! Let me show you cookware and ingredients you\'ll need for this dish:',
-                showCarousel: true,
-                carouselType: 'products',
-                carouselData: mockProducts.slice(0, 2),
-                transitionTo: 'browse_products'
-            },
-            'eval_recipe_What Cookware Do I Need?': {
-                userText: 'What cookware do I need for this?',
-                agentText: 'For pan-seared salmon, you\'ll need a good stainless steel or cast iron skillet. Here are our top recommendations:',
-                showCarousel: true,
-                carouselType: 'products',
-                carouselData: extraProducts.slice(0, 2),
-                transitionTo: 'eval_product'
-            },
-            'eval_recipe_Related Techniques': {
-                userText: 'Are there related cooking techniques I should know?',
-                agentText: 'Pan-searing is all about temperature control and timing. The key is getting your pan hot enough to create a crispy exterior while keeping the inside tender. Check out our Tips & Techniques section for detailed videos.',
+            'eval_recipe_List the Ingredients': {
+                userText: 'What ingredients do I need?',
+                agentText: 'Here's the full ingredient list for this salmon recipe: Fresh salmon fillet (6 oz), butter (2 tbsp), fresh thyme, lemon (½), salt, pepper. These are easily found at most grocery stores.',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
-                    { text: 'Shop the Ingredients', emoji: '🛒', scenarioId: 'eval_recipe' },
                     { text: 'What Cookware Do I Need?', emoji: '🍳', scenarioId: 'eval_recipe' },
+                    { text: 'Related Techniques', emoji: '🔪', scenarioId: 'eval_recipe' }
+                ]
+            },
+            'eval_recipe_Email Me This Recipe': {
+                userText: 'Can you email me this recipe?',
+                agentText: 'Perfect! I've sent the complete recipe with ingredient list and step-by-step instructions to your email. Check your inbox!',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
+                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' }
+                ]
+            },
+            'eval_recipe_What Cookware Do I Need?': {
+                userText: 'What cookware do I need?',
+                agentText: 'For pan-searing salmon, you'll need: A 10-12 inch stainless steel or cast iron skillet, a wooden spoon or spatula, and tongs. These are essential for getting that perfect crust.',
+                showCarousel: true,
+                carouselType: 'products',
+                carouselData: mockProducts.slice(0, 3),
+                transitionTo: null,
+                followUpChips: [
+                    { text: 'Related Techniques', emoji: '🔪', scenarioId: 'eval_recipe' }
+                ]
+            },
+            'eval_recipe_Related Techniques': {
+                userText: 'What techniques should I know?',
+                agentText: 'Pan-searing is all about temperature control and timing. Get your pan hot enough for a crispy exterior while keeping the inside tender. Check out our Tips & Techniques section for detailed videos.',
+                showCarousel: false,
+                transitionTo: null,
+                followUpChips: [
                     { text: 'Find Similar Recipes', emoji: '🔍', scenarioId: 'eval_recipe' }
                 ]
             },
-            'eval_recipe_Simpler Version?': {
-                userText: 'Is there a simpler version of this recipe?',
-                agentText: 'Yes! A simpler version would skip the herbs and use pre-seasoned salmon. Or try the Quick Stir-Fry recipe - it\'s similar but takes only 20 minutes.',
+            'eval_recipe_Find a Simpler Recipe': {
+                userText: 'Is there a simpler version?',
+                agentText: 'Yes! A simpler version would skip the herbs. Or try the Quick Stir-Fry -- similar technique but even faster.',
                 showCarousel: true,
                 carouselType: 'recipes',
                 carouselData: mockRecipes.slice(3, 5),
                 transitionTo: null,
                 followUpChips: [
-                    { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'eval_recipe' },
-                    { text: 'Shop the Ingredients', emoji: '🛒', scenarioId: 'eval_recipe' },
-                    { text: 'Find Similar Recipes', emoji: '🔍', scenarioId: 'eval_recipe' }
+                    { text: 'Tell Me More About This One', emoji: '📖', scenarioId: 'browse_recipes' }
                 ]
             },
             'eval_recipe_Find Similar Recipes': {
                 userText: 'Show me similar recipes.',
-                agentText: 'Here are other quick, elegant recipes:',
+                agentText: 'Here are other quick, elegant recipes with similar techniques:',
                 showCarousel: true,
                 carouselType: 'recipes',
                 carouselData: mockRecipes,
                 transitionTo: 'browse_recipes'
-            },
-
-            // Follow-up response entries for eval_recipe
-            'eval_recipe_Shop the Ingredients': {
-                userText: 'Can I shop for the ingredients?',
-                agentText: 'Absolutely! Here are some essential ingredients for this salmon recipe:',
-                showCarousel: true,
-                carouselType: 'products',
-                carouselData: mockProducts.slice(0, 2),
-                transitionTo: 'browse_products',
-                followUpChips: [
-                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
-                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
-                    { text: 'Ask Me Anything', emoji: '💬', scenarioId: 'general' }
-                ]
-            },
-            'eval_recipe_What Cookware Do I Need?': {
-                userText: 'What cookware do I need for this recipe?',
-                agentText: 'For pan-searing salmon, you\'ll need: a stainless steel or cast iron skillet (10-12 inches), a wooden spoon or spatula, and tongs. Here are some options:',
-                showCarousel: true,
-                carouselType: 'products',
-                carouselData: extraProducts,
-                transitionTo: null,
-                followUpChips: [
-                    { text: 'Shop the Ingredients', emoji: '🛒', scenarioId: 'eval_recipe' },
-                    { text: 'Related Techniques', emoji: '📖', scenarioId: 'eval_recipe' },
-                    { text: 'Find Similar Recipes', emoji: '🔍', scenarioId: 'eval_recipe' }
-                ]
             },
 
             // Scenario 5: General Conversational
@@ -1473,37 +1442,28 @@
                 userText: 'Show me some menus.',
                 agentText: 'Here are some curated menus perfect for different occasions.',
                 showCarousel: false,
-                transitionTo: null,
-                followUpChips: [
-                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
-                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
-                    { text: 'Ask Me Anything', emoji: '💬', scenarioId: 'general' }
-                ]
+                transitionTo: null
             },
-            'general_Tips & Techniques': {
+            'general_Tips and Techniques': {
                 userText: 'Tell me about cooking tips and techniques.',
                 agentText: 'We have a comprehensive Tips & Techniques library covering everything from knife skills to advanced cooking methods.',
                 showCarousel: false,
-                transitionTo: null,
-                followUpChips: [
-                    { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
-                    { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
-                    { text: 'Explore Menus', emoji: '🍽️', scenarioId: 'general' }
-                ]
+                transitionTo: null
             },
-            'general_Ask Me Anything': {
-                userText: 'What else can I ask you about?',
-                agentText: 'I can help you find products, recipes, cooking tips, and much more. What sounds interesting?',
+            'general_How Can You Help?': {
+                userText: 'How can you help me?',
+                agentText: 'I can help you find products, discover recipes, learn cooking techniques, explore menus, and answer your culinary questions. What would you like to explore?',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
                     { text: 'Search Products', emoji: '🔍', scenarioId: 'general' },
                     { text: 'Find a Recipe', emoji: '📖', scenarioId: 'general' },
                     { text: 'Explore Menus', emoji: '🍽️', scenarioId: 'general' },
-                    { text: 'Tips & Techniques', emoji: '🔪', scenarioId: 'general' }
+                    { text: 'Tips and Techniques', emoji: '🔪', scenarioId: 'general' }
                 ]
             }
         };
+
 
         function renderScenarioButtons() {
             const container = document.getElementById('scenarioButtons');
@@ -1522,6 +1482,11 @@
             const dataHtml = s.data.map(d => `<div class="data-tag">${d}</div>`).join('');
             const cantDoHtml = s.cantDo.map(d => `<div class="data-tag unavailable">${d}</div>`).join('');
             const transitionsHtml = s.transitions.map(t => `<div class="transition-item">${t}</div>`).join('');
+            
+            const nudgesHtml = s.nudges.map(n => {
+                const badge = n.implNote ? `<span class="impl-badge">${n.implNote}</span>` : '';
+                return `<div class="nudge-item">${n.emoji} <strong>${n.text}</strong> — ${n.rationale} ${badge}</div>`;
+            }).join('');
 
             container.innerHTML = `
                 <div class="context-card">
@@ -1542,6 +1507,10 @@
                     <div class="data-tags">${cantDoHtml}</div>
                 </div>
                 <div class="context-card">
+                    <div class="context-card-title">Nudge Chips</div>
+                    <div class="nudges-list">${nudgesHtml}</div>
+                </div>
+                <div class="context-card">
                     <div class="context-card-title">Transitions</div>
                     ${transitionsHtml}
                 </div>
@@ -1552,14 +1521,21 @@
             const container = document.getElementById('phoneScreenBody');
             const s = activeScenario;
 
-            container.innerHTML = `
-                <div class="chat-message agent">
-                    <div class="chat-bubble">${s.agentMessage}</div>
-                </div>
-                <div class="chat-message user">
-                    <div class="chat-bubble">${s.userMessage}</div>
-                </div>
-            `;
+            container.innerHTML = s.messages.map(msg => {
+                if (msg.role === 'user') {
+                    return `
+                        <div class="chat-message user">
+                            <div class="chat-bubble">${msg.text}</div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="chat-message agent">
+                            <div class="chat-bubble">${msg.text}</div>
+                        </div>
+                    `;
+                }
+            }).join('');
         }
 
         function renderNudgeChips() {
