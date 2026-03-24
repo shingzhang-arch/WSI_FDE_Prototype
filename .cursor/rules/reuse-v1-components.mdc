@@ -1,0 +1,59 @@
+---
+description: Reuse V1 prototype UI components when building new prototype pages
+globs: "**/*.html"
+alwaysApply: false
+---
+
+# Reuse V1 Prototype Components
+
+When creating new prototype pages (e.g. see-more.html, nudges.html, or any future prototype HTML file), always reuse the existing components from `preview.html` (the V1 prototype). Do NOT recreate or restyle components from scratch.
+
+## Source of Truth
+
+`preview.html` is the canonical source for all shared UI components. Copy CSS classes and HTML structures directly from it.
+
+## Components to Reuse
+
+### Layout
+- **Tab bar**: `.tab-bar`, `.tab`, `.tab.active`
+- **Three-column layout**: `.main-content` flex wrapper, left rail (`.settings-panel` / `.left-rail`), `.center-area`, `.right-rail`
+- **Left panel**: `.panel-title`, `.panel-section`, `.panel-section-title`, `.panel-option`, `.panel-option-content`, `.panel-option-label`, `.panel-option-desc`, `.panel-accordion`
+
+### Phone Frame
+- **Bezel**: `.phone-bezel` (393px width, 50px border-radius, #1d1d1f background)
+- **Dynamic island**: `.phone-dynamic-island` (126px × 37px, centered)
+- **Screen**: `.phone-screen` (780px height, 40px border-radius, padding-top 52px)
+- **Header bar**: `.phone-screen-header` (#1a1a1a, sparkle icon + "AI Sous Chef")
+- **Scrollable body**: `.phone-screen-body` (overflow-y: auto, hidden scrollbar)
+- **Home indicator**: `.phone-home-indicator-wrap`, `.phone-home-indicator`
+
+### Chat Messages
+- **Container**: `.chat-container` (max-width 375px, 1rem gap, 1rem padding)
+- **User message**: `.chat-message.user` > `.message-bubble` (blue #0176d3) + `.message-time`
+- **Agent message**: `.chat-message.agent` > `.chat-avatar` (32px, Olive icon) + `.message-content`
+- **Text**: `.message-text` (0.875rem), `.message-time` (0.6875rem, #706e6b)
+
+### Product Cards & Carousel
+- **Preview wrapper**: `.preview-container` (white bg, 8px radius, box-shadow)
+- **Header**: `.header` > `.header-row` (flex, space-between) > `h2` + optional `.see-more-link`
+- **Carousel**: `.carousel-section` > `.carousel-wrapper` > `.carousel-track` (2-col grid)
+- **Cards**: `.product-card` > `.product-card-inner` > `.product-badge` + `.product-image-container` + `.product-details` (name, price, action buttons)
+- **Buttons**: `.btn-quick-view` (outlined blue), `.btn-shop-now` (solid #181818)
+- **Navigation**: `.carousel-navigation` > `.carousel-nav` (prev/next) + `.pagination-container` > `.pagination-dot`
+
+### See More Patterns
+- **Header-right link**: `.see-more-link` — title case "See More", blue #0176d3, 0.8125rem, no arrow. Hide with `.is-hidden` (visibility: hidden + pointer-events: none).
+- **Full-width button**: `.see-more-button-full` — uppercase "SEE MORE ITEMS", transparent bg, 1px solid #181818 border, hover inverts to white-on-black.
+
+### Comments Rail
+- `.comments-rail`, `.comments-form`, `.comments-submit-btn`, `.comment-item`, `.comment-author`, `.comment-type`, `.comment-text`, `.comment-date`
+- Comments use server-side persistence via `GET /api/comments` and `POST /api/comments`
+
+## Rules
+
+1. **Copy, don't reinvent.** When you need a component listed above, copy its CSS and HTML from `preview.html`. Do not write new styles that approximate the same look.
+2. **Title case "See More"** for the header-right link — no arrow, no lowercase.
+3. **"SEE MORE ITEMS"** for the full-width button — all-caps via `text-transform: uppercase`.
+4. **Phone screen body must scroll.** Keep `.phone-screen-body` as the scrollable container. The `.chat-container` goes inside it as a child div (not by reassigning `.phone-screen-body`'s className).
+5. **Per-carousel pagination.** Each carousel gets its own state object in `carouselStates` and a unique ID. `goToSlide(carouselId, slideIdx)` re-renders only that carousel's content.
+6. **Product data.** Reuse the `mockProducts` array structure (id, name, imageUrl, price, badge, productUrl).

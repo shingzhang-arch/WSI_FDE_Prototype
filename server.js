@@ -71,6 +71,11 @@ app.get('/nudges', (req, res) => {
     res.sendFile(path.join(__dirname, 'nudges.html'));
 });
 
+// Route for see-more flow prototype
+app.get('/see-more', (req, res) => {
+    res.sendFile(path.join(__dirname, 'see-more.html'));
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     loadCommentsFromFile();

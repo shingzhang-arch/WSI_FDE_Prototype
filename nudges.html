@@ -850,6 +850,7 @@
     <div class="tab-bar">
         <a href="/" class="tab">V1 Prototype (carousel, see more)</a>
         <a href="/nudges" class="tab active">Nudge Scenarios</a>
+        <a href="/see-more" class="tab">See More Flow</a>
     </div>
 
     <!-- ===== MAIN CONTENT ===== -->
@@ -1189,7 +1190,7 @@
             },
             'browse_products_Help Me Decide': {
                 userText: 'I need help deciding. What questions should I answer?',
-                agentText: 'To narrow this down, tell me: Are you looking for speed or quality? Do you prefer a carafe or single-serve? What's your budget range?',
+                agentText: 'To narrow this down, tell me: Are you looking for speed or quality? Do you prefer a carafe or single-serve? What\'s your budget range?',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
@@ -1218,7 +1219,7 @@
                 ]
             },
             'browse_products_Quality -- I want the best brew': {
-                userText: 'I'm all about quality -- I want the best brew possible.',
+                userText: 'I\'m all about quality -- I want the best brew possible.',
                 agentText: 'Great choice! Here are our highest-rated and most premium coffee makers:',
                 showCarousel: true,
                 carouselType: 'products',
@@ -1229,7 +1230,7 @@
                 ]
             },
             'browse_products_Budget -- Under $200': {
-                userText: 'I'm looking for something under $200.',
+                userText: 'I\'m looking for something under $200.',
                 agentText: 'Excellent! Here are our best value coffee makers under $200:',
                 showCarousel: true,
                 carouselType: 'products',
@@ -1253,7 +1254,7 @@
                 transitionTo: null,
                 followUpChips: [
                     { text: 'What Size Is Right for Me?', emoji: '📏', scenarioId: 'eval_product' },
-                    { text: 'What's This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
                     { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' }
                 ]
             },
@@ -1263,7 +1264,7 @@
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
-                    { text: 'What's This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
                     { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' }
                 ]
             },
@@ -1273,13 +1274,13 @@
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
-                    { text: 'What's This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
+                    { text: 'What\'s This Best For?', emoji: '🍳', scenarioId: 'eval_product' },
                     { text: 'Add to Cart', emoji: '🛒', scenarioId: 'eval_product' }
                 ]
             },
-            'eval_product_What's This Best For?': {
-                userText: 'What's this coffee maker best for?',
-                agentText: 'The Breville is best for morning routines where you want to brew once and enjoy coffee throughout the morning thanks to the thermal carafe. It's also ideal if you entertain guests and need larger quantities.',
+            'eval_product_What\'s This Best For?': {
+                userText: 'What\'s this coffee maker best for?',
+                agentText: 'The Breville is best for morning routines where you want to brew once and enjoy coffee throughout the morning thanks to the thermal carafe. It\'s also ideal if you entertain guests and need larger quantities.',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
@@ -1296,7 +1297,7 @@
                 transitionTo: 'browse_products'
             },
             'eval_product_Add to Cart': {
-                userText: 'Great, I'll add it to my cart.',
+                userText: 'Great, I\'ll add it to my cart.',
                 agentText: 'Perfect! Breville The Luxe Brewer has been added to your cart. Would you like to continue shopping or proceed to checkout?',
                 showCarousel: false,
                 transitionTo: null,
@@ -1320,7 +1321,7 @@
                 ]
             },
             'browse_recipes_Weeknight Dinner': {
-                userText: 'What's good for a weeknight dinner?',
+                userText: 'What\'s good for a weeknight dinner?',
                 agentText: 'Here are some easy weeknight favorites:',
                 showCarousel: true,
                 carouselType: 'recipes',
@@ -1344,13 +1345,13 @@
             },
             'browse_recipes_Tell Me More About This One': {
                 userText: 'Tell me more about this recipe.',
-                agentText: 'This is a fantastic choice! Pan-Seared Salmon with Herbs is quick (25 min), easy to prepare, and delicious. You'll learn a classic French cooking technique.',
+                agentText: 'This is a fantastic choice! Pan-Seared Salmon with Herbs is quick (25 min), easy to prepare, and delicious. You\'ll learn a classic French cooking technique.',
                 showCarousel: false,
                 transitionTo: 'eval_recipe'
             },
             'browse_recipes_Not What I Wanted': {
-                userText: 'This isn't what I'm looking for.',
-                agentText: 'No problem! Let's explore a different direction. What are you in the mood for instead?',
+                userText: 'This isn\'t what I\'m looking for.',
+                agentText: 'No problem! Let\'s explore a different direction. What are you in the mood for instead?',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
@@ -1363,7 +1364,7 @@
             // Scenario 4: Evaluating a Single Recipe
             'eval_recipe_List the Ingredients': {
                 userText: 'What ingredients do I need?',
-                agentText: 'Here's the full ingredient list for this salmon recipe: Fresh salmon fillet (6 oz), butter (2 tbsp), fresh thyme, lemon (½), salt, pepper. These are easily found at most grocery stores.',
+                agentText: 'Here\'s the full ingredient list for this salmon recipe: Fresh salmon fillet (6 oz), butter (2 tbsp), fresh thyme, lemon (½), salt, pepper. These are easily found at most grocery stores.',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
@@ -1373,7 +1374,7 @@
             },
             'eval_recipe_Email Me This Recipe': {
                 userText: 'Can you email me this recipe?',
-                agentText: 'Perfect! I've sent the complete recipe with ingredient list and step-by-step instructions to your email. Check your inbox!',
+                agentText: 'Perfect! I\'ve sent the complete recipe with ingredient list and step-by-step instructions to your email. Check your inbox!',
                 showCarousel: false,
                 transitionTo: null,
                 followUpChips: [
@@ -1383,7 +1384,7 @@
             },
             'eval_recipe_What Cookware Do I Need?': {
                 userText: 'What cookware do I need?',
-                agentText: 'For pan-searing salmon, you'll need: A 10-12 inch stainless steel or cast iron skillet, a wooden spoon or spatula, and tongs. These are essential for getting that perfect crust.',
+                agentText: 'For pan-searing salmon, you\'ll need: A 10-12 inch stainless steel or cast iron skillet, a wooden spoon or spatula, and tongs. These are essential for getting that perfect crust.',
                 showCarousel: true,
                 carouselType: 'products',
                 carouselData: mockProducts.slice(0, 3),
