@@ -143,6 +143,20 @@
             line-height: 1.4;
         }
 
+        .panel-option-badge {
+            font-size: 0.5625rem;
+            font-weight: 700;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .panel-option-badge.recommended {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
         /* ===== CENTER AREA (Phone Frame) ===== */
         .center-area {
             flex: 1;
@@ -882,17 +896,17 @@
             <div class="panel-section">
                 <div class="panel-section-title">1. See More Flow</div>
                 <label class="panel-option selected">
-                    <input type="radio" name="seeMoreFlowVariation" value="link" checked onchange="selectVariation('link')">
+                    <input type="radio" name="seeMoreFlowVariation" value="chips" checked onchange="selectVariation('chips')">
                     <div class="panel-option-content">
-                        <div class="panel-option-label">See More Link</div>
-                        <div class="panel-option-desc">Header link reveals more carousels on each click</div>
+                        <div class="panel-option-label">1.1 Nudge Chips <span class="panel-option-badge recommended">Recommended</span></div>
+                        <div class="panel-option-desc">Conversational nudge buttons guide the next step</div>
                     </div>
                 </label>
                 <label class="panel-option">
-                    <input type="radio" name="seeMoreFlowVariation" value="chips" onchange="selectVariation('chips')">
+                    <input type="radio" name="seeMoreFlowVariation" value="link" onchange="selectVariation('link')">
                     <div class="panel-option-content">
-                        <div class="panel-option-label">Nudge Chips</div>
-                        <div class="panel-option-desc">Conversational nudge buttons guide the next step</div>
+                        <div class="panel-option-label">1.2 See More Link</div>
+                        <div class="panel-option-desc">Header link reveals more carousels on each click</div>
                     </div>
                 </label>
             </div>
@@ -1058,7 +1072,7 @@
         // State variables
         let carouselPage = 0;
         let comments = [];
-        let currentVariation = 'link'; // 'link' or 'chips'
+        let currentVariation = 'chips'; // 'link' or 'chips'
         const carouselStates = {}; // Track individual carousel pagination states
         let carouselSequence = 0; // Counter for carousel IDs
 
@@ -1304,10 +1318,13 @@
                         <div class="chat-avatar"><img src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="Olive"></div>
                         <div class="message-content">
                             <div class="message-bubble">
-                                <div class="message-text">Based on ratings and popularity, here are my top 3 recommendations:<br><br>
-                                    1. <strong>Breville The Luxe Brewer</strong> - $349.95 - Perfect for coffee enthusiasts, dual-temperature carafe<br>
-                                    2. <strong>Moccamaster KBGV Select</strong> - $369.95 - Precision brewing, SCAA certified<br>
-                                    3. <strong>Fellow Aiden</strong> - $299.95 - Sleek design, excellent temperature control</div>
+                                <div class="message-text">Let me help you compare your top options:<br><br>
+                                    <strong>🏆 Best Overall: Breville The Luxe Brewer</strong> - $349.95<br>
+                                    Dual-temperature carafe, perfect for coffee enthusiasts who value precision<br><br>
+                                    <strong>⚡ Best for Speed: Fellow Aiden</strong> - $299.95<br>
+                                    Sleek design with excellent temperature control, ideal if you brew multiple cups daily<br><br>
+                                    <strong>🥇 Best Value: Cafe Specialty Drip</strong> - $199.95<br>
+                                    Top-rated quality without the premium price, great all-around choice</div>
                             </div>
                         </div>
                     </div>
