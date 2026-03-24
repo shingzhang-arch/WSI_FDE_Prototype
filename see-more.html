@@ -1350,9 +1350,19 @@
                 carouselStates[carouselId] = { currentSlide: 0 };
                 
                 currentCategory = category;
-                browseLevelByCategory[category] = browseLevel;
+                
+                // When switching to a new category, start at level 1; when continuing same category, increment level
+                let newLevel = browseLevel;
+                if (!browseLevelByCategory[category]) {
+                    // First time in this category
+                    newLevel = 1;
+                } else {
+                    // Continuing in same category
+                    newLevel = browseLevel + 1;
+                }
+                browseLevelByCategory[category] = newLevel;
 
-                const carouselBlock = renderCarouselBlock(carouselId, newSequence, nextProducts, nextTitle, nextSubtitle, category, browseLevel);
+                const carouselBlock = renderCarouselBlock(carouselId, newSequence, nextProducts, nextTitle, nextSubtitle, category, newLevel);
                 chatContainer.insertAdjacentHTML('beforeend', carouselBlock);
             } else if (action === 'helpDecide') {
                 // Phase 1: Show use-case questions
@@ -1402,7 +1412,8 @@
                 chatContainer.insertAdjacentHTML('beforeend', questionMsg);
             }
 
-            body.scrollTop = body.scrollHeight;
+            // Smooth scroll to bottom with animation
+            body.scroll({ top: body.scrollHeight, behavior: 'smooth' });
         }
 
         function handleDecideAnswer(answer, category, sequence) {
@@ -1436,7 +1447,8 @@
             const carouselBlock = renderCarouselBlock(carouselId, newSequence, filteredProducts, filteredTitle, filteredSubtitle, category, 2);
             chatContainer.insertAdjacentHTML('beforeend', carouselBlock);
             
-            body.scrollTop = body.scrollHeight;
+            // Smooth scroll to bottom with animation
+            body.scroll({ top: body.scrollHeight, behavior: 'smooth' });
         }
 
         async function loadComments() {
