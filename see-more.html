@@ -1316,9 +1316,7 @@
                 let onclick = '';
                 if (chip.action === 'loadChipCarousel') {
                     const newCat = chip.newCategory || category;
-                    const isSeeMoreChip = chip.id.startsWith('see-more-');
-                    const newCount = isSeeMoreChip ? seeMoreCount + 1 : 0;
-                    onclick = `handleNudgeChip('${chip.id}','${chip.action}',${sequence},'${chip.nextTitle}','${chip.nextSubtitle}',${chip.nextProducts},'${newCat}',${newCount})`;
+                    onclick = `handleNudgeChip('${chip.id}','${chip.action}',${sequence},'${chip.nextTitle}','${chip.nextSubtitle}',${chip.nextProducts},'${newCat}',${seeMoreCount})`;
                 } else if (chip.action === 'browseAll') {
                     onclick = `window.open('${chip.url}', '_blank')`;
                 } else if (chip.action === 'helpDecide') {
