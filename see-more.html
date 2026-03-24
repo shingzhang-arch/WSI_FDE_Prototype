@@ -1078,7 +1078,7 @@
         const carouselStates = {}; // Track individual carousel pagination states
         let carouselSequence = 0; // Counter for carousel IDs
         let currentCategory = 'coffee'; // Track current category (coffee, espresso, grinders)
-        let browseLevelByCategory = {}; // Track browse level per category
+        let seeMoreClicksByCategory = {}; // Track "See more" clicks per category (coffee, espresso, grinders)
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
@@ -1095,11 +1095,11 @@
             const body = document.getElementById('phoneScreenBody');
             carouselSequence = 0;
             currentCategory = 'coffee';
-            browseLevelByCategory = { coffee: 1, espresso: 0, grinders: 0 };
+            seeMoreClicksByCategory = { coffee: 0, espresso: 0, grinders: 0 };
             
             const carouselId = `carousel-${carouselSequence}`;
             carouselStates[carouselId] = { currentSlide: 0 };
-            const agentMsg = renderCarouselBlock(carouselId, carouselSequence, 0, 'Coffee Makers', 'Coffee makers curated just for you • 5 items', 'coffee', 1);
+            const agentMsg = renderCarouselBlock(carouselId, carouselSequence, 0, 'Coffee Makers', 'Coffee makers curated just for you • 5 items', 'coffee', 0);
 
             body.innerHTML = `
                 <div class="chat-container" id="chatContainer">
@@ -1114,7 +1114,7 @@
             `;
         }
 
-        function renderCarouselBlock(carouselId, sequence, productStartIdx, title, subtitle, category = 'coffee', browseLevel = 1) {
+        function renderCarouselBlock(carouselId, sequence, productStartIdx, title, subtitle, category = 'coffee', seeMoreCount = 0) {
             const isLinkMode = currentVariation === 'link';
             const isLastCarouselLink = isLinkMode && sequence === 2;
             const products = mockProducts.slice(productStartIdx, productStartIdx + 4);
@@ -1135,7 +1135,7 @@
 
             let chipsContent = '';
             if (!isLinkMode) {
-                chipsContent = renderNudgeChips(sequence, productStartIdx, category, browseLevel);
+                chipsContent = renderNudgeChips(sequence, productStartIdx, category, seeMoreCount);
             }
 
             return `
@@ -1278,7 +1278,7 @@
             loadComments();
         }
 
-        function renderNudgeChips(sequence, productStartIdx, category = 'coffee', browseLevel = 1) {
+        function renderNudgeChips(sequence, productStartIdx, category = 'coffee', seeMoreCount = 0) {
             let chipDefs = [];
             
             // Define chips based on category
@@ -1288,8 +1288,8 @@
                     { id: 'show-espresso', label: 'Show me espresso machines', icon: '✦', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'Espresso Machines', nextSubtitle: 'Espresso options for your kitchen • 4 items', nextProducts: 4, newCategory: 'espresso' },
                     { id: 'help-decide', label: 'Help me decide', icon: '💬', action: 'helpDecide', sequence: sequence, category: 'coffee' }
                 ];
-                // Add "Browse All" nudge on 3rd level
-                if (browseLevel === 3) {
+                // Add "Browse All" nudge only after exactly 2 "See more" clicks
+                if (seeMoreCount === 2) {
                     chipDefs.unshift({ id: 'browse-all-coffee', label: 'Browse All Coffee Makers', icon: '→', action: 'browseAll', url: 'https://www.williams-sonoma.com/products/coffee-tea/coffee-makers/' });
                 }
             } else if (category === 'espresso') {
@@ -1298,7 +1298,7 @@
                     { id: 'show-grinders', label: 'Show me coffee grinders', icon: '⚙️', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'Coffee Grinders', nextSubtitle: 'Grinders to pair with your espresso • 4 items', nextProducts: 8, newCategory: 'grinders' },
                     { id: 'help-decide-espresso', label: 'Help me decide', icon: '💬', action: 'helpDecide', sequence: sequence, category: 'espresso' }
                 ];
-                if (browseLevel === 3) {
+                if (seeMoreCount === 2) {
                     chipDefs.unshift({ id: 'browse-all-espresso', label: 'Browse All Espresso Machines', icon: '→', action: 'browseAll', url: 'https://www.williams-sonoma.com/products/coffee-tea/espresso-machines/' });
                 }
             } else if (category === 'grinders') {
@@ -1307,7 +1307,7 @@
                     { id: 'show-espresso-grinders', label: 'Show me espresso machines', icon: '✦', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'Espresso Machines', nextSubtitle: 'Espresso options for your kitchen • 4 items', nextProducts: 4, newCategory: 'espresso' },
                     { id: 'help-decide-grinders', label: 'Help me decide', icon: '💬', action: 'helpDecide', sequence: sequence, category: 'grinders' }
                 ];
-                if (browseLevel === 3) {
+                if (seeMoreCount === 2) {
                     chipDefs.unshift({ id: 'browse-all-grinders', label: 'Browse All Coffee Grinders', icon: '→', action: 'browseAll', url: 'https://www.williams-sonoma.com/products/coffee-tea/grinders/' });
                 }
             }
@@ -1316,12 +1316,13 @@
                 let onclick = '';
                 if (chip.action === 'loadChipCarousel') {
                     const newCat = chip.newCategory || category;
-                    const newLevel = browseLevel + 1;
-                    onclick = `handleNudgeChip('${chip.id}','${chip.action}',${sequence},'${chip.nextTitle}','${chip.nextSubtitle}',${chip.nextProducts},'${newCat}',${newLevel})`;
+                    const isSeeMoreChip = chip.id.startsWith('see-more-');
+                    const newCount = isSeeMoreChip ? seeMoreCount + 1 : 0;
+                    onclick = `handleNudgeChip('${chip.id}','${chip.action}',${sequence},'${chip.nextTitle}','${chip.nextSubtitle}',${chip.nextProducts},'${newCat}',${newCount})`;
                 } else if (chip.action === 'browseAll') {
                     onclick = `window.open('${chip.url}', '_blank')`;
                 } else if (chip.action === 'helpDecide') {
-                    onclick = `handleNudgeChip('${chip.id}','${chip.action}',${sequence},'','',0,'${chip.category}',${browseLevel})`;
+                    onclick = `handleNudgeChip('${chip.id}','${chip.action}',${sequence},'','',0,'${chip.category}',${seeMoreCount})`;
                 }
                 
                 return `<button type="button" class="nudge-chip" id="chip-${chip.id}" onclick="${onclick}"><span class="nudge-chip-icon">${chip.icon}</span>${chip.label}</button>`;
@@ -1337,7 +1338,7 @@
             `;
         }
 
-        function handleNudgeChip(chipId, action, sequence, nextTitle, nextSubtitle, nextProducts, category = 'coffee', browseLevel = 1) {
+        function handleNudgeChip(chipId, action, sequence, nextTitle, nextSubtitle, nextProducts, category = 'coffee', seeMoreCount = 0) {
             const chip = document.getElementById(`chip-${chipId}`);
             if (chip) chip.classList.add('selected');
 
@@ -1349,20 +1350,30 @@
                 const carouselId = `carousel-chip-${newSequence}`;
                 carouselStates[carouselId] = { currentSlide: 0 };
                 
-                currentCategory = category;
+                // Check if this is a "See more" nudge (by chip ID)
+                const isSeeMoreChip = chipId.startsWith('see-more-');
                 
-                // When switching to a new category, start at level 1; when continuing same category, increment level
-                let newLevel = browseLevel;
-                if (!browseLevelByCategory[category]) {
-                    // First time in this category
-                    newLevel = 1;
+                // If switching to a new category, reset count; otherwise use the passed seeMoreCount
+                if (category !== currentCategory) {
+                    // Switching to new category: reset to 0, will become 1 if it's a "See more" chip
+                    if (isSeeMoreChip) {
+                        seeMoreClicksByCategory[category] = 1;
+                    } else {
+                        seeMoreClicksByCategory[category] = 0;
+                    }
                 } else {
                     // Continuing in same category
-                    newLevel = browseLevel + 1;
+                    if (isSeeMoreChip) {
+                        seeMoreClicksByCategory[category] = seeMoreCount + 1;
+                    } else {
+                        seeMoreClicksByCategory[category] = seeMoreCount;
+                    }
                 }
-                browseLevelByCategory[category] = newLevel;
+                
+                currentCategory = category;
+                const newSeeMoreCount = seeMoreClicksByCategory[category];
 
-                const carouselBlock = renderCarouselBlock(carouselId, newSequence, nextProducts, nextTitle, nextSubtitle, category, newLevel);
+                const carouselBlock = renderCarouselBlock(carouselId, newSequence, nextProducts, nextTitle, nextSubtitle, category, newSeeMoreCount);
                 chatContainer.insertAdjacentHTML('beforeend', carouselBlock);
             } else if (action === 'helpDecide') {
                 // Phase 1: Show use-case questions
@@ -1444,7 +1455,8 @@
             const carouselId = `carousel-decide-${newSequence}`;
             carouselStates[carouselId] = { currentSlide: 0 };
             
-            const carouselBlock = renderCarouselBlock(carouselId, newSequence, filteredProducts, filteredTitle, filteredSubtitle, category, 2);
+            const seeMoreCount = seeMoreClicksByCategory[category] || 0;
+            const carouselBlock = renderCarouselBlock(carouselId, newSequence, filteredProducts, filteredTitle, filteredSubtitle, category, seeMoreCount);
             chatContainer.insertAdjacentHTML('beforeend', carouselBlock);
             
             // Smooth scroll to bottom with animation
