@@ -1075,6 +1075,8 @@
         let currentVariation = 'chips'; // 'link' or 'chips'
         const carouselStates = {}; // Track individual carousel pagination states
         let carouselSequence = 0; // Counter for carousel IDs
+        let currentCategory = 'coffee'; // Track current category (coffee, espresso, grinders)
+        let browseLevelByCategory = {}; // Track browse level per category
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
@@ -1090,10 +1092,12 @@
         function renderInitialChat() {
             const body = document.getElementById('phoneScreenBody');
             carouselSequence = 0;
+            currentCategory = 'coffee';
+            browseLevelByCategory = { coffee: 1, espresso: 0, grinders: 0 };
             
             const carouselId = `carousel-${carouselSequence}`;
             carouselStates[carouselId] = { currentSlide: 0 };
-            const agentMsg = renderCarouselBlock(carouselId, carouselSequence, 0, 'Coffee Makers', 'Coffee makers curated just for you • 5 items');
+            const agentMsg = renderCarouselBlock(carouselId, carouselSequence, 0, 'Coffee Makers', 'Coffee makers curated just for you • 5 items', 'coffee', 1);
 
             body.innerHTML = `
                 <div class="chat-container" id="chatContainer">
@@ -1108,7 +1112,7 @@
             `;
         }
 
-        function renderCarouselBlock(carouselId, sequence, productStartIdx, title, subtitle) {
+        function renderCarouselBlock(carouselId, sequence, productStartIdx, title, subtitle, category = 'coffee', browseLevel = 1) {
             const isLinkMode = currentVariation === 'link';
             const isLastCarouselLink = isLinkMode && sequence === 2;
             const products = mockProducts.slice(productStartIdx, productStartIdx + 4);
@@ -1129,7 +1133,7 @@
 
             let chipsContent = '';
             if (!isLinkMode) {
-                chipsContent = renderNudgeChips(sequence, productStartIdx);
+                chipsContent = renderNudgeChips(sequence, productStartIdx, category, browseLevel);
             }
 
             return `
@@ -1272,20 +1276,53 @@
             loadComments();
         }
 
-        function renderNudgeChips(sequence, productStartIdx) {
-            const chipDefs = [
-                { id: 'see-more-coffee', label: 'See more coffee makers', icon: '☕', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'More Coffee Makers', nextSubtitle: 'More options curated for you • 4 items', nextProducts: productStartIdx + 4 },
-                { id: 'show-espresso', label: 'Show me espresso machines', icon: '✦', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'Espresso Machines', nextSubtitle: 'Espresso options for your kitchen • 4 items', nextProducts: 4 },
-                { id: 'budget-picks', label: 'Under $200', icon: '💰', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'Budget-Friendly Picks', nextSubtitle: 'Great coffee makers under $200 • 4 items', nextProducts: 8 },
-                { id: 'help-decide', label: 'Help me decide', icon: '💬', action: 'showComparison', sequence: sequence }
-            ];
+        function renderNudgeChips(sequence, productStartIdx, category = 'coffee', browseLevel = 1) {
+            let chipDefs = [];
+            
+            // Define chips based on category
+            if (category === 'coffee') {
+                chipDefs = [
+                    { id: 'see-more-coffee', label: 'See more coffee makers', icon: '☕', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'More Coffee Makers', nextSubtitle: 'More options curated for you • 4 items', nextProducts: productStartIdx + 4 },
+                    { id: 'show-espresso', label: 'Show me espresso machines', icon: '✦', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'Espresso Machines', nextSubtitle: 'Espresso options for your kitchen • 4 items', nextProducts: 4, newCategory: 'espresso' },
+                    { id: 'help-decide', label: 'Help me decide', icon: '💬', action: 'helpDecide', sequence: sequence, category: 'coffee' }
+                ];
+                // Add "Browse All" nudge on 3rd level
+                if (browseLevel === 3) {
+                    chipDefs.unshift({ id: 'browse-all-coffee', label: 'Browse All Coffee Makers', icon: '→', action: 'browseAll', url: 'https://www.williams-sonoma.com/products/coffee-tea/coffee-makers/' });
+                }
+            } else if (category === 'espresso') {
+                chipDefs = [
+                    { id: 'see-more-espresso', label: 'See more espresso machines', icon: '✦', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'More Espresso Machines', nextSubtitle: 'More options curated for you • 4 items', nextProducts: productStartIdx + 4 },
+                    { id: 'show-grinders', label: 'Show me coffee grinders', icon: '⚙️', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'Coffee Grinders', nextSubtitle: 'Grinders to pair with your espresso • 4 items', nextProducts: 8, newCategory: 'grinders' },
+                    { id: 'help-decide-espresso', label: 'Help me decide', icon: '💬', action: 'helpDecide', sequence: sequence, category: 'espresso' }
+                ];
+                if (browseLevel === 3) {
+                    chipDefs.unshift({ id: 'browse-all-espresso', label: 'Browse All Espresso Machines', icon: '→', action: 'browseAll', url: 'https://www.williams-sonoma.com/products/coffee-tea/espresso-machines/' });
+                }
+            } else if (category === 'grinders') {
+                chipDefs = [
+                    { id: 'see-more-grinders', label: 'See more coffee grinders', icon: '⚙️', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'More Coffee Grinders', nextSubtitle: 'More options curated for you • 4 items', nextProducts: productStartIdx + 4 },
+                    { id: 'show-espresso-grinders', label: 'Show me espresso machines', icon: '✦', action: 'loadChipCarousel', sequence: sequence, nextTitle: 'Espresso Machines', nextSubtitle: 'Espresso options for your kitchen • 4 items', nextProducts: 4, newCategory: 'espresso' },
+                    { id: 'help-decide-grinders', label: 'Help me decide', icon: '💬', action: 'helpDecide', sequence: sequence, category: 'grinders' }
+                ];
+                if (browseLevel === 3) {
+                    chipDefs.unshift({ id: 'browse-all-grinders', label: 'Browse All Coffee Grinders', icon: '→', action: 'browseAll', url: 'https://www.williams-sonoma.com/products/coffee-tea/grinders/' });
+                }
+            }
 
             const chipsHtml = chipDefs.map(chip => {
-                const params = chip.action === 'loadChipCarousel' 
-                    ? `'${chip.id}','${chip.action}',${chip.sequence},'${chip.nextTitle}','${chip.nextSubtitle}',${chip.nextProducts}`
-                    : `'${chip.id}','${chip.action}',${chip.sequence}','','0`;
+                let onclick = '';
+                if (chip.action === 'loadChipCarousel') {
+                    const newCat = chip.newCategory || category;
+                    const newLevel = browseLevel + 1;
+                    onclick = `handleNudgeChip('${chip.id}','${chip.action}',${sequence},'${chip.nextTitle}','${chip.nextSubtitle}',${chip.nextProducts},'${newCat}',${newLevel})`;
+                } else if (chip.action === 'browseAll') {
+                    onclick = `window.open('${chip.url}', '_blank')`;
+                } else if (chip.action === 'helpDecide') {
+                    onclick = `handleNudgeChip('${chip.id}','${chip.action}',${sequence},'','',0,'${chip.category}',${browseLevel})`;
+                }
                 
-                return `<button type="button" class="nudge-chip" id="chip-${chip.id}" onclick="handleNudgeChip(${params})"><span class="nudge-chip-icon">${chip.icon}</span>${chip.label}</button>`;
+                return `<button type="button" class="nudge-chip" id="chip-${chip.id}" onclick="${onclick}"><span class="nudge-chip-icon">${chip.icon}</span>${chip.label}</button>`;
             }).join('');
 
             return `
@@ -1298,7 +1335,7 @@
             `;
         }
 
-        function handleNudgeChip(chipId, action, sequence, nextTitle, nextSubtitle, nextProducts) {
+        function handleNudgeChip(chipId, action, sequence, nextTitle, nextSubtitle, nextProducts, category = 'coffee', browseLevel = 1) {
             const chip = document.getElementById(`chip-${chipId}`);
             if (chip) chip.classList.add('selected');
 
@@ -1309,29 +1346,94 @@
                 const newSequence = sequence + 1;
                 const carouselId = `carousel-chip-${newSequence}`;
                 carouselStates[carouselId] = { currentSlide: 0 };
+                
+                currentCategory = category;
+                browseLevelByCategory[category] = browseLevel;
 
-                const carouselBlock = renderCarouselBlock(carouselId, newSequence, nextProducts, nextTitle, nextSubtitle);
+                const carouselBlock = renderCarouselBlock(carouselId, newSequence, nextProducts, nextTitle, nextSubtitle, category, browseLevel);
                 chatContainer.insertAdjacentHTML('beforeend', carouselBlock);
-            } else if (action === 'showComparison') {
-                const comparisonMsg = `
+            } else if (action === 'helpDecide') {
+                // Phase 1: Show use-case questions
+                let questionText = '';
+                let buttons = [];
+                
+                if (category === 'coffee') {
+                    questionText = 'What matters most to you?';
+                    buttons = [
+                        { label: '⚡ Speed - I brew multiple cups daily', value: 'speed', category: 'coffee' },
+                        { label: '✨ Quality - I want the best brew', value: 'quality', category: 'coffee' },
+                        { label: '💰 Value - I want reliable without premium price', value: 'value', category: 'coffee' }
+                    ];
+                } else if (category === 'espresso') {
+                    questionText = "What's your priority?";
+                    buttons = [
+                        { label: '⚡ Speed - Quick espresso shots', value: 'speed', category: 'espresso' },
+                        { label: '✨ Precision - Temperature/pressure control', value: 'precision', category: 'espresso' },
+                        { label: '💰 Simplicity - Easy to use', value: 'simplicity', category: 'espresso' }
+                    ];
+                } else if (category === 'grinders') {
+                    questionText = 'What suits your workflow?';
+                    buttons = [
+                        { label: '⚡ Speed - Quick grinding', value: 'speed', category: 'grinders' },
+                        { label: '✨ Consistency - Uniform grind size', value: 'consistency', category: 'grinders' },
+                        { label: '💰 Durability - Long-lasting', value: 'durability', category: 'grinders' }
+                    ];
+                }
+                
+                const buttonHtml = buttons.map((btn, idx) => 
+                    `<button type="button" class="nudge-chip" onclick="handleDecideAnswer('${btn.value}', '${btn.category}', ${sequence})"><span class="nudge-chip-icon">→</span>${btn.label}</button>`
+                ).join('');
+                
+                const questionMsg = `
                     <div class="chat-message agent visible">
                         <div class="chat-avatar"><img src="https://wsgc.my.site.com/ESWSousChefAgentOlive1760167198695vforce/resource/AgentOliveIcon" alt="Olive"></div>
                         <div class="message-content">
                             <div class="message-bubble">
-                                <div class="message-text">Let me help you compare your top options:<br><br>
-                                    <strong>🏆 Best Overall: Breville The Luxe Brewer</strong> - $349.95<br>
-                                    Dual-temperature carafe, perfect for coffee enthusiasts who value precision<br><br>
-                                    <strong>⚡ Best for Speed: Fellow Aiden</strong> - $299.95<br>
-                                    Sleek design with excellent temperature control, ideal if you brew multiple cups daily<br><br>
-                                    <strong>🥇 Best Value: Cafe Specialty Drip</strong> - $199.95<br>
-                                    Top-rated quality without the premium price, great all-around choice</div>
+                                <div class="message-text">${questionText}</div>
+                            </div>
+                            <div style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                                ${buttonHtml}
                             </div>
                         </div>
                     </div>
                 `;
-                chatContainer.insertAdjacentHTML('beforeend', comparisonMsg);
+                chatContainer.insertAdjacentHTML('beforeend', questionMsg);
             }
 
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function handleDecideAnswer(answer, category, sequence) {
+            // Phase 2: Show filtered carousel based on answer
+            const chatContainer = document.getElementById('chatContainer');
+            const body = document.getElementById('phoneScreenBody');
+            
+            let filteredTitle = '';
+            let filteredSubtitle = '';
+            let filteredProducts = 0;
+            
+            // Determine product subset based on answer
+            if (answer === 'speed') {
+                filteredTitle = category.charAt(0).toUpperCase() + category.slice(1) + ' - Speed Optimized';
+                filteredSubtitle = `Best for quick setup • 4 items`;
+                filteredProducts = 0; // Use first set
+            } else if (answer === 'quality' || answer === 'precision' || answer === 'consistency') {
+                filteredTitle = category.charAt(0).toUpperCase() + category.slice(1) + ' - Premium Options';
+                filteredSubtitle = `Best for discerning users • 4 items`;
+                filteredProducts = 4; // Use second set
+            } else if (answer === 'value' || answer === 'simplicity' || answer === 'durability') {
+                filteredTitle = category.charAt(0).toUpperCase() + category.slice(1) + ' - Reliable & Practical';
+                filteredSubtitle = `Great all-around options • 4 items`;
+                filteredProducts = 8; // Use third set
+            }
+            
+            const newSequence = sequence + 1;
+            const carouselId = `carousel-decide-${newSequence}`;
+            carouselStates[carouselId] = { currentSlide: 0 };
+            
+            const carouselBlock = renderCarouselBlock(carouselId, newSequence, filteredProducts, filteredTitle, filteredSubtitle, category, 2);
+            chatContainer.insertAdjacentHTML('beforeend', carouselBlock);
+            
             body.scrollTop = body.scrollHeight;
         }
 
